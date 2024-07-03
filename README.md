@@ -1,7 +1,10 @@
- # PromiseEval, baseline method, RAG through GPT-4o.
+# PromiseEval
 
- ## Program architecture
- '
+This repository the baseline method, RAG through GPT-4o.
+
+## Program architecture
+
+ ```plaintext
  gpt-rag/
 │
 ├── src/
@@ -17,7 +20,7 @@
 │
 ├── data/
 │   ├── raw/
-│   │   └── annotated_data.xlsx # Original annotated data in Excel format
+│   │   └── annotated_data.xlsx
 │   ├── processed/
 │   │   ├── search_data.json # Processed data for search/retrieval
 │   │   └── test_data.json # Processed data for testing
@@ -34,10 +37,13 @@
 │   ├── test_rag_model.py # Tests for RAG model implementation
 │   └── test_evaluator.py # Tests for evaluation functions
 │
+├── main.py # Entry point for running the analysis
 ├── requirements.txt # Lists project dependencies
-├── README.md
 ├── .gitignore # Specifies files to ignore in version control
-└── main.py # Entry point for running the analysis
-'
+└── README.md
+```
 
 ## Experimental procedure
+
+1.
+2.
