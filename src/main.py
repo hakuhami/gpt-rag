@@ -1,6 +1,6 @@
 import sys
 
-def dijkstra(graph, start):
+def aaa(graph, start):
   # Initialize distances and visited array
   distances = {node: sys.maxsize for node in graph}
   distances[start] = 0
@@ -35,5 +35,8 @@ graph = {
 }
 
 start_node = 'A'
-distances = dijkstra(graph, start_node)
+distances = aaa(graph, start_node)
+print(distances)
+
+print(aaa(graph, 'A') == {'A': 0, 'B': 3, 'C': 2, 'D': 6})
 print(distances)
