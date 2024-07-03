@@ -4,7 +4,7 @@ from typing import List, Dict
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.data_loader import load_annotated_data_from_excel, save_json_data, load_json_data
+from src.data_loader import load_annotated_data_from_excel, save_json_data
 from src.data_preprocessor import preprocess_data, split_data
 from src.rag_model import RAGModel
 from src.evaluator import calculate_f1_scores
