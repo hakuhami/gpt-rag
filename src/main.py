@@ -1,30 +1,39 @@
-from transformers import RagTokenizer, RagRetriever, RagSequenceForGeneration
-from transformers import T5Tokenizer, T5Config, T5ForConditionalGeneration
+import sys
 
-# Load the tokenizer and retriever
-tokenizer = RagTokenizer.from_pretrained("facebook/rag-token-base")
-retriever = RagRetriever.from_pretrained("facebook/rag-token-base")
+def dijkstra(graph, start):
+  # Initialize distances and visited array
+  distances = {node: sys.maxsize for node in graph}
+  distances[start] = 0
+  visited = set()
 
-# Load the generator
-generator_tokenizer = T5Tokenizer.from_pretrained("t5-base")
-generator_model = T5ForConditionalGeneration.from_pretrained("t5-base")
+  while len(visited) < len(graph):
+    # Find the node with the minimum distance
+    min_distance = sys.maxsize
+    min_node = None
+    for node in graph:
+      if node not in visited and distances[node] < min_distance:
+        min_distance = distances[node]
+        min_node = node
 
-# Set the context and question
-context = "The quick brown fox jumps over the lazy dog."
-question = "What animal jumps over the dog?"
+    # Mark the node as visited
+    visited.add(min_node)
 
-# Encode the context and question
-input_ids = tokenizer.encode(context, question, return_tensors="pt")
+    # Update distances of adjacent nodes
+    for neighbor, weight in graph[min_node].items():
+      new_distance = distances[min_node] + weight
+      if new_distance < distances[neighbor]:
+        distances[neighbor] = new_distance
 
-# Retrieve relevant documents
-retrieved_docs = retriever.retrieve(input_ids)
+  return distances
 
-# Generate the answer
-generator_input_ids = generator_tokenizer.prepare_seq2seq_batch(
-  retrieved_docs["input_ids"], return_tensors="pt"
-)["input_ids"]
-generated_ids = generator_model.generate(generator_input_ids)
+# Example usage
+graph = {
+  'A': {'B': 5, 'C': 2},
+  'B': {'A': 5, 'C': 1, 'D': 3},
+  'C': {'A': 2, 'B': 1, 'D': 6},
+  'D': {'B': 3, 'C': 6}
+}
 
-# Decode and print the answer
-answer = generator_tokenizer.decode(generated_ids[0], skip_special_tokens=True)
-print(answer)
+start_node = 'A'
+distances = dijkstra(graph, start_node)
+print(distances)
