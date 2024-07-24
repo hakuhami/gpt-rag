@@ -22,7 +22,7 @@ def run_analysis(config_path: str) -> None:
         config = yaml.safe_load(f)
 
     # データを読み込む
-    df = load_annotated_data_from_excel(config['raw_data_path'])
+    df = load_annotated_data_from_excel(config['raw_data_path/1st_200.json'])
     json_data = preprocess_data(df)
 
     # データを分割する

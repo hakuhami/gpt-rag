@@ -9,7 +9,7 @@ class RAGModel:
     def __init__(self, api_key: str, model_name: str = "gpt-4"):
         openai.api_key = api_key
         self.model_name = model_name
-        self.embedder = SentenceTransformer('all-MiniLM-L6-v2')
+        self.embedder = SentenceTransformer('all-mpnet-base-v2')
 
     def prepare_documents(self, search_data: List[Dict]) -> None:
         """
