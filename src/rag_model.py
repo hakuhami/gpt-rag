@@ -5,11 +5,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import json
 
+# embedding modelには、多言語に対応したmultilingual-e5-large-instructを使用
+
 class RAGModel:
     def __init__(self, api_key: str, model_name: str = "gpt-4"):
         openai.api_key = api_key
         self.model_name = model_name
-        self.embedder = SentenceTransformer('all-mpnet-base-v2')
+        self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
 
     def prepare_documents(self, search_data: List[Dict]) -> None:
         """

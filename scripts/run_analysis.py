@@ -4,7 +4,7 @@ from typing import List, Dict
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.data_loader import load_annotated_data_from_excel, save_json_data
+from src.data_loader import load_annotated_data_from_excel, save_json_data, load_json_data
 from src.data_preprocessor import preprocess_data, split_data
 from src.rag_model import RAGModel
 from src.evaluator import calculate_f1_scores
@@ -22,8 +22,11 @@ def run_analysis(config_path: str) -> None:
         config = yaml.safe_load(f)
 
     # データを読み込む
-    df = load_annotated_data_from_excel(config['raw_data_path/1st_200.json'])
-    json_data = preprocess_data(df)
+    # df = load_json_data(config['raw_data_path/1st_200.json'])
+    # json_data = preprocess_data(df)
+    
+    #事前に準備したjsonデータを読み込む
+    json_data = load_json_data(config['raw_data_path/1st_200.json'])
 
     # データを分割する
     search_data, test_data = split_data(json_data, test_size=config['test_size'])
