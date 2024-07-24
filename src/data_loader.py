@@ -2,17 +2,17 @@ import pandas as pd
 import json
 from typing import List, Dict
 
-def load_annotated_data_from_excel(file_path: str) -> pd.DataFrame:
-    """
-    エクセルファイルからアノテーションデータを読み込む
+# def load_annotated_data_from_excel(file_path: str) -> pd.DataFrame:
+#     """
+#     エクセルファイルからアノテーションデータを読み込む
 
-    Args:
-        file_path (str): エクセルファイルのパス
+#     Args:
+#         file_path (str): エクセルファイルのパス
 
-    Returns:
-        pd.DataFrame: アノテーションデータのDataFrame
-    """
-    return pd.read_excel(file_path)
+#     Returns:
+#         pd.DataFrame: アノテーションデータのDataFrame
+#     """
+#     return pd.read_excel(file_path)
 
 def save_json_data(data: List[Dict], file_path: str) -> None:
     """

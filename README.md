@@ -20,7 +20,7 @@ This repository the baseline method, RAG through GPT-4o.
 │
 ├── data/
 │   ├── raw/
-│   │   └── annotated_data.xlsx
+│   │   └── # Json data
 │   ├── processed/
 │   │   ├── search_data.json # Processed data for search/retrieval
 │   │   └── test_data.json # Processed data for testing

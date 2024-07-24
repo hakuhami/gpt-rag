@@ -53,7 +53,7 @@ def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict
     rouge = Rouge()
     rouge_scores = {}
     
-    text_elements = ['commitment_text', 'evidence_text']
+    text_elements = ['promise_string', 'evidence_string']
     
     for element in text_elements:
         true_texts = [item.get(element, "") for item in true_data]
@@ -86,7 +86,7 @@ def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[st
     
     f1_scores = {}
     
-    categorical_elements = ['commitment_present', 'commitment_timing', 'evidence_present', 'relation_quality']
+    categorical_elements = ['promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality']
     
     for element in categorical_elements:
         true_values = [item.get(element) for item in true_data if item.get(element) is not None]
