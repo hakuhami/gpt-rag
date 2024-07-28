@@ -15,10 +15,10 @@ class RAGModel:
 
     def prepare_documents(self, search_data: List[Dict]) -> None:
         """
-        検索用データを準備し、エンコードする
+        Prepare and encode the search data
 
         Args:
-            search_data (List[Dict]): 検索用データ
+            search_data (List[Dict]): Data for search
         """
         self.search_data = search_data
         self.documents = [item['paragraph'] for item in search_data]
@@ -27,21 +27,20 @@ class RAGModel:
     # とりあえず上位5個のデータを選んだが、これは本当に適当か？動的な選び方の方が良い？
     def get_relevant_context(self, query: str, top_k: int = 5) -> List[Dict]:
         """
-        クエリに関連する上位のドキュメントを取得する
+        Retrieve the top documents related to the query
 
         Args:
-            query (str): 入力クエリ
-            top_k (int): 取得するドキュメント数
+            query (str): Input query
+            top_k (int): Number of documents to retrieve
 
         Returns:
-            List[Dict]: 関連するドキュメントのリスト
+            List[Dict]: List of relevant documents
         """
         query_embedding = self.embedder.encode([query])
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
         top_indices = np.argsort(similarities)[-top_k:][::-1]
         return [self.search_data[i] for i in top_indices]
 
-    #プロンプトは英語で書き直す
     def analyze_paragraph(self, paragraph: str) -> Dict:
         relevant_docs = self.get_relevant_context(paragraph)
         context = "\n".join([json.dumps(doc, ensure_ascii=False) for doc in relevant_docs])
