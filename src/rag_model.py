@@ -43,52 +43,74 @@ class RAGModel:
 
     #プロンプトは英語で書き直す
     def analyze_paragraph(self, paragraph: str) -> Dict:
-        """
-        パラグラフを分析し、公約と根拠を抽出する
-
-        Args:
-            paragraph (str): 分析対象のパラグラフ
-
-        Returns:
-            Dict: 分析結果
-        """
         relevant_docs = self.get_relevant_context(paragraph)
         context = "\n".join([json.dumps(doc, ensure_ascii=False) for doc in relevant_docs])
 
         prompt = f"""
-        あなたは、ESGに関して記述した企業のレポートから、ESGに関する公約とそれに対応する根拠を抽出する専門家です。
-        以下の形式でアノテーションを行ってください。
-        なお、結果は以下のJSON形式で出力してください：
+        You are an expert in extracting ESG-related commitments and their corresponding evidence from corporate reports that describe ESG matters.
+        Follow the instructions below to provide careful and consistent annotations.
+        Output the results in the following JSON format:
         {{
+            "data": str,
             "promise_status": str,
             "promise_string": str or null,
-            "verification_timeline": str or null,
-            "evidence_status": str or null,
+            "verification_timeline": str,
+            "evidence_status": str,
             "evidence_string": str or null,
-            "evidence_quality": str or null
-        }}：
-        （アノテーションの形式）
-        1. パラグラフ中の文章内容が与えられます。
-        2. 公約が含まれるかどうかを判断し、含まれる場合はYes、含まれない場合はNoと表記してください。(promise_status)
-        3. 公約が含まれる場合（2がYesの場合）、以下の情報も提供してください：
-           - 公約の具体的な箇所（文章から一言一句変えずにそのまま抽出）(promise_string)
-           - 公約を検証できるタイミング（already, within_2_years, between_2_and_5_years, more_than_5_years）(verification_timeline)
-           - 根拠が含まれるかどうか（Yes, No）(evidence_status)
-        4. 根拠が含まれる場合evidence_statusがYesの場合）、以下の情報も提供してください：
-           - 根拠の箇所（文章から一言一句変えずに直接抽出）(evidence_string)
-           - 公約と根拠の関係の質（Clear, Not Clear, Misleading）(evidence_quality)
+            "evidence_quality": str
+        }}:
+        
+        Annotation procedure:
+        1. You will be given the content of a paragraph.
+        2. Determine if a commitment is included, and indicate "Yes" if included, "No" if not included. (promise_status)
+        3. If a commitment is included (if promise_status is "Yes"), also provide the following information:
+        - The specific part of the commitment (extract verbatim from the text without changing a single word) (promise_string)
+        - When the commitment can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
+        - Whether evidence is included ("Yes", "No", "N/A") (evidence_status)
+        4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
+        - The part containing the evidence (extract directly from the text without changing a single word) (evidence_string)
+        - The quality of the relationship between the commitment and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
+           
+        Definitions and criteria for annotation labels:
+        1. promise_status - A promise is composed of a statement (a company principle, commitment, or strategy related to ESG criteria).:
+        - "Yes": A commitment exists.
+        - "No": No commitment exists.
+        
+        2. verification_timeline - The Verification Timeline is the assessment of when we could possibly see the final results of a given ESG-related action and thus verify the statement.:
+        - "already": Qualifies ESG-related measures that have already been and keep on being applied and every small measure whose results can already be verified anyway.
+        - "within_2_years": ESG-related measures whose results can be verified within 2 years.
+        - "between_2_and_5_years": ESG-related measures whose results can be verified in 2 to 5 years.
+        - "more_than_5_years: ESG-related measures whose results can be verified in more than 5 years.
+        - "N/A": When no commitment exists.
 
-        以下は、参考となる既存のアノテーション例です：
+        3. evidence_status - Pieces of evidence are elements deemed the most relevant to exemplify and prove the core promise is being kept, which includes but is not limited to simple examples, company measures, numbers, etc.:
+        - "Yes": Evidence supporting the commitment exists.
+        - "No": No evidence for the commitment exists.
+        - "N/A": When no commitment exists.
+
+        4. evidence_quality - The Evidence Quality is the assessment of the company's ability to back up their statement with enough clarity and precision.:
+        - "Clear": There is no lack of information and what is said is intelligible and logical.
+        - "Not Clear": An information is missing so much so that what is said may range from intelligible and logical to superficial and/or superfluous.
+        - "Misleading": The evidence, whether true or not, has no obvious connection with the point raised and is used to divert attention.
+        - "N/A": When no evidence or commitment exists.
+        
+        Important notes:
+        - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        - If there are multiple commitments, choose the most specific and important one.
+        - For indirect evidence, carefully judge its relevance.
+        - Understand and appropriately interpret industry-specific terms.
+
+        The following are examples of existing annotations for reference:
         {context}
 
-        次の文章を分析し、上記の形式で結果を提供してください：
+        Analyze the following text and provide results in the format described above:
         {paragraph}
         """
 
         response = openai.ChatCompletion.create(
             model=self.model_name,
             messages=[
-                {"role": "system", "content": "You are an expert in extracting commitments and evidence from sustainability reports."},
+                {"role": "system", "content": "You are an expert in extracting commitments and evidence from corporate reports."},
                 {"role": "user", "content": prompt}
             ]
         )
