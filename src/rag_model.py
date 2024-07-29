@@ -1,4 +1,5 @@
 import openai
+from openai import OpenAI
 from typing import List, Dict
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -21,7 +22,7 @@ class RAGModel:
             search_data (List[Dict]): Data for search
         """
         self.search_data = search_data
-        self.documents = [item['paragraph'] for item in search_data]
+        self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
 
     # とりあえず上位5個のデータを選んだが、これは本当に適当か？動的な選び方の方が良い？
@@ -46,7 +47,7 @@ class RAGModel:
         context = "\n".join([json.dumps(doc, ensure_ascii=False) for doc in relevant_docs])
 
         prompt = f"""
-        You are an expert in extracting ESG-related commitments and their corresponding evidence from corporate reports that describe ESG matters.
+        You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
         Follow the instructions below to provide careful and consistent annotations.
         Output the results in the following JSON format:
         {{
@@ -107,10 +108,11 @@ class RAGModel:
         {paragraph}
         """
 
-        response = openai.ChatCompletion.create(
+        client = OpenAI(api_key = openai.api_key)
+        response = client.chat.completions.create(
             model=self.model_name,
             messages=[
-                {"role": "system", "content": "You are an expert in extracting commitments and evidence from corporate reports."},
+                {"role": "system", "content": "You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."},
                 {"role": "user", "content": prompt}
             ]
         )

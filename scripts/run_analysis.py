@@ -38,7 +38,7 @@ def run_analysis(config_path: str) -> None:
     # テストデータに対して分析を実行する
     predictions = []
     for item in test_data:
-        result = rag_model.analyze_paragraph(item['paragraph'])
+        result = rag_model.analyze_paragraph(item['data'])
         predictions.append(result)
 
     # 予測結果を保存する
@@ -47,7 +47,7 @@ def run_analysis(config_path: str) -> None:
     # F1スコア、ROUGEスコアを計算する
     evaluate_scores = evaluate_results(test_data, predictions)
 
-    print("F1 Scores:")
+    print("F1 Scores and ROUGE Scores:")
     for element, score in evaluate_scores.items():
         print(f"{element}: {score:.4f}")
 
