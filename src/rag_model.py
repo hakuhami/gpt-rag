@@ -8,7 +8,7 @@ import json
 # embedding modelには、多言語に対応したmultilingual-e5-large-instructを使用
 
 class RAGModel:
-    def __init__(self, api_key: str, model_name: str = "gpt-4"):
+    def __init__(self, api_key: str, model_name: str = "gpt-4o"):
         openai.api_key = api_key
         self.model_name = model_name
         self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
@@ -97,6 +97,7 @@ class RAGModel:
         - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
         - If there are multiple commitments, choose the most specific and important one.
         - For indirect evidence, carefully judge its relevance.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text.
         - Understand and appropriately interpret industry-specific terms.
 
         The following are examples of existing annotations for reference:
