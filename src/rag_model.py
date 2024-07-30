@@ -80,22 +80,18 @@ class RAGModel:
         {{
             "data": str,
             "promise_status": str,
-            "promise_string": str or null,
             "verification_timeline": str,
             "evidence_status": str,
-            "evidence_string": str or null,
             "evidence_quality": str
         }}:
         
         Annotation procedure:
         1. You will be given the content of a paragraph.
-        2. Determine if a commitment is included, and indicate "Yes" if included, "No" if not included. (promise_status)
-        3. If a commitment is included (if promise_status is "Yes"), also provide the following information:
-        - The specific part of the commitment (extract verbatim from the text without changing a single word) (promise_string)
-        - When the commitment can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
+        2. Determine if a promise is included, and indicate "Yes" if included, "No" if not included. (promise_status)
+        3. If a promise is included (if promise_status is "Yes"), also provide the following information:
+        - When the promise can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
         - Whether evidence is included ("Yes", "No", "N/A") (evidence_status)
         4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
-        - The part containing the evidence (extract directly from the text without changing a single word) (evidence_string)
         - The quality of the relationship between the commitment and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
            
         Definitions and criteria for annotation labels:
@@ -124,7 +120,6 @@ class RAGModel:
         Important notes:
         - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
         - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
         - Understand and appropriately interpret industry-specific terms.
 
         The following are examples of existing annotations for reference:
