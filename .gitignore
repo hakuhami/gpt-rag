@@ -17,7 +17,8 @@ ENV/
 data/*.json
 
 # Config
-config/*.yml
+config/*
+!config/
 
 # Logs
 *.log
