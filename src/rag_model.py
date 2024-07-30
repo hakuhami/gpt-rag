@@ -117,5 +117,5 @@ class RAGModel:
             ]
         )
 
-        result = response.choices[0].message['content']
+        result = response.choices[0].message.content
         return json.loads(result)

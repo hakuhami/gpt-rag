@@ -30,10 +30,12 @@ def run_analysis(config_path: str) -> None:
     # Save the search and test data
     save_json_data(search_data, config['search_data_path'])
     save_json_data(test_data, config['test_data_path'])
+    print("Search and test data is saved.")
 
     # Prepare the RAG model with the search data
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
     rag_model.prepare_documents(search_data)
+    print("Documents are prepared.")
 
     # Analyze the test data
     predictions = []
@@ -43,6 +45,7 @@ def run_analysis(config_path: str) -> None:
 
     # Save the prediction results
     save_json_data(predictions, config['output_path'])
+    print("Predictions are saved.")
 
     # Evaluate the prediction results
     evaluate_scores = evaluate_results(test_data, predictions)
