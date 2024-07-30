@@ -1,6 +1,7 @@
 from typing import List, Dict
 from rouge import Rouge
 from sklearn.metrics import f1_score
+import json
 
 def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, Dict[str, float]]:
     """
@@ -29,8 +30,6 @@ def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict
             true_valid, pred_valid = zip(*valid_pairs)
             scores = rouge.get_scores(pred_valid, true_valid, avg=True)
             rouge_scores[element] = scores['rouge-l']
-        else:
-            rouge_scores[element] = {'f': 0.0, 'p': 0.0, 'r': 0.0}
     
     return rouge_scores
 
@@ -56,8 +55,6 @@ def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[st
         if true_values and pred_values:
             f1 = f1_score(true_values, pred_values, average='weighted')
             f1_scores[element] = f1
-        else:
-            f1_scores[element] = 0.0
     
     return f1_scores
 
@@ -80,3 +77,23 @@ def evaluate_results(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, 
     evaluation.update({k: {'f': v} for k, v in f1_scores.items()})
     
     return evaluation
+
+def average_results(scores_list: List[Dict[str, Dict[str, float]]]) -> Dict[str, Dict[str, float]]:
+    avg_scores = {}
+    if not scores_list:
+        return avg_scores
+    elements = scores_list[0].keys()
+    for element in elements:
+        f_scores = [scores[element]['f'] for scores in scores_list if 'f' in scores[element]]
+        p_scores = [scores[element]['p'] for scores in scores_list if 'p' in scores[element]]
+        r_scores = [scores[element]['r'] for scores in scores_list if 'r' in scores[element]]
+        avg_scores[element] = {
+            'f': sum(f_scores) / len(f_scores) if f_scores else 0.0,
+            'p': sum(p_scores) / len(p_scores) if p_scores else 0.0,
+            'r': sum(r_scores) / len(r_scores) if r_scores else 0.0,
+        }
+    return avg_scores
+
+def save_average_results_to_file(results: Dict[str, Dict[str, float]], filename: str):
+    with open(filename, 'w') as file:
+        json.dump(results, file, indent=2)
