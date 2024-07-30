@@ -1,4 +1,4 @@
-# This branch is used to analyze the English data.
+# This branch is used to analyze the French data.
 
 from scripts.run_analysis import run_analysis
 
