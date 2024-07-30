@@ -14,7 +14,6 @@ ENV/
 .vscode/
 
 # Data
-data/*.xlsx
 data/*.json
 
 # Config
