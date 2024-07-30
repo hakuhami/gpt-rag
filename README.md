@@ -11,6 +11,7 @@ Since the JSON structure differs for each language's dataset, branches are separ
 │
 ├── src/
 │   ├── __init__.py
+│   ├── evaluator.py (Arrange the labels in the dataset for experimental purposes)
 │   ├── data_loader.py (Handles loading and saving data)
 │   ├── data_preprocessor.py (Preprocesses and transforms data)
 │   ├── rag_model.py (Implements the RAG model for analysis)
@@ -43,7 +44,9 @@ Since the JSON structure differs for each language's dataset, branches are separ
 
 2. Place the JSON files to be analyzed in the "data/raw".
 
-3. Create a config.yml file in the "config" with the following parameters.
+3. Run evaluator.py to arrange the dataset labels for the experiment.
+
+4. Create a config.yml file in the "config" with the following parameters.
 
    ```plaintext
    openai_api_key: ""
@@ -55,5 +58,16 @@ Since the JSON structure differs for each language's dataset, branches are separ
    average_results_path: ""
    test_size:
 
-4. Run the "main.py".
+5. Run the "main.py".
 
+## Generated JSON format
+
+ ```plaintext
+  {
+      "data": str,
+      "promise_status": str,
+      "verification_timeline": str,
+      "evidence_status": str,
+      "evidence_quality": str
+  }:
+```
