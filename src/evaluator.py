@@ -23,7 +23,7 @@ def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict
         true_texts = [item.get(element, "") for item in true_data if isinstance(item, dict)]
         pred_texts = [item.get(element, "") for item in pred_data if isinstance(item, dict)]
         
-        # 空の文字列を除外
+        # Exclude empty strings.
         valid_pairs = [(t, p) for t, p in zip(true_texts, pred_texts) if t and p]
         
         if valid_pairs:

@@ -1,6 +1,7 @@
 # PromiseEval
 
-This repository the baseline method, RAG through GPT model.
+This repository is the baseline method, RAG through GPT-4o.  
+("evaluator.py" is a validation evaluation script for checking and will not be used in production.)
 
 ## Program architecture
 
@@ -12,7 +13,7 @@ This repository the baseline method, RAG through GPT model.
 │   ├── data_loader.py # Handles loading and saving data
 │   ├── data_preprocessor.py # Preprocesses and transforms data
 │   ├── rag_model.py # Implements the RAG model for analysis
-│   └── evaluator.py # Evaluates model performance
+│   └── evaluator.py # Evaluates model performance (checking the sample output data)
 │
 ├── scripts/
 │   └── run_analysis.py # Runs the entire analysis process

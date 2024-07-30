@@ -56,7 +56,3 @@ def run_analysis(config_path: str) -> None:
     average_scores = average_results(evaluate_scores)
     save_average_results_to_file(average_scores, config['average_results_path'])
     print(f"F1 Scores and ROUGE Scores averages:{average_scores}")
-
-if __name__ == "__main__":
-    config_path = 'config/config.yml'
-    run_analysis(config_path)
