@@ -42,6 +42,7 @@ def run_analysis(config_path: str) -> None:
     for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
         predictions.append(result)
+    print("Analysis is completed.")
 
     # Save the prediction results
     save_json_data(predictions, config['output_path'])

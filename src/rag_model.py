@@ -42,15 +42,25 @@ class RAGModel:
         top_indices = np.argsort(similarities)[-top_k:][::-1]
         return [self.search_data[i] for i in top_indices]
 
-    def analyze_paragraph(self, paragraph: str) -> Dict:
+    def analyze_paragraph(self, paragraph: str) -> Dict[str, str]:
+        """
+        Generate annotation results from paragraph text using an LLM, referencing similar data.
+
+        Args:
+            paragraph (str): Input paragraph text
+
+        Returns:
+            Dict[str, str]: Annotation results in JSON format
+        """
         relevant_docs = self.get_relevant_context(paragraph)
-        context = "\n".join([json.dumps(doc, ensure_ascii=False) for doc in relevant_docs])
+        context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
         Follow the instructions below to provide careful and consistent annotations.
         Output the results in the following JSON format.
-        Do not output any text other than the results in JSON format:
+        Ensure that your response is a valid JSON object.
+        Do not include any text before or after the JSON object.:
         {{
             "data": str,
             "promise_status": str,
@@ -114,8 +124,17 @@ class RAGModel:
             messages=[
                 {"role": "system", "content": "You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            temperature=0
         )
+        print(f"API Response: {response}")
 
-        result = response.choices[0].message.content
-        return json.loads(result)
+        generated_text = response.choices[0].message.content
+        print(f"Generated Text: {generated_text}")
+        
+        result = json.loads(generated_text)
+        print(f"Result: {result}")
+        print("")
+        print(f"ここまでが出力データ")
+        print("")
+        return result

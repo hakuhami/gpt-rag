@@ -1,5 +1,6 @@
 from typing import List, Dict
 from rouge import Rouge
+from sklearn.metrics import f1_score
 
 def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, Dict[str, float]]:
     """
@@ -43,9 +44,7 @@ def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[st
 
     Returns:
         Dict[str, float]: The F1 score for each element
-    """
-    from sklearn.metrics import f1_score
-    
+    """    
     f1_scores = {}
     
     categorical_elements = ['promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality']
