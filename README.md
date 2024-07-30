@@ -1,6 +1,7 @@
-# PromiseEval
+# PromiseEval baseline method
 
 This repository is the baseline method, RAG through GPT-4o.  
+Since the JSON structure differs for each language's dataset, branches are separated for each language.  
 ("evaluator.py" is a validation evaluation script for checking and will not be used in production.)
 
 ## Program architecture
