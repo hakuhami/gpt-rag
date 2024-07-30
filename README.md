@@ -36,9 +36,11 @@ This repository the baseline method, RAG through GPT model.
 
 ## Experimental procedure
 
-1. Place the JSON files to be analyzed in the "data/raw".
+1. Clone the remote branch corresponding to each language (designing prompts tailored to the structure of each language's dataset).
 
-2. Create a config.yml file in the "config" with the following parameters.
+2. Place the JSON files to be analyzed in the "data/raw".
+
+3. Create a config.yml file in the "config" with the following parameters.
 
    ```plaintext
    openai_api_key: ""
@@ -46,10 +48,11 @@ This repository the baseline method, RAG through GPT model.
    sample_raw_data_path: ""
    search_data_path: ""
    test_data_path: ""
-   output_path: ""
+   generated_data_path: ""
+   average_results_path: ""
    test_size:
 
-3. Run the "main.py".
+4. Run the "main.py".
 
 ## Experimental results using sample data (200 samples) for each language
 
@@ -76,6 +79,3 @@ ROUGE scores : 'promise_string', 'evidence_string'
  ```plaintext
  Korean
 ```
-
-
-
