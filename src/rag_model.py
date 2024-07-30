@@ -9,7 +9,7 @@ import json
 # For the embedding model, use the multilingual-e5-large-instruct which supports multiple languages
 
 class RAGModel:
-    def __init__(self, api_key: str, model_name: str = "gpt-4o"):
+    def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name
         self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
@@ -49,7 +49,8 @@ class RAGModel:
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
         Follow the instructions below to provide careful and consistent annotations.
-        Output the results in the following JSON format:
+        Output the results in the following JSON format.
+        Do not output any text other than the results in JSON format:
         {{
             "data": str,
             "promise_status": str,
@@ -96,9 +97,8 @@ class RAGModel:
         
         Important notes:
         - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
-        - If there are multiple commitments, choose the most specific and important one.
         - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
         - Understand and appropriately interpret industry-specific terms.
 
         The following are examples of existing annotations for reference:
