@@ -1,6 +1,6 @@
 # PromiseEval
 
-This repository the baseline method, RAG through GPT-4o.
+This repository the baseline method, RAG through GPT model.
 
 ## Program architecture
 
@@ -12,11 +12,10 @@ This repository the baseline method, RAG through GPT-4o.
 │   ├── data_loader.py # Handles loading and saving data
 │   ├── data_preprocessor.py # Preprocesses and transforms data
 │   ├── rag_model.py # Implements the RAG model for analysis
-│   ├── evaluator.py # Evaluates model performance
-│   └── utils.py # Contains utility functions
+│   └── evaluator.py # Evaluates model performance
 │
 ├── scripts/
-│   └── run_analysis.py # Orchestrates the entire analysis process
+│   └── run_analysis.py # Runs the entire analysis process
 │
 ├── data/
 │   ├── raw/
@@ -30,20 +29,53 @@ This repository the baseline method, RAG through GPT-4o.
 ├── config/
 │   └── config.yml
 │
-├── tests/
-│   ├── __init__.py
-│   ├── test_data_loader.py # Tests for data loading functions
-│   ├── test_data_preprocessor.py # Tests for data preprocessing functions
-│   ├── test_rag_model.py # Tests for RAG model implementation
-│   └── test_evaluator.py # Tests for evaluation functions
-│
 ├── main.py # Entry point for running the analysis
-├── requirements.txt # Lists project dependencies
 ├── .gitignore # Specifies files to ignore in version control
 └── README.md
 ```
 
 ## Experimental procedure
 
-1.
-2.
+1. Place the JSON files to be analyzed in the "data/raw".
+
+2. Create a config.yml file in the "config" with the following parameters.
+
+   ```plaintext
+   openai_api_key: ""
+   model_name: ""
+   sample_raw_data_path: ""
+   search_data_path: ""
+   test_data_path: ""
+   output_path: ""
+   test_size:
+
+3. Run the "main.py".
+
+## Experimental results using sample data (200 samples) for each language
+
+Model : "gpt-4o"
+F1 scores : 'promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality'  
+ROUGE scores : 'promise_string', 'evidence_string'  
+
+ ```plaintext
+ Chinese
+```
+
+ ```plaintext
+ English
+```
+
+ ```plaintext
+ French
+```
+
+ ```plaintext
+ Japanese
+```
+
+ ```plaintext
+ Korean
+```
+
+
+

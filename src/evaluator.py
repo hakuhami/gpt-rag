@@ -1,16 +1,17 @@
 from typing import List, Dict
 from rouge import Rouge
+from sklearn.metrics import f1_score
 
 def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, Dict[str, float]]:
     """
-    予測結果のROUGEスコアを計算する
+    Calculate the ROUGE score for the prediction results.
 
     Args:
-        true_data (List[Dict]): 正解データ
-        pred_data (List[Dict]): 予測データ
+        true_data (List[Dict]): The ground truth data
+        pred_data (List[Dict]): The predicted data
 
     Returns:
-        Dict[str, Dict[str, float]]: 各要素のROUGEスコア
+        Dict[str, Dict[str, float]]: The ROUGE score for each element
     """
     rouge = Rouge()
     rouge_scores = {}
@@ -35,17 +36,15 @@ def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict
 
 def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, float]:
     """
-    予測結果のF1スコアを計算する（カテゴリカルな要素用）
+    Calculate the F1 score for the prediction results (for categorical elements).
 
     Args:
-        true_data (List[Dict]): 正解データ
-        pred_data (List[Dict]): 予測データ
+        true_data (List[Dict]): The ground truth data
+        pred_data (List[Dict]): The predicted data
 
     Returns:
-        Dict[str, float]: 各要素のF1スコア
-    """
-    from sklearn.metrics import f1_score
-    
+        Dict[str, float]: The F1 score for each element
+    """    
     f1_scores = {}
     
     categorical_elements = ['promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality']
@@ -64,14 +63,14 @@ def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[st
 
 def evaluate_results(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, Dict[str, float]]:
     """
-    予測結果の総合評価を行う
+    Evaluate the overall performance of the prediction results.(rouge score and f1 score)
 
     Args:
-        true_data (List[Dict]): 正解データ
-        pred_data (List[Dict]): 予測データ
+        true_data (List[Dict]): The ground truth data
+        pred_data (List[Dict]): The predicted data
 
     Returns:
-        Dict[str, Dict[str, float]]: 各要素の評価スコア
+        Dict[str, Dict[str, float]]: The evaluation scores for each element
     """
     rouge_scores = calculate_rouge_scores(true_data, pred_data)
     f1_scores = calculate_f1_scores(true_data, pred_data)

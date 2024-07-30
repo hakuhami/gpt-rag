@@ -12,42 +12,46 @@ import yaml
 
 def run_analysis(config_path: str) -> None:
     """
-    分析を実行する
+    Execute the analysis.
 
     Args:
-        config_path (str): 設定ファイルのパス
+        config_path (str): The path to the configuration file
     """
-    # 設定を読み込む
+    # Load the configuration file
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     
-    #事前に準備したjsonデータを読み込む
+    # Load the pre-prepared JSON data
     json_data = load_json_data(config['sample_raw_data_path'])
 
-    # データを分割する
+    # Split the data into search and test sets
     search_data, test_data = split_data(json_data, test_size=config['test_size'])
 
-    # 分割したデータを保存する
+    # Save the search and test data
     save_json_data(search_data, config['search_data_path'])
     save_json_data(test_data, config['test_data_path'])
+    print("Search and test data is saved.")
 
-    # RAGモデルを初期化し、検索用データを準備する
+    # Prepare the RAG model with the search data
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
     rag_model.prepare_documents(search_data)
+    print("Documents are prepared.")
 
-    # テストデータに対して分析を実行する
+    # Analyze the test data
     predictions = []
     for item in test_data:
-        result = rag_model.analyze_paragraph(item['paragraph'])
+        result = rag_model.analyze_paragraph(item['data'])
         predictions.append(result)
+    print("Analysis is completed.")
 
-    # 予測結果を保存する
+    # Save the prediction results
     save_json_data(predictions, config['output_path'])
+    print("Predictions are saved.")
 
-    # F1スコア、ROUGEスコアを計算する
+    # Evaluate the prediction results
     evaluate_scores = evaluate_results(test_data, predictions)
 
-    print("F1 Scores:")
+    print("F1 Scores and ROUGE Scores:")
     for element, score in evaluate_scores.items():
         print(f"{element}: {score:.4f}")
 

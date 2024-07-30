@@ -1,14 +1,15 @@
 import openai
+from openai import OpenAI
 from typing import List, Dict
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import json
 
-# embedding modelには、多言語に対応したmultilingual-e5-large-instructを使用
+# For the embedding model, use the multilingual-e5-large-instruct which supports multiple languages
 
 class RAGModel:
-    def __init__(self, api_key: str, model_name: str = "gpt-4o"):
+    def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name
         self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
@@ -21,7 +22,7 @@ class RAGModel:
             search_data (List[Dict]): Data for search
         """
         self.search_data = search_data
-        self.documents = [item['paragraph'] for item in search_data]
+        self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
 
     # とりあえず上位5個のデータを選んだが、これは本当に適当か？動的な選び方の方が良い？
@@ -41,14 +42,25 @@ class RAGModel:
         top_indices = np.argsort(similarities)[-top_k:][::-1]
         return [self.search_data[i] for i in top_indices]
 
-    def analyze_paragraph(self, paragraph: str) -> Dict:
+    def analyze_paragraph(self, paragraph: str) -> Dict[str, str]:
+        """
+        Generate annotation results from paragraph text using an LLM, referencing similar data.
+
+        Args:
+            paragraph (str): Input paragraph text
+
+        Returns:
+            Dict[str, str]: Annotation results in JSON format
+        """
         relevant_docs = self.get_relevant_context(paragraph)
-        context = "\n".join([json.dumps(doc, ensure_ascii=False) for doc in relevant_docs])
+        context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
         prompt = f"""
-        You are an expert in extracting ESG-related commitments and their corresponding evidence from corporate reports that describe ESG matters.
+        You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
         Follow the instructions below to provide careful and consistent annotations.
-        Output the results in the following JSON format:
+        Output the results in the following JSON format.
+        Ensure that your response is a valid JSON object.
+        Do not include any text before or after the JSON object.:
         {{
             "data": str,
             "promise_status": str,
@@ -95,9 +107,8 @@ class RAGModel:
         
         Important notes:
         - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
-        - If there are multiple commitments, choose the most specific and important one.
         - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
         - Understand and appropriately interpret industry-specific terms.
 
         The following are examples of existing annotations for reference:
@@ -107,13 +118,23 @@ class RAGModel:
         {paragraph}
         """
 
-        response = openai.ChatCompletion.create(
+        client = OpenAI(api_key = openai.api_key)
+        response = client.chat.completions.create(
             model=self.model_name,
             messages=[
-                {"role": "system", "content": "You are an expert in extracting commitments and evidence from corporate reports."},
+                {"role": "system", "content": "You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            temperature=0
         )
+        print(f"API Response: {response}")
 
-        result = response.choices[0].message['content']
-        return json.loads(result)
+        generated_text = response.choices[0].message.content
+        print(f"Generated Text: {generated_text}")
+        
+        result = json.loads(generated_text)
+        print(f"Result: {result}")
+        print("")
+        print(f"ここまでが出力データ")
+        print("")
+        return result
