@@ -1,6 +1,7 @@
-# PromiseEval
+# PromiseEval baseline method
 
 This repository is the baseline method, RAG through GPT-4o.  
+Since the JSON structure differs for each language's dataset, branches are separated for each language.  
 ("evaluator.py" is a validation evaluation script for checking and will not be used in production.)
 
 ## Program architecture
@@ -10,28 +11,29 @@ This repository is the baseline method, RAG through GPT-4o.
 │
 ├── src/
 │   ├── __init__.py
-│   ├── data_loader.py # Handles loading and saving data
-│   ├── data_preprocessor.py # Preprocesses and transforms data
-│   ├── rag_model.py # Implements the RAG model for analysis
-│   └── evaluator.py # Evaluates model performance (checking the sample output data)
+│   ├── data_loader.py (Handles loading and saving data)
+│   ├── data_preprocessor.py (Preprocesses and transforms data)
+│   ├── rag_model.py (Implements the RAG model for analysis)
+│   └── evaluator.py (Evaluates model performance) (checking the sample output data)
 │
 ├── scripts/
-│   └── run_analysis.py # Runs the entire analysis process
+│   └── run_analysis.py (Runs the entire analysis process)
 │
-├── data/
+├── data/ (Prepared in each language's branch)
 │   ├── raw/
-│   │   └── # Json data
+│   │   └── (Json data) (Prepared in each language's branch)
 │   ├── processed/
-│   │   ├── search_data.json # Processed data for search/retrieval
-│   │   └── test_data.json # Processed data for testing
+│   │   ├── search_data.json (Processed data for search/retrieval)
+│   │   └── test_data.json (Processed data for testing)
 │   └── output/
-│       └── .gitkeep # Placeholder for output directory
+│       ├── predictions.json (Generated data by the LLM)
+│       └── average_results.json (The evaluation results of the generated JSON data) (checking the sample output data)
 │
 ├── config/
 │   └── config.yml
 │
-├── main.py # Entry point for running the analysis
-├── .gitignore # Specifies files to ignore in version control
+├── main.py (Entry point for running the analysis)
+├── .gitignore (Specifies files to ignore in version control)
 └── README.md
 ```
 
@@ -55,28 +57,3 @@ This repository is the baseline method, RAG through GPT-4o.
 
 4. Run the "main.py".
 
-## Experimental results using sample data (200 samples) for each language
-
-Model : "gpt-4o"
-F1 scores : 'promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality'  
-ROUGE scores : 'promise_string', 'evidence_string'  
-
- ```plaintext
- Chinese
-```
-
- ```plaintext
- English
-```
-
- ```plaintext
- French
-```
-
- ```plaintext
- Japanese
-```
-
- ```plaintext
- Korean
-```

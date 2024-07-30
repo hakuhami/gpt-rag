@@ -13,9 +13,6 @@ ENV/
 # VSCode
 .vscode/
 
-# Data
-data/*.json
-
 # Config
 config/*
 !config/
