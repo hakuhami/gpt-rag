@@ -8,6 +8,7 @@ from src.data_preprocessor import split_data
 from src.rag_model import RAGModel
 from src.evaluator import evaluate_results, average_results, save_average_results_to_file
 import yaml
+import json
 
 def run_analysis(config_path: str) -> None:
     """
@@ -40,7 +41,8 @@ def run_analysis(config_path: str) -> None:
     predictions = []
     for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
-        predictions.append(result)
+        result_dict = json.loads(result)
+        predictions.append(result_dict)
     print("Analysis is completed.")
 
     # Save the prediction results
@@ -48,7 +50,9 @@ def run_analysis(config_path: str) -> None:
     print("Predictions are saved.")
 
     # Evaluate the prediction results
-    evaluate_scores = evaluate_results(test_data, predictions)
+    evaluate_scores = evaluate_results(config['test_data_path'], config['generated_data_path'])
+    print("Evaluation is completed.")
+    
     average_scores = average_results(evaluate_scores)
     save_average_results_to_file(average_scores, config['average_results_path'])
     print(f"F1 Scores and ROUGE Scores averages:{average_scores}")
