@@ -56,6 +56,8 @@ class RAGModel:
                 pass        
         return None
 
+# The parts of the prompt that explains the JSON structure are to be changed according to the language since the JSON structure differs for each language's dataset.
+
     def analyze_paragraph(self, paragraph: str) -> Dict[str, str]:
         """
         Generate annotation results from paragraph text using an LLM, referencing similar data.

@@ -3,6 +3,8 @@ from rouge import Rouge
 from sklearn.metrics import f1_score
 import json
 
+# Evaluation logics are to be changed according to the language since the JSON structure differs for each language's dataset.
+
 def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, Dict[str, float]]:
     """
     Calculate the ROUGE score for the prediction results.
