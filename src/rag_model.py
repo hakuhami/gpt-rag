@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import json
 
-# embedding modelには、多言語に対応したmultilingual-e5-large-instructを使用
+# For the embedding model, use the multilingual-e5-large-instruct which supports multiple languages
 
 class RAGModel:
     def __init__(self, api_key: str, model_name: str = "gpt-4o"):
