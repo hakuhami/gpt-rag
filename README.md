@@ -1,7 +1,11 @@
 # PromiseEval baseline method
 
-This repository is the baseline method, RAG through GPT-4o.  
-Since the JSON structure differs for each language's dataset, branches are separated for each language.  
+This repository is the baseline method, RAG through GPT-4o.    
+> [!NOTE]
+> Since the JSON structure differs for each language's dataset, branches are separated for each language.  
+> The main branch is tailored to the Japanese dataset labels, but the parts that change according to the language are only "rag_model.py" (prompt part), "converter.py" (part specifying labels to be removed), and "evaluator.py".  
+> Therefore, the structure of the program can be understood by looking at the main branch (all branches are almost the same).
+
 ("evaluator.py" is a validation evaluation script for checking and will not be used in production.)
 
 ## Program architecture
@@ -46,23 +50,25 @@ Since the JSON structure differs for each language's dataset, branches are separ
 
 3. Run converter.py to arrange the dataset labels for the experiment.
 
-4. Create a config.yml file in the "config" with the following parameters.
+4. Create a config.yml file in the "config" with the following parameters.　Copy and paste, then fill in the respective parameters.
 
    ```plaintext
-   openai_api_key: ""
-   model_name: ""
-   sample_raw_data_path: ""
-   search_data_path: ""
-   test_data_path: ""
-   generated_data_path: ""
-   average_results_path: ""
-   test_size:
+   openai_api_key: "your_openai_api_key"
+   model_name: "gpt-4o"
+   sample_raw_data_path: "data/raw/[filename]"
+   search_data_path: "data/processed/[filename]"
+   test_data_path: "data/processed/[filename]"
+   generated_data_path: "data/output/[filename]"
+   average_results_path: "data/output/[filename]"
+   test_size: 0.2
+   ```
 
 5. Run the "main.py".
 
-## Generated JSON format
+## JSON format
 
  ```plaintext
+(Japanese)
   {
       "data": str,
       "promise_status": str,
@@ -70,6 +76,17 @@ Since the JSON structure differs for each language's dataset, branches are separ
       "verification_timeline": str,
       "evidence_status": str,
       "evidence_string": str or null,
+      "evidence_quality": str
+  }:
+```
+
+ ```plaintext
+(Other language)
+  {
+      "data": str,
+      "promise_status": str,
+      "verification_timeline": str,
+      "evidence_status": str,
       "evidence_quality": str
   }:
 ```
