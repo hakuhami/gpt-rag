@@ -7,7 +7,7 @@ import numpy as np
 import json
 import re
 
-# For the embedding model, use the multilingual-e5-large-instruct which supports multiple languages
+# For the embedding model, use the 'multilingual-e5-large-instruct' which supports multiple languages
 
 class RAGModel:
     def __init__(self, api_key, model_name):
@@ -86,6 +86,7 @@ class RAGModel:
             "evidence_string": str or null,
             "evidence_quality": str
         }}:
+        Although you are specified to output in JSON format, perform the thought process in natural language and output the result in JSON format at the end.
         
         Annotation procedure:
         1. You will be given the content of a paragraph.
@@ -127,7 +128,9 @@ class RAGModel:
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
         - Understand and appropriately interpret industry-specific terms.
 
-        The following are examples of existing annotations for reference:
+        The following are annotation examples of texts similar to the text you want to analyze.
+        Refer to these examples, think about why these examples have such annotation results, and then output the results.
+        Examples for your reference are as follows:
         {context}
 
         Analyze the following text and provide results in the format described above:
