@@ -2,6 +2,8 @@ from typing import List, Dict
 from sklearn.metrics import f1_score
 import json
 
+# Evaluation logics are to be changed according to the language since the JSON structure differs for each language's dataset.
+
 def load_json_data(file_path: str) -> List[Dict]:
     """
     Load JSON data from a file.
