@@ -1,7 +1,8 @@
 import json
 
-# Original English JSON file.
-input_file = './data/raw/1st_200.json'
+# Original Japanese JSON file.
+input_file = './data/raw/PromiseEval_Sample_Trainset_Japanese.json'
+
 # New JSON file limited to only the labels needed for the experiment.
 output_file = './data/raw/Japanese_experiment_data.json'
 
