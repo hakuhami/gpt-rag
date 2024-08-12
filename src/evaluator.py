@@ -48,31 +48,6 @@ def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict
     
     return rouge_scores
 
-# def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, float]:
-#     """
-#     Calculate the F1 score for the prediction results (for categorical elements).
-
-#     Args:
-#         true_data (List[Dict]): The ground truth data
-#         pred_data (List[Dict]): The predicted data
-
-#     Returns:
-#         Dict[str, float]: The F1 score for each element
-#     """    
-#     f1_scores = {}
-    
-#     categorical_elements = ['promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality']
-    
-#     for element in categorical_elements:
-#         true_values = [item.get(element) for item in true_data if isinstance(item, dict) and item.get(element) is not None]
-#         pred_values = [item.get(element) for item in pred_data if isinstance(item, dict) and item.get(element) is not None]
-        
-#         if true_values and pred_values:
-#             f1 = f1_score(true_values, pred_values, average='weighted')
-#             f1_scores[element] = f1
-    
-#     return f1_scores
-
 def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, float]:
     """
     Calculate the F1 score for the prediction results (for categorical elements),
