@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data_loader import save_json_data, load_json_data
 from src.data_preprocessor import split_data
 from src.rag_model import RAGModel
-from src.evaluator import evaluate_results, average_results, save_average_results_to_file
+from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
 import json
 
@@ -57,6 +57,5 @@ def run_analysis(config_path: str) -> None:
     evaluate_scores = evaluate_results(config['test_data_path'], config['generated_data_path'])
     print("Evaluation is completed.")
     
-    average_scores = average_results(evaluate_scores)
-    save_average_results_to_file(average_scores, config['average_results_path'])
-    print(f"F1 Scores averages:{average_scores}")
+    save_average_results_to_file(evaluate_scores, config['average_results_path'])
+    print(f"F1 Scores:{evaluate_scores}")
