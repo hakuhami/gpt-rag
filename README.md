@@ -90,3 +90,81 @@ This repository is the baseline method, RAG through GPT-4o.
       "evidence_quality": str
   }:
 ```
+
+## Experimental results using sample data (200 samples) for each language
+
+Model : "gpt-4o"  
+F1 scores : 'promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality'  
+ROUGE scores : 'promise_string', 'evidence_string'  
+
+ ```plaintext
+ Chinese
+```
+
+ ```plaintext
+ English
+ {
+  "promise_status": {
+    "f": 0.85
+  },
+  "verification_timeline": {
+    "f": 0.5701219512195121
+  },
+  "evidence_status": {
+    "f": 0.7072463768115943
+  },
+  "evidence_quality": {
+    "f": 0.5886363636363637
+  }
+}
+```
+
+ ```plaintext
+ French
+ {
+  "promise_status": {
+    "f": 0.855625717566016
+  },
+  "verification_timeline": {
+    "f": 0.48910200523103753
+  },
+  "evidence_status": {
+    "f": 0.8879239040529362
+  },
+  "evidence_quality": {
+    "f": 0.42922824302134654
+  }
+}
+```
+
+ ```plaintext
+ Japanese
+ {
+  "promise_string": {
+    "r": 0.475,
+    "p": 0.5,
+    "f": 0.4799999975599999
+  },
+  "evidence_string": {
+    "r": 0.3,
+    "p": 0.3,
+    "f": 0.2999999985
+  },
+  "promise_status": {
+    "f": 0.7450980392156862
+  },
+  "verification_timeline": {
+    "f": 0.5242424242424242
+  },
+  "evidence_status": {
+    "f": 0.8946648426812586
+  },
+  "evidence_quality": {
+    "f": 0.5121212121212121
+  }
+}
+```
+
+ ```plaintext
+ Korean
+```
