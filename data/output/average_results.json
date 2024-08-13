@@ -1,1 +1,14 @@
-{}
+{
+  "promise_status": {
+    "f": 0.85
+  },
+  "verification_timeline": {
+    "f": 0.5701219512195121
+  },
+  "evidence_status": {
+    "f": 0.7072463768115943
+  },
+  "evidence_quality": {
+    "f": 0.5886363636363637
+  }
+}

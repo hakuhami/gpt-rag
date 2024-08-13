@@ -39,11 +39,8 @@ def run_analysis(config_path: str) -> None:
 
     # Analyze the test data
     predictions = []
-    #
-    # ↓For testing purposes, generate only the first 3 data. When actually using it, loop through the "test_data".
-    #
-    # for item in test_data:
-    for item in test_data[:2]:
+
+    for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
         result_dict = json.loads(result)
         predictions.append(result_dict)
