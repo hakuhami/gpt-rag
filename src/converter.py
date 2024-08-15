@@ -1,9 +1,9 @@
 import json
 
 # Original English JSON file.
-input_file = './data/raw/PromiseEval_Sample_Trainset_Japanese.json'
+input_file = './data/raw/PromiseEval_Sample_Trainset_Chinese.json'
 # New JSON file limited to only the labels needed for the experiment.
-output_file = './data/raw/Japanese_experiment_data.json'
+output_file = './data/raw/Chinese_experiment_data.json'
 
 with open(input_file, 'r', encoding='utf-8-sig') as file:
     data = json.load(file)
