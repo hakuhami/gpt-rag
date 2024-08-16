@@ -26,8 +26,8 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
 
-    # Retrieve the top 10 items from the target search data with the highest cosine similarity to the input paragraph.
-    def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
+    # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
+    def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
         """
         Retrieve the top documents related to the query
 

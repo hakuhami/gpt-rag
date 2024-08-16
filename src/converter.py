@@ -1,6 +1,7 @@
 import json
+from collections import OrderedDict
 
-# Original English JSON file.
+# Original Chinese JSON file.
 input_file = './data/raw/Chinese_experiment_data.json'
 # New JSON file limited to only the labels needed for the experiment.
 output_file = './data/raw/Chinese_experiment_data-Text-Extracted.json'
@@ -17,13 +18,27 @@ def remove_labels(record):
     return record
 
 # Filter out records where "data" key has the value "Text extraction failed."
-filtered_data = [
-    remove_labels(record) 
-    for record in data 
-    if record.get('data') != "Text extraction failed."
-]
+def filter_and_order_data(records):
+    filtered_records = []
+    for record in records:
+        if record.get('data') != "Text extraction failed.":
+            # Remove unnecessary labels
+            cleaned_record = remove_labels(record)
+            
+            # Create a new OrderedDict with 'data' key first
+            ordered_record = OrderedDict()
+            ordered_record['data'] = cleaned_record['data']
+            for key, value in cleaned_record.items():
+                if key != 'data':  # Skip the 'data' key since it's already added
+                    ordered_record[key] = value
+            
+            filtered_records.append(ordered_record)
+    
+    return filtered_records
+
+filtered_data = filter_and_order_data(data)
+
 print(f"Number of records: {len(filtered_data)}")
 
 with open(output_file, 'w', encoding='utf-8-sig') as file:
     json.dump(filtered_data, file, ensure_ascii=False, indent=2)
-    
