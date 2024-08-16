@@ -27,7 +27,7 @@ class RAGModel:
         self.doc_embeddings = self.embedder.encode(self.documents)
 
     # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
-    def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
+    def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
         """
         Retrieve the top documents related to the query
 
@@ -71,6 +71,8 @@ class RAGModel:
         relevant_docs = self.get_relevant_context(paragraph)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
+# The prompt is written for Chinese data.
+
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
         Follow the instructions below to provide careful and consistent annotations.
@@ -109,7 +111,7 @@ class RAGModel:
         - "within_2_years": ESG-related measures whose results can be verified within 2 years.
         - "between_2_and_5_years": ESG-related measures whose results can be verified in 2 to 5 years.
         - "more_than_5_years: ESG-related measures whose results can be verified in more than 5 years.
-        - "N/A": When no promise exists.
+        - "N/A": When no promise exists. (Or when the promise is not verifiable.)
 
         3. evidence_status - Pieces of evidence are elements deemed the most relevant to exemplify and prove the core promise is being kept, which includes but is not limited to simple examples, company measures, numbers, etc.:
         - "Yes": Evidence supporting the promise exists.
@@ -125,7 +127,7 @@ class RAGModel:
         Important notes:
         - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
         - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank. The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
         - Understand and appropriately interpret industry-specific terms.
 
         The following are annotation examples of texts similar to the text you want to analyze.
