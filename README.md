@@ -6,7 +6,7 @@ This repository is the baseline method, RAG through GPT-4o.
 > The main branch is tailored to the Japanese dataset labels, but the parts that change according to the language are only "rag_model.py" (prompt part), "converter.py" (part specifying labels to be removed), and "evaluator.py".  
 > Therefore, the structure of the program can be understood by looking at the main branch (all branches are almost the same).
 
-("evaluator.py" is a validation evaluation script for checking and will not be used in production.)
+("evaluator.py" is a validation evaluation script for checking and will not be used in production.)  
 
 ## Program architecture
 
@@ -93,6 +93,14 @@ This repository is the baseline method, RAG through GPT-4o.
 ```
 
 ## Experimental results using sample data (200 samples) for each language
+
+> [!NOTE]
+> To verify whether the model works, I conducted a simple evaluation for each language using the sample data currently uploaded to Google Drive.  
+> For the Chinese and Korean data, the input was "URL", and it was necessary to extract text from the PDFs at the given URLs, so the logic is slightly different from the data for the other three languages.  
+> (For the Chinese data, text extraction failed for 4 out of 9 companies, so the experiment was conducted using 109 data points from 5 companies.)  
+> The reference annotation examples included in the prompt were set to 10 for Chinese and 6 for the other languages.  
+>
+> -Last update of the experiment : 2024/08/17-
 
 Model : "gpt-4o"  
 F1 scores : 'promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality'  
@@ -200,6 +208,9 @@ ROUGE scores : 'promise_string', 'evidence_string'
 
  ```plaintext
  Korean
+
+・The experiment was conducted with only 30 data.
+
  {
   "promise_status": {
     "f": 0.3333333333333333
