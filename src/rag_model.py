@@ -26,8 +26,8 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
 
-    # Retrieve the top 10 items from the target search data with the highest cosine similarity to the input paragraph.
-    def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
+    # Retrieve the top 3 items from the target search data with the highest cosine similarity to the input paragraph.
+    def get_relevant_context(self, query: str, top_k: int = 3) -> List[Dict]:
         """
         Retrieve the top documents related to the query
 
@@ -71,7 +71,7 @@ class RAGModel:
         relevant_docs = self.get_relevant_context(paragraph)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
-# The prompt is written for Chinese data.
+# The prompt is written for Korean data.
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
@@ -82,10 +82,8 @@ class RAGModel:
         {{
             "data": str,
             "promise_status": str,
-            "promise_string": str or null,
             "verification_timeline": str,
             "evidence_status": str,
-            "evidence_string": str or null,
             "evidence_quality": str
         }}:
         Although you are specified to output in JSON format, perform the thought process in natural language and output the result in JSON format at the end.
@@ -94,11 +92,9 @@ class RAGModel:
         1. You will be given the content of a paragraph.
         2. Determine if a promise is included, and indicate "Yes" if included, "No" if not included. (promise_status)
         3. If a promise is included (if promise_status is "Yes"), also provide the following information:
-        - The specific part of the promise (extract verbatim from the text without changing a single word) (promise_string)
         - When the promise can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
         - Whether evidence is included ("Yes", "No", "N/A") (evidence_status)
         4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
-        - The part containing the evidence (extract directly from the text without changing a single word) (evidence_string)
         - The quality of the relationship between the promise and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
            
         Definitions and criteria for annotation labels:
@@ -127,7 +123,6 @@ class RAGModel:
         Important notes:
         - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
         - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank. The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
         - Understand and appropriately interpret industry-specific terms.
 
         The following are annotation examples of texts similar to the text you want to analyze.

@@ -1,9 +1,10 @@
 import json
+from collections import OrderedDict
 
-# Original English JSON file.
-input_file = './data/raw/Chinese_experiment_data.json'
+# Original Korean JSON file.
+input_file = './data/raw/Korean_experiment_data.json'
 # New JSON file limited to only the labels needed for the experiment.
-output_file = './data/raw/Chinese_experiment_data-Text-Extracted.json'
+output_file = './data/raw/Korean_experiment_data-Text-Extracted.json'
 
 with open(input_file, 'r', encoding='utf-8-sig') as file:
     data = json.load(file)
@@ -16,14 +17,38 @@ def remove_labels(record):
             del record[label]
     return record
 
+# Replace None with 'N/A'
+def replace_none_with_na(record):
+    for key, value in record.items():
+        if value is None:
+            record[key] = 'N/A'
+    return record
+
 # Filter out records where "data" key has the value "Text extraction failed."
-filtered_data = [
-    remove_labels(record) 
-    for record in data 
-    if record.get('data') != "Text extraction failed."
-]
+def filter_and_order_data(records):
+    filtered_records = []
+    for record in records:
+        if record.get('data') != "Text extraction failed.":
+            # Remove unnecessary labels
+            cleaned_record = remove_labels(record)
+            
+            # Replace None values with 'N/A'
+            cleaned_record = replace_none_with_na(cleaned_record)
+            
+            # Create a new OrderedDict with 'data' key first
+            ordered_record = OrderedDict()
+            ordered_record['data'] = cleaned_record['data']
+            for key, value in cleaned_record.items():
+                if key != 'data':  # Skip the 'data' key since it's already added
+                    ordered_record[key] = value
+            
+            filtered_records.append(ordered_record)
+    
+    return filtered_records
+
+filtered_data = filter_and_order_data(data)
+
 print(f"Number of records: {len(filtered_data)}")
 
 with open(output_file, 'w', encoding='utf-8-sig') as file:
     json.dump(filtered_data, file, ensure_ascii=False, indent=2)
-    
