@@ -16,6 +16,7 @@ This repository is the baseline method, RAG through GPT-4o.
 ├── src/
 │   ├── __init__.py
 │   ├── converter.py (Arrange the labels in the dataset for experimental purposes)
+│   ├── text_extractor.py (Extract the text from each page based on the URLs of the company reports provided in the given JSON file.)
 │   ├── data_loader.py (Handles loading and saving data)
 │   ├── data_preprocessor.py (Preprocesses and transforms data)
 │   ├── rag_model.py (Implements the RAG model for analysis)
@@ -48,9 +49,9 @@ This repository is the baseline method, RAG through GPT-4o.
 
 2. Place the JSON files to be analyzed in the "data/raw".
 
-3. Run converter.py to arrange the dataset labels for the experiment.
+3. Run text_extractor.py to extract the text from each page. And run converter.py to arrange the dataset labels for the experiment.
 
-4. Create a config.yml file in the "config" with the following parameters.　Copy and paste, then fill in the respective parameters.
+4. Create a config.yml file in the "config" with the following parameters. Copy and paste, then fill in the respective parameters.
 
    ```plaintext
    openai_api_key: "your_openai_api_key"
