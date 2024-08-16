@@ -26,7 +26,8 @@ This repository is the baseline method, RAG through GPT-4o.
 │
 ├── data/ (Prepared in each language's branch)
 │   ├── raw/
-│   │   └── (Json data) (Prepared in each language's branch)
+│   │   └── (Json data) (Prepared in each language's branch) (PromiseEval_Sample_Trainset_○○○.json)
+│   │   └── ○○○_experiment_data.json (The JSON data with labels that are not used in the experiment removed)
 │   ├── processed/
 │   │   ├── search_data.json (Processed data for search/retrieval)
 │   │   └── test_data.json (Processed data for testing)
@@ -68,7 +69,7 @@ This repository is the baseline method, RAG through GPT-4o.
 ## JSON format
 
  ```plaintext
-(Japanese)
+(Japanese and Chinese)
   {
       "data": str,
       "promise_status": str,
@@ -97,8 +98,40 @@ Model : "gpt-4o"
 F1 scores : 'promise_status', 'verification_timeline', 'evidence_status', 'evidence_quality'  
 ROUGE scores : 'promise_string', 'evidence_string'  
 
+"r" : Recall  
+"p" : Precision  
+"f" : F-score  
+
  ```plaintext
- Chinese
+ Chinese 
+
+ ・The text extraction from the URLs did not go well, so the experiment was conducted with only 109 out of the 200 data points.
+ ・Since there were many instances of `"promise_status": "No"`, increased the number of reference data to 10 in the prompt to ensure the quality of the reference data.
+
+ {
+  "promise_string": {
+    "r": 0.09090909090909091,
+    "p": 0.09090909090909091,
+    "f": 0.09090909045454545
+  },
+  "evidence_string": {
+    "r": 0.3181818181818182,
+    "p": 0.3181818181818182,
+    "f": 0.31818181659090905
+  },
+  "promise_status": {
+    "f": 0.2535885167464115
+  },
+  "verification_timeline": {
+    "f": 0.0
+  },
+  "evidence_status": {
+    "f": 0.5104895104895104
+  },
+  "evidence_quality": {
+    "f": 0.5333333333333333
+  }
+}
 ```
 
  ```plaintext
@@ -167,4 +200,18 @@ ROUGE scores : 'promise_string', 'evidence_string'
 
  ```plaintext
  Korean
+ {
+  "promise_status": {
+    "f": 0.3333333333333333
+  },
+  "verification_timeline": {
+    "f": 0.3333333333333333
+  },
+  "evidence_status": {
+    "f": 0.5333333333333333
+  },
+  "evidence_quality": {
+    "f": 0.6428571428571428
+  }
+}
 ```
