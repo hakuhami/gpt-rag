@@ -26,22 +26,22 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
 
-    # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
-    def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
-        """
-        Retrieve the top documents related to the query
+    # # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
+    # def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
+    #     """
+    #     Retrieve the top documents related to the query
 
-        Args:
-            query (str): Input query
-            top_k (int): Number of documents to retrieve
+    #     Args:
+    #         query (str): Input query
+    #         top_k (int): Number of documents to retrieve
 
-        Returns:
-            List[Dict]: List of relevant documents
-        """
-        query_embedding = self.embedder.encode([query])
-        similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-        top_indices = np.argsort(similarities)[-top_k:][::-1]
-        return [self.search_data[i] for i in top_indices]
+    #     Returns:
+    #         List[Dict]: List of relevant documents
+    #     """
+    #     query_embedding = self.embedder.encode([query])
+    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
+    #     top_indices = np.argsort(similarities)[-top_k:][::-1]
+    #     return [self.search_data[i] for i in top_indices]
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
@@ -68,8 +68,8 @@ class RAGModel:
         Returns:
             Dict[str, str]: Annotation results in JSON format
         """
-        relevant_docs = self.get_relevant_context(paragraph)
-        context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
+        # relevant_docs = self.get_relevant_context(paragraph)
+        # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
@@ -127,11 +127,6 @@ class RAGModel:
         - For indirect evidence, carefully judge its relevance.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
         - Understand and appropriately interpret industry-specific terms.
-
-        The following are annotation examples of texts similar to the text you want to analyze.
-        Refer to these examples, think about why these examples have such annotation results, and then output the results.
-        Examples for your reference are as follows:
-        {context}
 
         Analyze the following text and provide results in the format described above:
         {paragraph}
