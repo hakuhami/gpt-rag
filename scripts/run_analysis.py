@@ -39,11 +39,36 @@ def run_analysis(config_path: str) -> None:
 
     # Analyze the test data
     predictions = []
+    # skipped_items = []
     for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
+        print(f"{result},")
         result_dict = json.loads(result)
         predictions.append(result_dict)
-    print("Analysis is completed.")
+        
+    # for item in test_data:
+    #     result = rag_model.analyze_paragraph(item['data'])
+    #     if result is None:
+    #         print("")
+    #         print(f"Skipping item due to None result")
+    #         print("")
+    #         skipped_items.append(result)
+    #         continue
+        
+    #     try:
+    #         result_dict = json.loads(result)
+    #         print("")
+    #         print(f"{result_dict}")
+    #         print("")
+    #         predictions.append(result_dict)
+            
+    #     except json.JSONDecodeError:
+    #         print("")
+    #         print(f"JSONDecodeError occurred. Skipping item.")
+    #         print("")
+    #         skipped_items.append(result)
+    # print("Analysis is completed.")
+    # print(f"Skipped items: {skipped_items}")
 
     # Save the prediction results
     save_json_data(predictions, config['generated_data_path'])

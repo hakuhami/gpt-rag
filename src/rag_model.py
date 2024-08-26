@@ -26,9 +26,9 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
 
-    # Retrieve the top 10 items from the target search data with the highest cosine similarity to the input paragraph.
+    # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
     # Since there were many cases of `"promise_status": "No"` in the Chinese data, increased the number of reference data.
-    def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
+    def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
         """
         Retrieve the top documents related to the query
 
@@ -79,7 +79,8 @@ class RAGModel:
         Follow the instructions below to provide careful and consistent annotations.
         Output the results in the following JSON format.
         Ensure that your response is a valid JSON object.
-        Do not include any text before or after the JSON object.:
+        Do not include any text before or after the JSON object.
+        Regarding the "data", be sure to output the content of the given paragraph without altering it and in str format.:
         {{
             "data": str,
             "promise_status": str,
