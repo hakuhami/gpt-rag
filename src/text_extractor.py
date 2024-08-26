@@ -36,11 +36,11 @@ def process_json_data(json_file_path):
             print(f"× Text extraction failed. Error : {str(e)}")
             item['data'] = f"Text extraction failed."
 
-    output_file_path = './data/raw/Chinese_experiment_data.json'
+    output_file_path = './data/raw/Chinese_experiment_data_test20240819.json'
     with open(output_file_path, 'w', encoding='utf-8-sig') as file:
         json.dump(data, file, ensure_ascii=False, indent=2)
 
     print(f"The updated JSON data has been saved to {output_file_path}.")
 
-json_file_path = './data/raw/PromiseEval_Sample_Trainset_Chinese.json'
+json_file_path = './data/raw/Chinese_test.json'
 process_json_data(json_file_path)
