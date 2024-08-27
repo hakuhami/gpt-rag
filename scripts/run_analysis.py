@@ -24,23 +24,23 @@ def run_analysis(config_path: str) -> None:
     # Load the pre-prepared JSON data
     json_data = load_json_data(config['sample_raw_data_path'])
 
-    # Split the data into search and test sets
-    search_data, test_data = split_data(json_data, test_size=config['test_size'])
+    # # Split the data into search and test sets
+    # search_data, test_data = split_data(json_data, test_size=config['test_size'])
 
-    # Save the search and test data
-    save_json_data(search_data, config['search_data_path'])
-    save_json_data(test_data, config['test_data_path'])
-    print("Search and test data is saved.")
+    # # Save the search and test data
+    # save_json_data(search_data, config['search_data_path'])
+    # save_json_data(test_data, config['test_data_path'])
+    # print("Search and test data is saved.")
 
     # Prepare the RAG model with the search data
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
-    rag_model.prepare_documents(search_data)
+    rag_model.prepare_documents(config['search_data_path'])
     print("Documents are prepared.")
 
     # Analyze the test data
     predictions = []
     # skipped_items = []
-    for item in test_data:
+    for item in config['test_data_path']:
         result = rag_model.analyze_paragraph(item['data'])
         print(f"{result},")
         result_dict = json.loads(result)

@@ -2,9 +2,9 @@ import json
 from collections import OrderedDict
 
 # Original English JSON file.
-input_file = './data/raw/Chinese_experiment_data_test20240819.json'
+input_file = './data/processed/Chinese_test_extracted.json'
 # New JSON file limited to only the labels needed for the experiment.
-output_file = './data/raw/Chinese_experiment_data_test20240819-Text-Extracted.json'
+output_file = './data/processed/Chinese_test_converted.json'
 
 with open(input_file, 'r', encoding='utf-8-sig') as file:
     data = json.load(file)
