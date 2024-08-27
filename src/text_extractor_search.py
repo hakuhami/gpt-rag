@@ -25,6 +25,7 @@ def process_json_data(json_file_paths):
         with open(json_file_path, 'r', encoding='utf-8-sig') as file:
             data = json.load(file)
             combined_data.extend(data)
+    print(f"Combined data length: {len(combined_data)}")
 
     for item in combined_data:
         url = item['URL']
