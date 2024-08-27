@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head itemscope="itemscope" itemtype="http://schema.org/WebSite">
+    
+    
+    <meta http-equiv="content-language" content="zh-TW" />
+    <meta charset="UTF-8" />
+    <meta name="csrf-token" content="Z1af0ltMQs9tIIBz8ayJtS6RBGLlgPD4LexDmZ6V">
+    
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta name="format-detection" content="telephone=no">
+    
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    
+    <title>Alchip Technologies</title>
+    <meta property="og:title" content="" />
+    <meta itemprop="name" content="Alchip Technologies" />
+    <meta name="twitter:title" content="" />
+    
+    <meta name="description" content="" />
+    <meta itemprop="description" content="" />
+    <meta name="twitter:description" content="" />
+    <meta property="og:description" content="" />
+    
+    <meta name="twitter:site" content="webname" />
+    <meta name="twitter:creator" content="webname" />
+    <meta property="og:site_name" content="webname" />
+    
+    <meta name="keywords" content="">
+    
+                    <meta property="og:image" content="https://www.alchip.com/noimage.svg" />
+        <meta itemprop="image" content="https://www.alchip.com/noimage.svg" />
+        <meta name="twitter:card" content="https://www.alchip.com/noimage.svg" />
+        <meta name="twitter:image:src" content="https://www.alchip.com/noimage.svg" />
+        
+    
+    
+    <meta property="og:url" content="https://www.alchip.com/en" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:type" content="website" />
+
+    <link type="image/x-icon" href="/logo-1.png" rel="shortcut icon">
+    <link type="image/x-icon" href="/logo-1.png" rel="icon">
+    <link href="/logo-1.png" rel="apple-touch-icon">
+
+    
+
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-NTPB8L4VLY"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', 'G-NTPB8L4VLY');
+        </script>
+    
+    
+    
+
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&amp;family=Noto+Sans+TC:wght@300;400;500;700&amp;display=swap">
+
+    <link href="https://www.alchip.com/dist/assets/fonts/icomoon/style.css?v=082712" rel="stylesheet">
+    
+    <link href='/dist/css/fesd.min.css?v=082712' rel="stylesheet">
+    
+    <link href="https://www.alchip.com/dist/css/style.css?v=082712" rel="stylesheet">
+
+    
+        <link rel="stylesheet" href="/dist/css/pages/index.css?v=082712">
+
+    
+    
+</head>
+
+<body class="index">
+
+    
+    
+
+    <input class="base-url" type="hidden" value="https://www.alchip.com/en">
+    <input class="base-locatoin" type="hidden" value="en">
+    <input id="_token" name="_token" type="hidden" value="Z1af0ltMQs9tIIBz8ayJtS6RBGLlgPD4LexDmZ6V">
+
+    <h1 class="visuallyhidden"></h1>
+
+    <div class="main-wrapper">
+        <div class="mask"></div>
+            <header class="active" data-color="dark">
+    <nav class="navbar">
+        <div class="container">
+
+            <div class="logo">
+                <a href="https://www.alchip.com/en">
+                    <img alt="LOGO" src="/dist/assets/img/logo.svg">
+                </a>
+            </div>
+
+            <ul class="menu">
+
+
+                
+                                                            <li class="">
+                            <a href="javascript:;">ASIC Turnkey Solutions</a>
+                            
+                            <div class="wrap">
+                                <div class="mainBlk">
+                                    
+                                </div>
+                                
+
+                                <div class="sub-blk">
+                                    <div class="container">
+                                                                                    <div class="classBox"> <a
+                                                    href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services"><span>ASIC Design Services</span>
+                                                    <i class="icon-arrow"></i></a>
+                                                <ul>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/SoC_Frontend_Design">SoC Frontend Design</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Physical_Backend_Design">Physical Backend Design</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Low_Power_Solutions">Low Power Solutions</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/High_Performance_Solutions">High Performance Solutions</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Design_For_Testability">Design For Testability</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Advanced_Package_Solutions">Advanced Package Solutions</a>
+                                                        </li>
+                                                                                                    </ul>
+                                            </div>
+                                                                                    <div class="classBox"> <a
+                                                    href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services"><span>Production Services</span>
+                                                    <i class="icon-arrow"></i></a>
+                                                <ul>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Advanced_Packaging_Services">Advanced Packaging Services</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Advanced_Testing_Services">Advanced Testing Services</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Product_Engineering_Services">Product Engineering Services</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Quality_Assurance">Quality Assurance</a>
+                                                        </li>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Policy">Policy</a>
+                                                        </li>
+                                                                                                    </ul>
+                                            </div>
+                                                                                    <div class="classBox"> <a
+                                                    href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/IP_Services"><span>IP Services</span>
+                                                    <i class="icon-arrow"></i></a>
+                                                <ul>
+                                                                                                            <li> <a
+                                                                href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/IP_Services/IP_Integration_and_Verification">IP Integration and Verification</a>
+                                                        </li>
+                                                                                                    </ul>
+                                            </div>
+                                                                            </div>
+                                </div>
+
+                            </div>
+                        </li>
+                                    
+
+                
+                                                            <li class="">
+                            <a href="javascript:;">Business Models</a>
+                            
+                            <div class="wrap">
+                                <div class="mainBlk">
+                                    
+                                </div>
+                                
+                                <div class="sub-blk">
+                                    <div class="container">
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/Business_Models/model"><span>Flexible Business Models</span><i
+                                                        class="icon-arrow"></i></a>
+                                            </div>
+                                                                                                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                                    
+                
+                                    
+                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+                                                    <li class="">
+                                <a href="javascript:;">Investors</a>
+                                
+                                <div class="wrap">
+                                    <div class="mainBlk">
+                                        
+                                    </div>
+                                    
+                                    <div class="sub-blk">
+                                        <div class="container">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="classBox">
+                                                        <a
+                                                            href="https://www.alchip.com/en/Investors/financials"><span>Financials</span><i
+                                                                class="icon-arrow"></i></a>
+                                                        <ul>
+                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/financials/overview">Overview</a>
+                                                                    </li>
+                                                                                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/financials/revenue">Monthly Sales</a>
+                                                                    </li>
+                                                                                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/financials/report">Financial Statements</a>
+                                                                    </li>
+                                                                                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/financials/annual">Annual Reports</a>
+                                                                    </li>
+                                                                                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/financials/seminar">Investment Conferences</a>
+                                                                    </li>
+                                                                                                                                                                                    </ul>
+                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="classBox">
+                                                        <a
+                                                            href="https://www.alchip.com/en/Investors/corporate"><span>Corporate Governance</span><i
+                                                                class="icon-arrow"></i></a>
+                                                        <ul>
+                                                                                                                                                                                                                                                                                                                            <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/corporate/board">Board of Directors</a>
+                                                                    </li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/corporate/policy">Major Internal Policies</a>
+                                                                    </li>
+                                                                                                                                                                                    </ul>
+                                                    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <div class="classBox">
+                                                        <a
+                                                            href="https://www.alchip.com/en/Investors/shareholders"><span>Shareholders Service</span><i
+                                                                class="icon-arrow"></i></a>
+                                                        <ul>
+                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/shareholders/major">Major Shareholders</a>
+                                                                    </li>
+                                                                                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/shareholders/meeting">Shareholders&#039; Meeting</a>
+                                                                    </li>
+                                                                                                                                                                                                                                                                <li> <a
+                                                                            href="https://www.alchip.com/en/Investors/shareholders/contact">IR Contact</a>
+                                                                    </li>
+                                                                                                                                                                                    </ul>
+                                                    </div>
+                                                                                                                                    </div>
+                                    </div>
+                                </div>
+                            </li>
+                                                            
+
+                
+                                                            <li class=""><a
+                                href="javascript:;">Newsroom</a>
+                            
+                            <div class="wrap">
+                                <div class="mainBlk">
+                                    
+                                </div>
+                                
+                                <div class="sub-blk">
+                                    <div class="container">
+                                                                                    <div class="classBox">
+                                                <a
+                                                    href="https://www.alchip.com/en/Newsroom?cate=Press_Releases">
+                                                    <span>Press Releases</span>
+                                                    <i class="icon-arrow">
+                                                    </i>
+                                                </a>
+                                            </div>
+                                                                                    <div class="classBox">
+                                                <a
+                                                    href="https://www.alchip.com/en/Newsroom?cate=Events">
+                                                    <span>Events</span>
+                                                    <i class="icon-arrow">
+                                                    </i>
+                                                </a>
+                                            </div>
+                                                                            </div>
+                                </div>
+                            </div>
+                        </li>
+                                    
+                
+                                                            <li class=""><a
+                                href="javascript:;">Careers</a>
+                            
+                            <div class="wrap">
+                                <div class="mainBlk">
+                                    
+                                </div>
+                                
+                                <div class="sub-blk">
+                                    <div class="container">
+
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/Careers/life"><span>Life at Alchip</span><i
+                                                        class="icon-arrow"></i></a>
+                                            </div>
+                                        
+                                        
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/Careers/job"><span>Job Opportunities</span><i
+                                                        class="icon-arrow"></i></a>
+                                            </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                                    
+                
+                
+                                                            <li class=""><a
+                                href="javascript:;">About Alchip</a>
+                            
+                            <div class="wrap">
+                                <div class="mainBlk">
+                                    
+                                </div>
+                                
+                                <div class="sub-blk">
+                                    <div class="container">
+
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/About_Alchip/company">
+                                                    <span>Company</span>
+                                                    <i class="icon-arrow"></i>
+                                                </a>
+                                            </div>
+                                        
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/About_Alchip/executives">
+                                                    <span>Executives</span>
+                                                    <i class="icon-arrow"></i>
+                                                </a>
+                                            </div>
+                                        
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/About_Alchip/global">
+                                                    <span>Global Offices</span>
+                                                    <i class="icon-arrow"></i>
+                                                </a>
+                                            </div>
+                                        
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/About_Alchip/history">
+                                                    <span>History</span>
+                                                    <i class="icon-arrow"></i>
+                                                </a>
+                                            </div>
+                                        
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/About_Alchip/partners">
+                                                    <span>Partners</span><i
+                                                        class="icon-arrow"></i>
+                                                </a>
+                                            </div>
+                                        
+                                                                                    <div class="classBox">
+                                                <a href="https://www.alchip.com/en/About_Alchip/esg">
+                                                    <span>ESG</span><i
+                                                        class="icon-arrow">
+                                                    </i>
+                                                </a>
+                                            </div>
+                                                                            </div>
+                                </div>
+                            </div>
+                        </li>
+                                                </ul>
+
+
+            <div class="btnBox">
+                <div class="search" data-modal-target="search-modal"> <i class="icon-search"> </i></div>
+                <div class="language"><i class="icon-language"></i>
+                    <div class="wrap">
+                        <div class="flex-box">
+                            <div class="line"></div>
+                            <a class="active " href="https://www.alchip.com/en"><span>EN</span></a>
+                            <a class="" href="https://www.alchip.com/tw"><span>繁</span></a>
+                            <a class="" href="https://www.alchip.com/cn"><span>簡</span></a>
+                            <a class="" href="https://www.alchip.com/jp"><span>日</span></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hamburger"><i class="icon-hamburger"></i></div>
+            </div>
+
+
+        </div>
+    </nav>
+</header>
+<div class="hamburger-box">
+    <div class="modal-close"></div>
+    
+    <div class="back"><i class="icon-arrow"></i><span>BACK</span></div>
+    <div class="overview-box">
+        <div class="scrollBox">
+            <div class="content">
+                <ul class="menu">
+                                                                        <li data-menuTarget-option="0"><a
+                                    href="javascript:;"><span>ASIC Turnkey Solutions</span><i
+                                        class="icon-arrow"></i></a></li>
+                                                                                                                    <li data-menuTarget-option="1"><a
+                                    href="javascript:;"><span>Business Models</span><i
+                                        class="icon-arrow"></i></a></li>
+                                            
+                                            
+                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+                                                            <li data-menuTarget-option="2"><a
+                                        href="javascript:;"><span>Investors</span><i
+                                            class="icon-arrow"></i></a></li>
+                                                                        
+
+                                                                        <li data-menuTarget-option="3"><a
+                                    href="javascript:;"><span>Newsroom</span><i
+                                        class="icon-arrow"></i></a></li>
+                                                                                                                    <li data-menuTarget-option="4"><a
+                                    href="javascript:;"><span>Careers</span><i
+                                        class="icon-arrow"></i></a></li>
+                                                                                                                    <li data-menuTarget-option="5"><a
+                                    href="javascript:;"><span>About Alchip</span><i
+                                        class="icon-arrow"></i></a></li>
+                                                            </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-box">
+
+        
+        <div class="detail">
+            <div class="scrollBox" data-menuTarget-option="0">
+                                    <div class="wrap">
+                        <h2 class="btnName">ASIC Turnkey Solutions</h2>
+                        
+                        <div class="sub-blk">
+                            <div class="container">
+                                
+                                                                    <div class="classBox"> <a
+                                            href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services"><span>ASIC Design Services</span>
+                                            <i class="icon-arrow"></i></a>
+                                        <ul>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/SoC_Frontend_Design">SoC Frontend Design</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Physical_Backend_Design">Physical Backend Design</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Low_Power_Solutions">Low Power Solutions</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/High_Performance_Solutions">High Performance Solutions</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Design_For_Testability">Design For Testability</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/ASIC_Design_Services/Advanced_Package_Solutions">Advanced Package Solutions</a>
+                                                </li>
+                                                                                    </ul>
+                                    </div>
+                                                                    <div class="classBox"> <a
+                                            href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services"><span>Production Services</span>
+                                            <i class="icon-arrow"></i></a>
+                                        <ul>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Advanced_Packaging_Services">Advanced Packaging Services</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Advanced_Testing_Services">Advanced Testing Services</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Product_Engineering_Services">Product Engineering Services</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Quality_Assurance">Quality Assurance</a>
+                                                </li>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/Production_Services/Policy">Policy</a>
+                                                </li>
+                                                                                    </ul>
+                                    </div>
+                                                                    <div class="classBox"> <a
+                                            href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/IP_Services"><span>IP Services</span>
+                                            <i class="icon-arrow"></i></a>
+                                        <ul>
+                                                                                            <li> <a
+                                                        href="https://www.alchip.com/en/ASIC_Turnkey_Solutions/IP_Services/IP_Integration_and_Verification">IP Integration and Verification</a>
+                                                </li>
+                                                                                    </ul>
+                                    </div>
+                                                            </div>
+                        </div>
+                    </div>
+                            </div>
+        </div>
+
+        
+        <div class="detail">
+            <div class="scrollBox" data-menuTarget-option="1">
+                <div class="wrap">
+                    <h2 class="btnName">Business Models</h2>
+                    
+                    <div class="sub-blk">
+                        <div class="container">
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/Business_Models/model"><span>Flexible Business Models</span><i
+                                            class="icon-arrow"></i></a>
+                                </div>
+                                                                                </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="scrollBox" data-menuTarget-option="2">
+                <div class="wrap">
+                    <h2 class="btnName">Investors</h2>
+                    
+                    <div class="sub-blk">
+                        <div class="container">
+                            
+                                                                                                                                <div class="classBox">
+                                        <a href="https://www.alchip.com/en/Investors/financials"><span>Financials</span><i
+                                                class="icon-arrow"></i></a>
+                                        <ul>
+                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/financials/overview">Overview</a>
+                                                    </li>
+                                                                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/financials/revenue">Monthly Sales</a>
+                                                    </li>
+                                                                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/financials/report">Financial Statements</a>
+                                                    </li>
+                                                                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/financials/annual">Annual Reports</a>
+                                                    </li>
+                                                                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/financials/seminar">Investment Conferences</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                    </div>
+                                                                                                                                                                <div class="classBox">
+                                        <a href="https://www.alchip.com/en/Investors/corporate"><span>Corporate Governance</span><i
+                                                class="icon-arrow"></i></a>
+                                        <ul>
+                                                                                                                                                                                                                                            <li> <a
+                                                            href="https://www.alchip.com/en/Investors/corporate/board">Board of Directors</a>
+                                                    </li>
+                                                                                                                                                                                                                                                                                                                                                                                        <li> <a
+                                                            href="https://www.alchip.com/en/Investors/corporate/policy">Major Internal Policies</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                    </div>
+                                                                                                                                                                <div class="classBox">
+                                        <a href="https://www.alchip.com/en/Investors/shareholders"><span>Shareholders Service</span><i
+                                                class="icon-arrow"></i></a>
+                                        <ul>
+                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/shareholders/major">Major Shareholders</a>
+                                                    </li>
+                                                                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/shareholders/meeting">Shareholders&#039; Meeting</a>
+                                                    </li>
+                                                                                                                                                                                                <li> <a
+                                                            href="https://www.alchip.com/en/Investors/shareholders/contact">IR Contact</a>
+                                                    </li>
+                                                                                                                                    </ul>
+                                    </div>
+                                                                                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="scrollBox" data-menuTarget-option="3">
+                <div class="wrap">
+                    <h2 class="btnName">Newsroom</h2>
+                    
+                    <div class="sub-blk">
+                        <div class="container">
+                            
+                                                                                                <div class="classBox">
+                                        <a
+                                            href="https://www.alchip.com/en/Newsroom?cate=Press_Releases">
+                                            <span>Press Releases</span>
+                                            <i class="icon-arrow">
+                                            </i>
+                                        </a>
+                                    </div>
+                                                                                                                                <div class="classBox">
+                                        <a
+                                            href="https://www.alchip.com/en/Newsroom?cate=Events">
+                                            <span>Events</span>
+                                            <i class="icon-arrow">
+                                            </i>
+                                        </a>
+                                    </div>
+                                                                                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="scrollBox" data-menuTarget-option="4">
+                <div class="wrap">
+                    <h2 class="btnName">Careers</h2>
+                    
+                    <div class="sub-blk">
+                        <div class="container">
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/Careers/life"><span>Life at Alchip</span><i
+                                            class="icon-arrow"></i></a>
+                                </div>
+                            
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/Careers/job"><span>Job Opportunities</span><i
+                                            class="icon-arrow"></i></a>
+                                </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="scrollBox" data-menuTarget-option="5">
+                <div class="wrap">
+                    <h2 class="btnName">About Alchip</h2>
+                    
+                    <div class="sub-blk">
+                        <div class="container">
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/About_Alchip/company">
+                                        <span>Company</span>
+                                        <i class="icon-arrow"></i>
+                                    </a>
+                                </div>
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/About_Alchip/executives">
+                                        <span>Executives</span>
+                                        <i class="icon-arrow"></i>
+                                    </a>
+                                </div>
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/About_Alchip/global">
+                                        <span>Global Offices</span>
+                                        <i class="icon-arrow"></i>
+                                    </a>
+                                </div>
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/About_Alchip/history">
+                                        <span>History</span>
+                                        <i class="icon-arrow"></i>
+                                    </a>
+                                </div>
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/About_Alchip/partners">
+                                        <span>Partners</span><i class="icon-arrow"></i>
+                                    </a>
+                                </div>
+                            
+                                                            <div class="classBox">
+                                    <a href="https://www.alchip.com/en/About_Alchip/esg">
+                                        <span>ESG</span><i class="icon-arrow">
+                                        </i>
+                                    </a>
+                                </div>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+    <main>
+        <div class="banner">
+            
+            <div class="swiper bannerSwiper">
+                <div class="swiper-wrapper">
+                    
+                    
+
+                                            <div class="swiper-slide titleBox" data-color="light"
+                            data-align="left">
+                            <div class="content">
+                                <div class="picBox">
+                                    
+                                    <picture>
+                                        <source data-srcset="/upload/2023_10_25/1_20231025173006hk0vq6LU63.jpg" media="(min-width: 1025px)">
+                                        <source data-srcset="/upload/2023_10_25/1_20231025173002kfz6bwYAJ6.jpg" media="(min-width: 651px)">
+                                        <img class="swiper-lazy" data-src="/upload/2023_10_25/1_202310251730005hl1x1vOV10.jpg"
+                                            alt="">
+                                    </picture>
+                                </div>
+                                <div class="txtBox">
+                                    <h2></h2>
+                                    
+                                                                                                        </div>
+                            </div>
+                        </div>
+                                            <div class="swiper-slide titleBox" data-color="light"
+                            data-align="right">
+                            <div class="content">
+                                <div class="picBox">
+                                    
+                                    <picture>
+                                        <source data-srcset="/upload/2023_09_11/3_20230911171309iohkl3amt16.jpg" media="(min-width: 1025px)">
+                                        <source data-srcset="/upload/2023_09_11/3_20230911171309iohkl3amt16.jpg" media="(min-width: 651px)">
+                                        <img class="swiper-lazy" data-src="/upload/2023_09_11/3_20230911171309iohkl3amt16.jpg"
+                                            alt="">
+                                    </picture>
+                                </div>
+                                <div class="txtBox">
+                                    <h2>TSMC 2024 TECHNOLOGY SYMPOSIUM NORTH AMERICA</h2>
+                                    
+                                                                            <div class="dep">
+                                            <p>Visit Alchip at 816<br />
+Santa Clara<br />
+April 24<br />
+<br />
+</p>
+                                        </div>
+                                                                                                                <div class="btn">
+                                                                                            <a href="/en/Newsroom?cate=Events"
+                                                    target="_blank">EXPLORE</a>
+                                                                                    </div>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <div class="swiper-slide titleBox" data-color="dark"
+                            data-align="left">
+                            <div class="content">
+                                <div class="picBox">
+                                    
+                                    <picture>
+                                        <source data-srcset="/upload/2024_03_27/3_20240327092640t56fvjBYX0.jpg" media="(min-width: 1025px)">
+                                        <source data-srcset="/upload/2024_03_27/3_20240327092640t56fvjBYX0.jpg" media="(min-width: 651px)">
+                                        <img class="swiper-lazy" data-src="/upload/2024_03_27/3_20240327092640t56fvjBYX0.jpg"
+                                            alt="">
+                                    </picture>
+                                </div>
+                                <div class="txtBox">
+                                    <h2>Alchip Technologies Sets 2023 Financial Records</h2>
+                                    
+                                                                            <div class="dep">
+                                            <p>Alchip Technologies 2023 financial performance set records for the sixth straight year. Results include new highs for revenue, operating income, net income, and earnings per share.</p>
+                                        </div>
+                                                                                                                <div class="btn">
+                                                                                            <a href="/en/Newsroom/Alchip_2023_financial_records"
+                                                    target="_blank">EXPLORE</a>
+                                                                                    </div>
+                                                                    </div>
+                            </div>
+                        </div>
+                                            <div class="swiper-slide titleBox" data-color="light"
+                            data-align="left">
+                            <div class="content">
+                                <div class="picBox">
+                                    
+                                    <picture>
+                                        <source data-srcset="/upload/2023_10_25/1_20231025173004qzwnt4QiF4.jpg" media="(min-width: 1025px)">
+                                        <source data-srcset="/upload/2023_10_25/1_20231025173003jewax0x987.jpg" media="(min-width: 651px)">
+                                        <img class="swiper-lazy" data-src="/upload/2023_10_25/1_202310251730015pmh8ubIG11.jpg"
+                                            alt="">
+                                    </picture>
+                                </div>
+                                <div class="txtBox">
+                                    <h2></h2>
+                                    
+                                                                                                        </div>
+                            </div>
+                        </div>
+                                    </div>
+                <div class="swiper-pagination"></div>
+                <div class="control">
+                    <div class="button-prev icon-arrow-left"></div>
+                    <div class="button-next icon-arrow-right"></div>
+                </div>
+                
+                <a class="scroll d-none" href="javascript:;" data-anchor-target="[data-detectTarget=&quot;section1&quot;]">
+                    <i class="icon-goTop"> </i></a>
+            </div>
+        </div>
+        <section class="section1"></section>
+    </main>
+
+    <footer>
+  <div class="fixedBox">
+    <div class="goTop"><a href="javascript:;" data-anchor-target=""> <i class="icon-goTop"> </i></a></div>
+    <div class="socialBox">
+      <div class="socialBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M0 2H5V7H0V2Z" fill="#535353"></path>
+          <path d="M0 9H5V14H0V9Z" fill="#535353"></path>
+          <path d="M7 9H12V14H7V9Z" fill="#535353"></path>
+          <path d="M9 2.5C9 1.11929 10.1193 0 11.5 0C12.8807 0 14 1.11929 14 2.5C14 3.88071 12.8807 5 11.5 5C10.1193 5 9 3.88071 9 2.5Z" fill="#6DB0DC"></path>
+        </svg>
+      </div>
+      <div class="innerBox">
+        <a href="https://www.linkedin.com/company/alchip-technologies" target="_blank">
+          <i class="icon-linkedin"> </i>
+        </a>
+                <a href="https://www.alchip.com/en/Contact">
+          <i class="icon-mail">
+            </i>
+          </a>
+        </div>
+        <!-- QRcode燈箱-->
+        <div class="scanWrap"> 
+          <p></p>
+          <img src="" alt="">
+        </div>
+        
+    </div>
+  </div>
+  <div class="container"> 
+    <div class="flex-box contact"> 
+      <div class="info">
+        
+        <p>9F, No. 12, Wenhu St., Neihu Dist., Taipei City 114061, Taiwan</p>
+        
+        <p>T+886-2-2799-2318</p>
+        
+        <p>F+886-2-2799-7389</p>
+        
+        <p></p>
+      </div>
+      <div class="privacy"> 
+        <div class="social">
+
+          
+                                                                                          </div>
+                    
+        <div class="copyright">
+          
+          <p>© Copyright - Alchip Technologies, Limited</p>
+          <a href="javascript:;" data-modal-target="privacy-modal">
+            <span>Privacy Policy</span>
+          </a>
+          </a>
+          <a href="https://www.alchip.com/en/Contact">
+            <span>Contact Us </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<modern-modal data-modal-id="cookie-modal" data-modal-animate="fade-up">
+  <div class="content">
+    <div class="title">Terms and Conditions of Cookie</div>
+    <div class="close-content openBtn">
+      <p>Full Content</p>
+      <div class="icon"><i class="icon-dropdown"></i></div>
+    </div>
+    <div class="scroll-box txtContent">
+      <div class="text-content">
+        
+        <div class="base-text">
+          <p>It is necessary for Us to collect, use, retain, transfer, and/or disclose Your Personal data</p>
+          <ul class="dot">
+            <li>
+              <p>To perform Our obligations in accordance with any contract that we may have with You;</p>
+            </li>
+            <li>
+              <p>It is Our legal obligation to use Your Personal Data to comply with any legal obligations that may be imposed upon Us;</p>
+            </li>
+            <li>
+              <p>It is Our  legitimate interest or a third party’s legitimate interest to use Your Personal Data for direct marketing purposes, to prevent fraud or to ensure the network, and information security of Your IT systems, and to provide or improve the Service; and/or</p>
+            </li>
+            <li>
+              <p>With Your freely given consent, to the processing of Your personal data for one or more specific purposes.</p>
+            </li>
+          </ul>
+          <p>Please read carefully and fully understand all the terms before accessing Our website. You have rights to freely decide whether or not to agree on the terms. By clicking the “Agree” button, You agree to all of these terms. You may also visit Contact Us to request an access to, ask Us to stop processing, ask Us to provide a copy of, and to correct, update, or delete any Personal Data that You have provided to Us.</p>
+          <p>For more information, please visit Our Privacy Policy.</p>
+        </div>
+        <div class="item">
+          
+          <div class="item-title">
+            <p>Types of Data We Collected</p>
+          </div>
+          
+          <div class="base-text">
+            <p class="base-text fw-6">Personal Data</p>
+            <p>While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include:</p>
+            <ul>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck">
+                    <!-- 預設勾選-->
+                    <input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span>First name and last name                  </p>
+                </label>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck">
+                    <!-- 預設勾選-->
+                    <input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span>Email address                </label>
+                </p>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck">
+                    <!-- 預設勾選-->
+                    <input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span>Phone number                </label>
+                </p>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck">
+                    <!-- 預設勾選-->
+                    <input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span>Address, State, Province, ZIP/Postal Code, City                </label>
+                </p>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck">
+                    <!-- 預設勾選-->
+                    <input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span>Usage Data: information such as Your Device's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of Our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data. When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet browser You use, unique device identifiers and other diagnostic data.<br><br>We may also collect information that Your browser sends whenever You visit Our Service or when You access the Service by or through a mobile device.                </label>
+                </p>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="base-text">
+            <p class="base-text fw-6">Tracking Technologies and Cookies</p>
+            <p>We use Cookies and similar tracking technologies to track the activities on Our Service and store certain information for direct marketing purposes, to prevent fraud or to ensure the network and information security of Your IT systems, to provide or improve the Service, to perform Our obligations in accordance with any contract that we may have with You, or to comply with any legal obligations that may be imposed upon Us. Tracking technologies used are beacons, tags, and scripts to collect and track information and to improve and analyze Our Service. The technologies We use may include:</p>
+          </div>
+          
+          <div class="base-text">
+            <p class="base-text fw-6">Cookies or Browser Cookies</p>
+            <p>A cookie is a small file placed on Your Device. You can instruct Your browser to refuse all Cookies or to indicate when a Cookie is being sent. However, if You do not accept Cookies, You may not be able to use some parts of Our Service. Unless You have adjusted Your browser setting so that it will refuse Cookies, Our Service may use Cookies.</p>
+          </div>
+          
+          <div class="base-text">
+            <p class="base-text fw-6">Web Beacons</p>
+            <p>Certain sections of Our Service and Our emails may contain small electronic files known as web beacons (also referred to as clear gifs, pixel tags, and single-pixel gifs) that permit the Company, for example, to count users who have visited those pages or opened an email and for other related website statistics (for example, recording the popularity of a certain section and verifying system and server integrity).</p>
+          </div>
+          
+          <div class="base-text">
+            <p class="base-text fw-6">Types of Cookies</p>
+            <ul class="dot">
+              <li>
+                <p><span class="blackTet">Essential cookies. </span>These cookies are essential for You to browse the website and use its features, such as accessing secure areas of the site. Cookies that allow web shops to hold Your items in Your cart while You are shopping online are an example of strictly necessary cookies. These cookies will generally be first-party session cookies. While it is not required to obtain consent for these cookies, what they do and why they are necessary should be explained to the user.                </p>
+              </li>
+              <label class="agreeLabel">
+                <div class="inputCheck">
+                  <!-- 預設勾選-->
+                  <input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                </div>
+                <p><span class="blueTet">Agree                  </span>with Our use of the<span class="blackTet">Performance cookies.                  </span>These cookies collect information about how You use a website, like which pages You visited and which links You clicked on. None of this information can be used to identify You. It is all aggregated and, therefore, anonymized. Their sole purpose is to improve website functions. This includes cookies from third-party analytics services, as long as the cookies are for the exclusive use of the owner of the website visited.</p>
+              </label>
+            </ul>
+            <p>Your options for the Tracking Technologies and Cookies</p>
+            <ul class="dot">
+              <li>
+                <p>There are online tools such as Digital Advertising Alliance's Browser Check site which allow You to choose how cookies are used throughout the web based on the device and browser You are using.</p>
+              </li>
+              <li>
+                <p>Your browser probably gives You cookie choices. For example, most browsers let You block “third-party cookies,” which are cookies from sites other than the one You’re visiting. Those options vary from browser to browser, so check Your browser settings for more info.</p>
+              </li>
+              <li>
+                <p>Some browsers also have a privacy setting called “Do Not Track,” which We support. This setting is another way for You to decide whether We use info from Our partners and other services to customize Our services for You.</p>
+              </li>
+              <li>
+                <p>Finally, Your mobile device has settings that allow You to control how ad partners can use information about Your use of mobile applications to show ads to You. On Android devices, this setting is called “Opt out of Ads Personalization.” On Apple devices You can adjust Your choice by selecting Privacy and then Tracking.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="item">
+          
+          <div class="item-title">
+            <p>Use of Your Personal Data</p>
+          </div>
+          
+          <div class="base-text">
+            <p>Subject to the lawful grounds of (1) performing Our obligations in accordance with any contract that we may have with You, (2) complying with any legal obligations that may be imposed upon Us, (3) pursuing the legitimate interest or a third party’s legitimate interest to use the information We collect for direct marketing purposes, e.g., delivering ads that are relevant, interesting and personal to You in order to generate revenue and to customize Your experience based on Your offsite behavior, to prevent fraud or to ensure the network and information security of Your IT systems, and to provide or improve the Service, or (4) Your consent,</p>
+            <p>The Company may use Personal Data for the following purposes:</p>
+            <ul class="dotAgree">
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck"><input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span><span
+                      class="blackTet">To provide and maintain Our Service, </span>including to monitor the usage of Our Service.                  </p>
+                </label>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck"><input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span><span
+                      class="blackTet">For the performance of a contract: </span>the development, compliance and undertaking of the purchase contract for the products, items or services You have purchased or of any other contract with Us through the Service.                  </p>
+                </label>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck"><input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span><span
+                      class="blackTet">To contact You </span>by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application's push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.                  </p>
+                </label>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck"><input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span><span
+                      class="blackTet">To provide You </span>with news, special offers and general information about other goods, services and events which We offer that are similar to those that You have already purchased or enquired about unless You have opted not to receive such information.                  </p>
+                </label>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck"><input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span><span
+                      class="blackTet">To manage Your requests </span>to attend and manage Your requests to Us.                  </p>
+                </label>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck"><input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span><span
+                      class="blackTet">For business transfers: </span>We may use Your information to evaluate or conduct a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of Our assets, whether as a going concern or as part of bankruptcy, liquidation, or similar proceeding, in which Personal Data held by Us about Our Service users is among the assets transferred.                  </p>
+                </label>
+              </li>
+              <li>
+                <label class="agreeLabel">
+                  <div class="inputCheck"><input type="checkBox" name="agree" checked><span class="fakeCheckBox"></span>
+                  </div>
+                  <p><span class="blueTet">Agree </span><span
+                      class="blackTet">For other purposes: </span>We may use Your information for other purposes, such as data analysis, identifying usage trends, determining the effectiveness of Our promotional campaigns and to evaluate and improve Our Service, products, services, marketing and your experience.                  </p>
+                </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="agree">
+      <label class="agreeLabel">
+        
+        <input type="checkBox" name="agree"><span class="fakeCheckBox"></span>
+        <p class="base-text"> <span class="blueTet">Agree          </span>with Our use of the<span class="blackTet"> Performance cookies.          </span>These cookies collect information about how You use a website, like which pages You visited and which links You clicked on. None of this information can be used to identify You. It is all aggregated and, therefore, anonymized. Their sole purpose is to improve website functions. This includes cookies from third-party analytics services, as long as the cookies are for the exclusive use of the owner of the website visited.</p>
+      </label>
+    </div>
+    <div class="btn-group">
+      <div class="btn gray"><a href="javascript:;">CLOSE</a></div>
+      <div class="btn agreeBtn notAgree"><a href="javascript:;" data-modal-close>AGREE</a></div>
+      
+      <div class="error-tip"> <i class="icon-notice"></i><span>Please check the consent field.</span></div>
+    </div>
+  </div>
+</modern-modal>
+<modern-modal data-modal-id="privacy-modal" data-modal-animate="fade-up">
+  <div class="modal-close" data-modal-close></div>
+  <div class="content">
+    <div class="title">Privacy Policy</div>
+    <div class="text-content">
+      
+      <div class="base-text">
+        <p>Last updated: August 01, 2023</p>
+        <p>It is necessary for Us to collect, use, retain, transfer, and/or disclose Your Personal data</p>
+        <ul class="dot">
+          <li>
+            <p>To perform Our obligations in accordance with any contract that we may have with You;</p>
+          </li>
+          <li>
+            <p>It is Our legal obligation to use Your Personal Data to comply with any legal obligations that may be imposed upon Us;</p>
+          </li>
+          <li>
+            <p>It is Our legitimate interest or a third party’s legitimate interest to use Your Personal Data for direct marketing purposes, to prevent fraud or to ensure the network, and information security of Your IT systems, and to provide or improve the Service; and/or</p>
+          </li>
+          <li>
+            <p>With Your freely given consent, to the processing of Your personal data for one or more specific purposes. </p>
+          </li>
+        </ul>
+        <p>Please read carefully and fully understand all the terms. You may also visit Contact Us to request an access to, ask Us to stop processing, ask Us to provide a copy of, and to correct, update, or delete any Personal Data that You have provided to Us.</p>
+      </div>
+      <div class="item">
+        <div class="title openBtn">
+          <p>Interpretation and Definitions</p>
+          <div class="icon"><i class="icon-dropdown"></i></div>
+        </div>
+        <div class="txtContent">
+          
+          <div class="item-title">
+            <p>Interpretation</p>
+          </div>
+          <div class="base-text">
+            <p>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Definitions</p>
+          </div>
+          <div class="base-text">
+            <p>For the purposes of this Privacy Policy:</p>
+            <ul class="dot">
+              <li>
+                <p><span class="blackTet">Company </span>(referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Alchip Technologies, Limited, and its affiliates.                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Cookies </span>are small files that are placed on Your computer, mobile device or any other device by a website, containing the details of Your browsing history on that website among its many uses.                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Device </span>means any device that can access the Service such as a computer, a cellphone or a digital tablet.                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Personal Data </span>is any information that relates to an identified or identifiable individual.                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Service </span>refers to the Website.                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Service Provider </span>means any natural or legal person who processes the data on behalf of the Company. It refers to third-party companies or individuals employed by the Company to facilitate the Service, to provide the Service on behalf of the Company, to perform services related to the Service or to assist the Company in analyzing how the Service is used.                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Third-party Social Media Service </span>refers to any website or any social network website through which a User can log in or create an account to use the Service.                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Usage Data </span>refers to data collected automatically, either generated by the use of the Service or from the Service infrastructure itself (for example, the duration of a page visit).                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">Website </span>refers to Alchip Technologies, accessible from https://www.alchip.com                </p>
+              </li>
+              <li>
+                <p><span class="blackTet">You </span>means the individual accessing or using the Service, or the company, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.                </p>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="item-title">
+            <p>Types of Data We Collected</p>
+          </div>
+          <div class="base-text">
+            <p class="base-text fw-6">Personal Data</p>
+            <p>While using Our Service, We may ask You to provide Us with certain personally identifiable information that can be used to contact or identify You. Personally identifiable information may include:</p>
+            <ul class="dot">
+              <li>
+                <p>First name and last name</p>
+              </li>
+              <li>
+                <p>Email address</p>
+              </li>
+              <li>
+                <p>Phone number</p>
+              </li>
+              <li>
+                <p>Address, State, Province, ZIP/Postal Code, City</p>
+              </li>
+              <li>
+                <p>Usage Data: information such as Your Device's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of Our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data. When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet browser You use, unique device identifiers and other diagnostic data.</p>
+              </li>
+            </ul>
+            <p>We may also collect information that Your browser sends whenever You visit Our Service or when You access the Service by or through a mobile device.</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Tracking Technologies and Cookies</p>
+          </div>
+          <div class="base-text">
+            <p>We use Cookies and similar tracking technologies to track the activity on Our Service and store certain information. Tracking technologies used are beacons, tags, and scripts to collect and track information and to improve and analyze Our Service. The technologies We use may include:</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Cookies or Browser Cookies</p>
+          </div>
+          <div class="base-text">
+            <p>A cookie is a small file placed on Your Device. You can instruct Your browser to refuse all Cookies or to indicate when a Cookie is being sent. However, if You do not accept Cookies, You may not be able to use some parts of Our Service. Unless You have adjusted Your browser setting so that it will refuse Cookies, Our Service may use Cookies.</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Web Beacons</p>
+          </div>
+          <div class="base-text">
+            <p>Certain sections of Our Service and Our emails may contain small electronic files known as web beacons (also referred to as clear gifs, pixel tags, and single-pixel gifs) that permit the Company, for example, to count users who have visited those pages or opened an email and for other related website statistics (for example, recording the popularity of a certain section and verifying system and server integrity).</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Types of Cookies</p>
+          </div>
+          <div class="base-text">
+            <ul class="dot">
+              <li>
+                <p><span class="blackTet">Essential cookies.</span>These cookies are essential for You to browse the website and use its features, such as accessing secure areas of the site. Cookies that allow web shops to hold Your items in Your cart while You are shopping online are an example of strictly necessary cookies. These cookies will generally be first-party session cookies. While it is not required to obtain consent for these cookies, what they do and why they are necessary should be explained to the user.                </p>
+              </li>
+              <li>
+                <p>With Our use of the <span class="blackTet">Performance cookies.                  </span>These cookies collect information about how You use a website, like which pages You visited and which links You clicked on. None of this information can be used to identify You. It is all aggregated and, therefore, anonymized. Their sole purpose is to improve website functions. This includes cookies from third-party analytics services, as long as the cookies are for the exclusive use of the owner of the website visited.</p>
+              </li>
+            </ul>
+            <p>Your options for the Tracking Technologies and Cookies</p>
+            <ul class="dot">
+              <li>
+                <p>There are online tools such as Digital Advertising Alliance's Browser Check site which allow You to choose how cookies are used throughout the web based on the device and browser You are using.</p>
+              </li>
+              <li>
+                <p>Your browser probably gives You cookie choices. For example, most browsers let You block “third-party cookies,” which are cookies from sites other than the one You’re visiting. Those options vary from browser to browser, so check Your browser settings for more info.</p>
+              </li>
+              <li>
+                <p>Some browsers also have a privacy setting called “Do Not Track,” which We support. This setting is another way for You to decide whether We use info from Our partners and other services to customize Our services for You.</p>
+              </li>
+              <li>
+                <p>Finally, Your mobile device has settings that allow You to control how ad partners can use information about Your use of mobile applications to show ads to You. On Android devices, this setting is called “Opt out of Ads Personalization.” On Apple devices You can adjust Your choice by selecting Privacy and then Tracking.</p>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="item-title">
+            <p>Use of Your Personal Data</p>
+          </div>
+          <div class="base-text">
+            <p>Subject to the lawful grounds of (1) performing Our obligations in accordance with any contract that we may have with You, (2) complying with any legal obligations that may be imposed upon Us, (3) pursuing the legitimate interest or a third party’s legitimate interest to use the information We collect for direct marketing purposes, e.g., delivering ads that are relevant, interesting and personal to You in order to generate revenue and to customize Your experience based on Your offsite behavior, to prevent fraud or to ensure the network and information security of Your IT systems, and to provide or improve the Service, or (4) Your consent,</p>
+            <p>The Company may use Personal Data for the following purposes:</p>
+            <ul class="dot">
+              <li>
+                <p> <span class="blackTet">  To provide and maintain Our Service,                  </span>including to monitor the usage of Our Service.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">For the performance of a contract:                  </span>the development, compliance and undertaking of the purchase contract for the products, items or services You have purchased or of any other contract with Us through the Service.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">To contact You                  </span>by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application's push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">To provide You                  </span>with news, special offers and general information about other goods, services and events which We offer that are similar to those that You have already purchased or enquired about unless You have opted not to receive such information.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">To manage Your requests                  </span>to attend and manage Your requests to Us.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">For business transfers:                  </span>We may use Your information to evaluate or conduct a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of Our assets, whether as a going concern or as part of bankruptcy, liquidation, or similar proceeding, in which Personal Data held by Us about Our Service users is among the assets transferred.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">For other purposes:                  </span>We may use Your information for other purposes, such as data analysis, identifying usage trends, determining the effectiveness of Our promotional campaigns and to evaluate and improve Our Service, products, services, marketing and your experience.</p>
+              </li>
+            </ul>
+            <p>Subject to the above mentioned lawful grounds, We may share Your personal information in the following situations:</p>
+            <ul class="dot">
+              <li>
+                <p> <span class="blackTet">With Service Providers:                  </span>We may share Your personal information with Service Providers to monitor and analyze the use of our Service, to contact You.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">For business transfers:                  </span>We may share or transfer Your personal information in connection with, or during negotiations of, any merger, sale of Company assets, financing, or acquisition of all or a portion of Our business to another company.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">With Affiliates:                  </span>We may share Your information with Our affiliates, in which case We will require those affiliates to honor this Privacy Policy. Affiliates include Our parent company and any other subsidiaries, joint venture partners or other companies that We control or that are under common control with Us.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">With business partners:                  </span>We may share Your information with Our business partners to offer You certain products, services or promotions.</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">With other users:                  </span>when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside. If You interact with other users or register through a Third-Party Social Media Service, Your contacts on the Third-Party Social Media Service may see Your name, profile, pictures and description of Your activity. Similarly, other users will be able to view descriptions of Your activity, communicate with You and view Your profile</p>
+              </li>
+              <li>
+                <p> <span class="blackTet">With Your consent:                  </span>We may disclose Your personal information for any other purpose with Your consent.</p>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="item-title">
+            <p>Retention of Your Personal Data</p>
+          </div>
+          <div class="base-text">
+            <p>The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with Our legal obligations (for example, if We are required to retain Your data to comply with applicable laws), resolve disputes, and enforce Our legal agreements and policies.</p>
+            <p>The Company will also retain Usage Data and Cookie data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods. When We no longer need to use Your information and there is no need for Us to keep it to comply with Our legal or regulatory obligations, We’ll either remove it from Our systems or depersonalize it so that We can't identify You.</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Transfer of Your Personal Data</p>
+          </div>
+          <div class="base-text">
+            <p>Your information, including Personal Data, is processed at the Company's operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.</p>
+            <p>Your consent to this Privacy Policy followed by Your submission of such information represents Your agreement to that transfer.</p>
+            <p>The Company will take all steps reasonably necessary to ensure that Your data is treated securely and in accordance with this Privacy Policy and no transfer of Your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of Your data and other personal information.</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Delete Your Personal Data</p>
+          </div>
+          <div class="base-text">
+            <p>You have the right to delete or request that We assist in deleting the Personal Data that We have collected about You.</p>
+            <p>Our Service may give You the ability to delete certain information about You from within the Service.</p>
+            <p>You may also visit Contact Us to request an access to, ask Us to stop processing, ask Us to provide a copy of, and to correct, update, or delete any Personal Data that You have provided to Us.</p>
+            <p>Please note, however, that We may need to retain certain information when We have a legal obligation or lawful basis to do so.</p>
+          </div>
+          
+          <div class="item-title">
+            <p>Disclosure of Your Personal Data</p>
+          </div>
+          <div class="base-text">
+            <p>Business Transactions</p>
+            <p>If the Company is involved in a merger, acquisition or asset sale, Your Personal Data may be transferred. We will provide notice before Your Personal Data is transferred and becomes subject to a different Privacy Policy.</p>
+            <p>Law enforcement</p>
+            <p>Under certain circumstances, the Company may be required to disclose Your Personal Data if required to do so by law or in response to valid requests by public authorities (e.g. a court or a government agency).</p>
+            <p>Other legal requirements</p>
+            <p>The Company may disclose Your Personal Data in the good faith belief that such action is necessary to:</p>
+            <ul class="dot">
+              <li>
+                <p>Comply with a legal obligation</p>
+              </li>
+              <li>
+                <p>Protect and defend the rights or property of the Company</p>
+              </li>
+              <li>
+                <p>Prevent or investigate possible wrongdoing in connection with the Service</p>
+              </li>
+              <li>
+                <p>Protect the personal safety of Users of the Service or the public</p>
+              </li>
+              <li>
+                <p>Protect against legal liability</p>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="item-title">
+            <p>Security of Your Personal Data</p>
+          </div>
+          <div class="base-text">
+            <p>The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.</p>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title openBtn">
+          <p>Residents of the EEA</p>
+          <div class="icon"><i class="icon-dropdown"></i></div>
+        </div>
+        <div class="txtContent">
+          <div class="base-text">
+            <p>If You have any questions about Our data processing activities, the data controller You should contact Us through https://www.alchip.com/contact/.</p>
+            <p>If You think that We haven't complied with data protection laws, You have a right to lodge a complaint with the Data Protection Commission with Your local supervisory authority.</p>
+            <p>Because We offer a worldwide service, We may transfer the personal data of EEA residents to a country outside the EEA. Where We transfer information from the EEA to a country that doesn't provide an adequate level of protection, We’ll only do so under appropriate safeguards to protect Your information, like standard contractual clauses.</p>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title openBtn">
+          <p>Children's Privacy</p>
+          <div class="icon"><i class="icon-dropdown"></i></div>
+        </div>
+        <div class="txtContent">
+          <div class="base-text">
+            <p>Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If You are a parent or guardian and You are aware that Your child has provided Us with Personal Data, please contact Us. If We become aware that We have collected Personal Data from anyone under the age of 13 without verification of parental consent, We take steps to remove that information from Our servers.</p>
+            <p>If We need to rely on consent as a legal basis for processing Your information and Your country requires consent from a parent, We may require Your parent's consent before We collect and use that information.</p>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title openBtn">
+          <p>Links to Other Websites</p>
+          <div class="icon"><i class="icon-dropdown"></i></div>
+        </div>
+        <div class="txtContent">
+          <div class="base-text">
+            Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy of every site You visit.</p>
+            <p>We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.</p>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title openBtn">
+          <p>Changes to this Privacy Policy</p>
+          <div class="icon"><i class="icon-dropdown"></i></div>
+        </div>
+        <div class="txtContent">
+          <div class="base-text">
+            <p>We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page.</p>
+            <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title openBtn">
+          <p>Contact Us</p>
+          <div class="icon"><i class="icon-dropdown"></i></div>
+        </div>
+        <div class="txtContent">
+          <div class="base-text">
+            <p>If You have any questions about this Privacy Policy, You can contact Us by visiting this page on Our website: https://www.alchip.com/contact/</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="goTop"><a href="javascript:;" data-anchor-target=""
+        data-anchor-container="[data-modal-id=&quot;privacy-modal&quot;] .os-viewport"> <i class="icon-goTop">
+        </i></a></div>
+  </div>
+</modern-modal>
+<modern-modal data-modal-id="search-modal" data-modal-animate="clip-left">
+  <div class="modal-close" data-modal-close></div>
+  <div class="content search">
+    <div class="subtitle hasLine tac">
+      
+      <div class="txtBox">
+        <h2>Search</h2>
+        
+                <div class="dep">
+          <p>You can search for the units you are interested in or the solutions you want to know about through keywords.</p>
+        </div>
+              </div>
+    </div>
+    <div class="inputBox">
+      <div class="label">
+        <div class="icon">
+          <div class="icon-search"></div>
+        </div>
+        <input class="bkIncludeSearchInput" type="text" placeholder="Type to search...">
+        <a class="icon goSearch bkIncludeSearchBtn" href="javascript:;">
+          <div class="icon-arrow"></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</modern-modal>
+<modern-modal data-modal-id="leave-modal" data-modal-animate="fade-up">
+  <div class="content">
+    <div class="icon"> <i class="icon-leaving"> </i></div>
+    <div class="title">You are leaving our website now.</div>
+    <div class="base-text">
+      <p>The website you wish to link to is owned or operated by an entity other than Alchip Technologies, Ltd..
+        We do not control this third party web site.</p>
+    </div>
+    <div class="btn-group">
+      <div class="btn gray"><a href="javascript:;" data-modal-close>CLOSE</a></div>
+      <div class="btn"><a class="bk_alink" href="javascript:;" target="_blank"
+          data-modal-close>CONTINUE</a></div>
+    </div>
+  </div>
+</modern-modal>    </div>
+
+
+
+    <modern-modal data-modal-id="my-modal" data-modal-animate="clip-right">
+    <div class="close-btn" data-modal-close></div>
+    <div class="title">Modal4</div>
+</modern-modal>
+    
+
+    
+    <script defer src="/dist/js/jquery-3.6.3.min.js?v=082712"></script>
+    <script defer src="/dist/js/fesdDB.min.js?v=082712"></script>
+    <script defer src="/dist/js/fesd.min.js?v=082712"></script>
+    <script defer src="/dist/js/global.min.js?v=082712"></script>
+    <script defer src="/dist/js/common.min.js?v=082712"></script>
+    
+    <script defer src="https://www.alchip.com/vender/assets/js/custom/axios.min.js?082712"></script>
+    <script defer src="/bk/include/link.js?v=082712"></script>
+    <script type="module" defer src="/bk/include/search.js?v=082712"></script>
+
+    
+<script defer>
+        let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        let base = "https://www.alchip.com/en";
+        let country = {
+            'Asia/Shanghai' : 'https://www.alchip.com/cn',
+            'Asia/Tokyo': 'https://www.alchip.com/jp',
+            'Asia/Taipei': 'https://www.alchip.com/tw',
+        };
+
+let cookie = getCookie('timezone');
+if(cookie == null)
+{
+        if(country[timezone] != undefined && base != country[timezone])
+            {
+                window.location.href = country[timezone];
+            }else if(country[timezone] == undefined&&base != 'https://www.alchip.com/en'){
+                window.location.href = 'https://www.alchip.com/en';
+            }
+        setCookie(1,timezone);
+}
+
+
+function setCookie(day,timezone){
+    let toDay = new Date();
+    toDay.setDate(toDay.getDate() + day);
+    let setDay = toDay.toUTCString();
+    document.cookie = "timezone="+timezone+"; expires="+ setDay +"; path=/";
+}
+
+function getCookie(name) {
+  let cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    let [cookieName, cookieValue] = cookie.split('=');
+    if (cookieName.trim() === name) {
+      return cookieValue;
+    }
+  }
+  return null;
+}
+</script>
+
+
+    
+        <script defer src="/dist/js/pages/index.min.js?v=082712"></script>
+    
+    
+</body>
+
+</html>
