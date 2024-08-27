@@ -56,30 +56,4 @@ print(f"Number of records: {len(ordered_data)}")
 
 with open(output_file, 'w', encoding='utf-8-sig') as f:
     json.dump(ordered_data, f, ensure_ascii=False, indent=2)
-
-# # Filter out records where "data" key has the value "Text extraction failed."
-# def filter_and_order_data(records):
-#     filtered_records = []
-#     for record in records:
-#         if record.get('data') != "Text extraction failed.":
-#             # Remove unnecessary labels
-#             cleaned_record = remove_labels(record)
-            
-#             # Create a new OrderedDict with 'data' key first
-#             ordered_record = OrderedDict()
-#             ordered_record['data'] = cleaned_record['data']
-#             for key, value in cleaned_record.items():
-#                 if key != 'data':  # Skip the 'data' key since it's already added
-#                     ordered_record[key] = value
-            
-#             filtered_records.append(ordered_record)
-    
-#     return filtered_records
-
-# filtered_data = filter_and_order_data(data)
-
-# print(f"Number of records: {len(filtered_data)}")
-
-# with open(output_file, 'w', encoding='utf-8-sig') as file:
-#     json.dump(filtered_data, file, ensure_ascii=False, indent=2)
     
