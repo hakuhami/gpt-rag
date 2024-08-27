@@ -24,18 +24,18 @@ for item in data:
 # URLリストをリスト形式に変換
 url_list = sorted(list(unique_urls))
 print("Chinese_train.json URL_List:")
-for i in url_list:
-    print(i)
+for i, url in enumerate(url_list):
+    print(f"{i+1}: {url}")
 
-# # PDFをダウンロードして保存する関数
-# def download_pdfs(url_list, save_directory):
-#     for i, url in enumerate(url_list):
-#         response = requests.get(url)
-#         pdf_filename = f'company{i+1}.pdf'  # ファイル名を設定
-#         pdf_path = os.path.join(save_directory, pdf_filename)
-#         with open(pdf_path, 'wb') as f:
-#             f.write(response.content)
-#         print(f"Downloaded: {pdf_filename}")
+# PDFをダウンロードして保存する関数
+def download_pdfs(url_list, save_directory):
+    for i, url in enumerate(url_list):
+        response = requests.get(url)
+        pdf_filename = f'company{i+1}.pdf'  # ファイル名を設定
+        pdf_path = os.path.join(save_directory, pdf_filename)
+        with open(pdf_path, 'wb') as f:
+            f.write(response.content)
+        print(f"Downloaded: {pdf_filename}")
 
-# # PDFをダウンロード
-# download_pdfs(url_list, save_dir)
+# PDFをダウンロード
+download_pdfs(url_list, save_dir)
