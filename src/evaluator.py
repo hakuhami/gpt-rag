@@ -68,16 +68,37 @@ def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[st
         true_values = []
         pred_values = []
         
-        # Filtering: Exclude pairs with N/A labels.
+        # # Filtering: Exclude pairs with N/A labels.
+        # for true_item, pred_item in zip(true_data, pred_data):
+        #     true_label = true_item.get(element)
+        #     pred_label = pred_item.get(element)
+            
+        #     # Only for the 'promise_status' label, pairs containing 'N/A' are included in the calculation.
+        #     if element == 'promise_status':
+        #         true_values.append(true_label)
+        #         pred_values.append(pred_label)
+        #     else:
+        #         if true_label != 'N/A' and pred_label != 'N/A':
+        #             true_values.append(true_label)
+        #             pred_values.append(pred_label)
+        
+        # Filtering: Exclude pairs with N/A labels, with special handling for 'verification_timeline'.
         for true_item, pred_item in zip(true_data, pred_data):
             true_label = true_item.get(element)
             pred_label = pred_item.get(element)
-            
-            # Only for the 'promise_status' label, pairs containing 'N/A' are included in the calculation.
+            promise_status = true_item.get('promise_status')
+
             if element == 'promise_status':
+                # Include N/A for 'promise_status'
                 true_values.append(true_label)
                 pred_values.append(pred_label)
+            elif element == 'verification_timeline':
+                # Include 'verification_timeline' even if it is 'N/A', if 'promise_status' is 'Yes'
+                if promise_status == 'Yes' or (true_label != 'N/A' and pred_label != 'N/A'):
+                    true_values.append(true_label)
+                    pred_values.append(pred_label)
             else:
+                # Exclude N/A for other labels
                 if true_label != 'N/A' and pred_label != 'N/A':
                     true_values.append(true_label)
                     pred_values.append(pred_label)

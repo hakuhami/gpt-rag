@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.data_loader import save_json_data, load_json_data
-from src.data_preprocessor import split_data
+# from src.data_preprocessor import split_data
 from src.rag_model import RAGModel
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
@@ -20,9 +20,17 @@ def run_analysis(config_path: str) -> None:
     # Load the configuration file
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
+        
+    # Load the search data from the file
+    with open(config['search_data_path'], 'r', encoding='utf-8-sig') as f:
+        search_data = json.load(f)
+
+    # Load the test data from the file
+    with open(config['test_data_path'], 'r', encoding='utf-8-sig') as f:
+        test_data = json.load(f)
     
-    # Load the pre-prepared JSON data
-    json_data = load_json_data(config['sample_raw_data_path'])
+    # # Load the pre-prepared JSON data
+    # json_data = load_json_data(config['sample_raw_data_path'])
 
     # # Split the data into search and test sets
     # search_data, test_data = split_data(json_data, test_size=config['test_size'])
@@ -32,50 +40,44 @@ def run_analysis(config_path: str) -> None:
     # save_json_data(test_data, config['test_data_path'])
     # print("Search and test data is saved.")
 
-    # Prepare the RAG model with the search data
-    rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
-    rag_model.prepare_documents(config['search_data_path'])
-    print("Documents are prepared.")
+    # # Prepare the RAG model with the search data
+    # rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
+    # rag_model.prepare_documents(search_data)
+    # print("Documents are prepared.")
 
-    # Analyze the test data
-    predictions = []
-    # skipped_items = []
-    for item in config['test_data_path']:
-        result = rag_model.analyze_paragraph(item['data'])
-        print(f"{result},")
-        result_dict = json.loads(result)
-        predictions.append(result_dict)
-        
+    # # Analyze the test data
+    # predictions = []
+    # # skipped_items = []
     # for item in test_data:
     #     result = rag_model.analyze_paragraph(item['data'])
-    #     if result is None:
-    #         print("")
-    #         print(f"Skipping item due to None result")
-    #         print("")
-    #         skipped_items.append(result)
-    #         continue
-        
-    #     try:
-    #         result_dict = json.loads(result)
-    #         print("")
-    #         print(f"{result_dict}")
-    #         print("")
-    #         predictions.append(result_dict)
-            
-    #     except json.JSONDecodeError:
-    #         print("")
-    #         print(f"JSONDecodeError occurred. Skipping item.")
-    #         print("")
-    #         skipped_items.append(result)
-    # print("Analysis is completed.")
-    # print(f"Skipped items: {skipped_items}")
+    #     print(f"{result},")
+    #     result_dict = json.loads(result)
+    #     predictions.append(result_dict)
 
-    # Save the prediction results
-    save_json_data(predictions, config['generated_data_path'])
-    print("Predictions are saved.")
+    # # Save the prediction results
+    # save_json_data(predictions, config['generated_data_path'])
+    # print("Predictions are saved.")
+
+    with open(config['generated_data_path'], 'r', encoding='utf-8-sig') as file:
+        data = json.load(file)
+    # Convert the value of the 'verification_timeline' label (Match the label with config['test_data_path'])
+    for item in data:
+        if 'verification_timeline' in item:
+            if item['verification_timeline'] == "within_2_years":
+                item['verification_timeline'] = "Less than 2 years"
+            elif item['verification_timeline'] == "between_2_and_5_years":
+                item['verification_timeline'] = "2 to 5 years"
+            elif item['verification_timeline'] == "more_than_5_years":
+                item['verification_timeline'] = "More than 5 years"
+
+    # Save the converted prediction results
+    output_file = './data/output/predictions-test_converted.json'
+    with open(output_file, 'w', encoding='utf-8-sig') as file:
+        json.dump(data, file, ensure_ascii=False, indent=2)
+    print(f"Converted predictions are saved to {output_file}")
 
     # Evaluate the prediction results
-    evaluate_scores = evaluate_results(config['test_data_path'], config['generated_data_path'])
+    evaluate_scores = evaluate_results(config['test_data_path'], output_file)
     print("Evaluation is completed.")
     
     save_average_results_to_file(evaluate_scores, config['average_results_path'])
