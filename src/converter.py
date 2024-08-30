@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 
-# Original English JSON file.
+# Original JSON file.
 input_file = './data/raw/Chinese_sample.json'
 # PDF URL list JSON file.
 url_list_file = './data/raw/Chinese_sample_URL_List.json'
