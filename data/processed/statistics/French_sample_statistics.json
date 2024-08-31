@@ -1,0 +1,29 @@
+﻿{
+  "data_file": "French_sample.json",
+  "total_records": 200,
+  "label_counts": {
+    "promise_status": {
+      "Yes": 161,
+      "No": 39
+    },
+    "verification_timeline": {
+      "Less than 2 years": 19,
+      "More than 5 years": 33,
+      "N/A": 39,
+      "Already": 80,
+      "2 to 5 years": 24,
+      "2 to 5 years ": 5
+    },
+    "evidence_status": {
+      "Yes": 141,
+      "No": 59
+    },
+    "evidence_quality": {
+      "Not Clear": 57,
+      "Clear": 80,
+      "N/A": 59,
+      "Misleading": 2,
+      "Not clear": 2
+    }
+  }
+}
