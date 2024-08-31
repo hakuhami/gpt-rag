@@ -1,0 +1,29 @@
+﻿{
+  "data_file": "English_sample.json",
+  "total_records": 200,
+  "label_counts": {
+    "promise_status": {
+      "No": 31,
+      "Yes": 169
+    },
+    "verification_timeline": {
+      "N/A": 31,
+      "Already": 126,
+      "2 to 5 years": 25,
+      "More than 5 years": 14,
+      "Less than 2 years ": 1,
+      "Less than 2 years": 3
+    },
+    "evidence_status": {
+      "No": 77,
+      "No ": 1,
+      "Yes": 122
+    },
+    "evidence_quality": {
+      "N/A": 78,
+      "Not Clear": 56,
+      "Misleading": 5,
+      "Clear": 61
+    }
+  }
+}
