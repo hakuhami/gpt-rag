@@ -1,0 +1,26 @@
+﻿{
+  "data_file": "Korean_test.json",
+  "total_records": 500,
+  "label_counts": {
+    "promise_status": {
+      "Yes": 386,
+      "No": 114
+    },
+    "verification_timeline": {
+      "between_2_and_5_years": 38,
+      "already": 121,
+      "more_than_5_years": 58,
+      "within_2_years": 169,
+      "N/A": 114
+    },
+    "evidence_status": {
+      "Yes": 377,
+      "No": 123
+    },
+    "evidence_quality": {
+      "Clear": 349,
+      "N/A": 123,
+      "Not Clear": 28
+    }
+  }
+}

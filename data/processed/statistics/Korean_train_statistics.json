@@ -1,0 +1,26 @@
+﻿{
+  "data_file": "Korean_train.json",
+  "total_records": 500,
+  "label_counts": {
+    "promise_status": {
+      "Yes": 379,
+      "No": 121
+    },
+    "verification_timeline": {
+      "within_2_years": 136,
+      "between_2_and_5_years": 42,
+      "more_than_5_years": 59,
+      "N/A": 121,
+      "already": 142
+    },
+    "evidence_status": {
+      "Yes": 378,
+      "No": 122
+    },
+    "evidence_quality": {
+      "Not Clear": 33,
+      "Clear": 345,
+      "N/A": 122
+    }
+  }
+}

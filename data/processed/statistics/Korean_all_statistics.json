@@ -1,0 +1,26 @@
+﻿{
+  "data_file": "All Korean data",
+  "total_records": 1000,
+  "label_counts": {
+    "promise_status": {
+      "Yes": 765,
+      "No": 235
+    },
+    "verification_timeline": {
+      "between_2_and_5_years": 80,
+      "already": 263,
+      "more_than_5_years": 117,
+      "within_2_years": 305,
+      "N/A": 235
+    },
+    "evidence_status": {
+      "Yes": 755,
+      "No": 245
+    },
+    "evidence_quality": {
+      "Clear": 694,
+      "N/A": 245,
+      "Not Clear": 61
+    }
+  }
+}
