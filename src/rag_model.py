@@ -6,6 +6,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import json
 import re
+import torch
+import torch.nn.functional as F
+from PIL import Image
+from transformers import AutoTokenizer, LlavaNextProcessor, LlavaNextForConditionalGeneration
+import fitz  # PyMuPDF
 
 # For the embedding model, use the 'multilingual-e5-large-instruct' which supports multiple languages
 
@@ -13,38 +18,74 @@ class RAGModel:
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name
-        self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
+        # self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
         
-        # clipについて記述する
+        self.processor = LlavaNextProcessor.from_pretrained('royokong/e5-v')
+        self.model = LlavaNextForConditionalGeneration.from_pretrained('royokong/e5-v', torch_dtype=torch.float16).cuda()
+        self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nSummary above image in one word: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
 
+    # def prepare_documents(self, search_data: List[Dict]) -> None:
+    #     """
+    #     Prepare and encode the search data
+
+    #     Args:
+    #         search_data (List[Dict]): Data for search
+    #     """
+    #     self.search_data = search_data
+    #     self.documents = [item['data'] for item in search_data]
+    #     self.doc_embeddings = self.embedder.encode(self.documents)
+    
     def prepare_documents(self, search_data: List[Dict]) -> None:
         """
         Prepare and encode the search data
-
         Args:
             search_data (List[Dict]): Data for search
         """
         self.search_data = search_data
-        self.documents = [item['data'] for item in search_data]
-        self.doc_embeddings = self.embedder.encode(self.documents)
+        self.doc_embeddings = []
+        for item in search_data:
+            pdf_path = f"./data/raw/PDFs/{item['pdf']}"  # Adjust the path as needed
+            page_image = self.get_page_image(pdf_path, item['page_number'])
+            embedding = self.get_image_embedding(page_image)
+            self.doc_embeddings.append(embedding)
+        self.doc_embeddings = torch.stack(self.doc_embeddings)
+        
+    def get_page_image(self, pdf_path: str, page_number: int) -> Image.Image:
+        """
+        Extract a specific page from a PDF as an image
+        """
+        doc = fitz.open(pdf_path)
+        page = doc.load_page(page_number - 1)  # Page numbers start at 0
+        pix = page.get_pixmap()
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        doc.close()
+        return img
+
+    def get_image_embedding(self, image: Image.Image) -> torch.Tensor:
+        """
+        Get the embedding for an image
+        """
+        inputs = self.processor([self.img_prompt], [image], return_tensors="pt", padding=True).to('cuda')
+        with torch.no_grad():
+            output = self.model(**inputs, output_hidden_states=True, return_dict=True)
+            embedding = output.hidden_states[-1][:, -1, :]
+            embedding = F.normalize(embedding, dim=-1)
+        return embedding.squeeze()
 
     # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
-    # Since there were many cases of `"promise_status": "No"` in the Chinese data, increased the number of reference data.
-    def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
+    def get_relevant_context(self, query_image: Image.Image, top_k: int = 6) -> List[Dict]:
         """
-        Retrieve the top documents related to the query
-
+        Retrieve the top documents related to the query image
         Args:
-            query (str): Input query
+            query_image (Image.Image): Input query image
             top_k (int): Number of documents to retrieve
-
         Returns:
             List[Dict]: List of relevant documents
         """
-        query_embedding = self.embedder.encode([query])
-        similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-        top_indices = np.argsort(similarities)[-top_k:][::-1]
-        return [self.search_data[i] for i in top_indices]
+        query_embedding = self.get_image_embedding(query_image)
+        similarities = F.cosine_similarity(query_embedding.unsqueeze(0), self.doc_embeddings)
+        top_indices = torch.argsort(similarities, descending=True)[:top_k]
+        return [self.search_data[i] for i in top_indices.tolist()]
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
@@ -61,7 +102,7 @@ class RAGModel:
 
 # The parts of the prompt that explains the JSON structure are to be changed according to the language since the JSON structure differs for each language's dataset.
 
-    def analyze_paragraph(self, paragraph: str) -> Dict[str, str]:
+    def analyze_paragraph(self, pdf_path: str, page_number: int) -> Dict[str, str]:
         """
         Generate annotation results from paragraph text using an LLM, referencing similar data.
 
@@ -71,7 +112,11 @@ class RAGModel:
         Returns:
             Dict[str, str]: Annotation results in JSON format
         """
-        relevant_docs = self.get_relevant_context(paragraph)
+        # relevant_docs = self.get_relevant_context(paragraph)
+        # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
+        
+        page_image = self.get_page_image(pdf_path, page_number)
+        relevant_docs = self.get_relevant_context(page_image)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
 # The prompt is written for Chinese data.
@@ -150,7 +195,23 @@ class RAGModel:
             model=self.model_name,
             messages=[
                 {"role": "system", "content": "You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."},
-                {"role": "user", "content": prompt}
+                # {"role": "user", "content": prompt}
+                {
+                 "role": "user",
+                 "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    },
+                    {
+                        "type": "pdf_image",
+                        "pdf_image": {
+                            "pdf": page_image,
+                            "detail": "high"
+                        }
+                    },
+                 ]
+                }
             ],
             functions=[
                 {
