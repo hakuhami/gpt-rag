@@ -1,0 +1,25 @@
+﻿{
+  "data_file": "Chinese_sample.json",
+  "total_records": 200,
+  "label_counts": {
+    "promise_status": {
+      "No": 119,
+      "Yes": 81
+    },
+    "verification_timeline": {
+      "N/A": 148,
+      "Less than 2 years": 31,
+      "More than 5 years": 13,
+      "2 to 5 years": 8
+    },
+    "evidence_status": {
+      "No": 159,
+      "Yes": 41
+    },
+    "evidence_quality": {
+      "N/A": 163,
+      "Clear": 24,
+      "Not Clear": 13
+    }
+  }
+}
