@@ -9,7 +9,6 @@ from src.rag_model import RAGModel
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
 import json
-from PIL import Image
 
 def run_analysis(config_path: str) -> None:
     """

@@ -10,18 +10,16 @@ import torch
 import torch.nn.functional as F
 from PIL import Image
 import pdf2image
-from transformers import AutoTokenizer, LlavaNextProcessor, LlavaNextForConditionalGeneration
+from transformers import LlavaNextProcessor, LlavaNextForConditionalGeneration
 import base64
 from io import BytesIO
 
-# For the embedding model, use the 'multilingual-e5-large-instruct' which supports multiple languages
+# For the embedding model, use the 'royokong/e5-v' which supports multiple languages
 
 class RAGModel:
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
-        self.model_name = model_name
-        # self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
-        
+        self.model_name = model_name        
         self.processor = LlavaNextProcessor.from_pretrained('royokong/e5-v')
         self.model = LlavaNextForConditionalGeneration.from_pretrained('royokong/e5-v', torch_dtype=torch.float16).cuda()
         self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
@@ -51,7 +49,8 @@ class RAGModel:
         self.doc_images = []
         for item in search_data:
             pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
-            image = self.load_pdf_as_image(pdf_path, item['page_number'])
+            page_number = int(item['page_number'])
+            image = self.load_pdf_as_image(pdf_path, page_number)
             embedding = self.embed_image(image)
             self.doc_embeddings.append(embedding)
             self.doc_images.append(image)
@@ -123,9 +122,7 @@ class RAGModel:
 
         context_str = "\n".join(context)        
 
-# The prompt is written for Chinese data.
-
-# プロンプトよく考える！(文章抽出→分析という順番)(verification_timelineの部分は変更が必要)(pdf, page_numberの部分は変更が必要)
+        # The prompt is written for Chinese data.
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
@@ -200,7 +197,6 @@ class RAGModel:
             model=self.model_name,
             messages=[
                 {"role": "system", "content": "You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."},
-                # {"role": "user", "content": prompt}
                 {
                  "role": "user",
                  "content": [
