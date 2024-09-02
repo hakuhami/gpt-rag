@@ -1,16 +1,18 @@
 import openai
 from openai import OpenAI
 from typing import Optional, List, Dict
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import json
 import re
+import os
 import torch
 import torch.nn.functional as F
 from PIL import Image
+import pdf2image
 from transformers import AutoTokenizer, LlavaNextProcessor, LlavaNextForConditionalGeneration
-import fitz  # PyMuPDF
+import base64
+from io import BytesIO
 
 # For the embedding model, use the 'multilingual-e5-large-instruct' which supports multiple languages
 
@@ -22,70 +24,52 @@ class RAGModel:
         
         self.processor = LlavaNextProcessor.from_pretrained('royokong/e5-v')
         self.model = LlavaNextForConditionalGeneration.from_pretrained('royokong/e5-v', torch_dtype=torch.float16).cuda()
-        self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nSummary above image in one word: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
-
-    # def prepare_documents(self, search_data: List[Dict]) -> None:
-    #     """
-    #     Prepare and encode the search data
-
-    #     Args:
-    #         search_data (List[Dict]): Data for search
-    #     """
-    #     self.search_data = search_data
-    #     self.documents = [item['data'] for item in search_data]
-    #     self.doc_embeddings = self.embedder.encode(self.documents)
+        self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
     
-    def prepare_documents(self, search_data: List[Dict]) -> None:
+    def load_pdf_as_image(self, pdf_path: str, page_number: int) -> Image.Image:
         """
-        Prepare and encode the search data
-        Args:
-            search_data (List[Dict]): Data for search
+        Load a specific page from a PDF as an image.
         """
-        self.search_data = search_data
-        self.doc_embeddings = []
-        for item in search_data:
-            pdf_path = f"./data/raw/PDFs/{item['pdf']}"  # Adjust the path as needed
-            page_image = self.get_page_image(pdf_path, item['page_number'])
-            embedding = self.get_image_embedding(page_image)
-            self.doc_embeddings.append(embedding)
-        self.doc_embeddings = torch.stack(self.doc_embeddings)
-        
-    def get_page_image(self, pdf_path: str, page_number: int) -> Image.Image:
-        """
-        Extract a specific page from a PDF as an image
-        """
-        doc = fitz.open(pdf_path)
-        page = doc.load_page(page_number - 1)  # Page numbers start at 0
-        pix = page.get_pixmap()
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-        doc.close()
-        return img
+        images = pdf2image.convert_from_path(pdf_path, first_page=page_number, last_page=page_number)
+        return images[0]
 
-    def get_image_embedding(self, image: Image.Image) -> torch.Tensor:
+    def embed_image(self, image: Image.Image) -> torch.Tensor:
         """
-        Get the embedding for an image
+        Embed an image using the e5-v model.
         """
         inputs = self.processor([self.img_prompt], [image], return_tensors="pt", padding=True).to('cuda')
         with torch.no_grad():
-            output = self.model(**inputs, output_hidden_states=True, return_dict=True)
-            embedding = output.hidden_states[-1][:, -1, :]
-            embedding = F.normalize(embedding, dim=-1)
-        return embedding.squeeze()
-
-    # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
+            emb = self.e5v_model(**inputs, output_hidden_states=True, return_dict=True).hidden_states[-1][:, -1, :]
+        return F.normalize(emb, dim=-1)    
+    
+    def prepare_documents(self, search_data: List[Dict], pdf_dir: str) -> None:
+        """
+        Prepare and encode the search data
+        """
+        self.search_data = search_data
+        self.doc_embeddings = []
+        self.doc_images = []
+        for item in search_data:
+            pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
+            image = self.load_pdf_as_image(pdf_path, item['page_number'])
+            embedding = self.embed_image(image)
+            self.doc_embeddings.append(embedding)
+            self.doc_images.append(image)
+        self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
+    
+    # # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
     def get_relevant_context(self, query_image: Image.Image, top_k: int = 6) -> List[Dict]:
         """
         Retrieve the top documents related to the query image
-        Args:
-            query_image (Image.Image): Input query image
-            top_k (int): Number of documents to retrieve
-        Returns:
-            List[Dict]: List of relevant documents
         """
-        query_embedding = self.get_image_embedding(query_image)
-        similarities = F.cosine_similarity(query_embedding.unsqueeze(0), self.doc_embeddings)
+        query_embedding = self.embed_image(query_image)
+        similarities = F.cosine_similarity(query_embedding, self.doc_embeddings)
         top_indices = torch.argsort(similarities, descending=True)[:top_k]
-        return [self.search_data[i] for i in top_indices.tolist()]
+        # return [self.search_data[i] for i in top_indices]
+        return [
+            {**self.search_data[i], "image": self.doc_images[i]}
+            for i in top_indices
+        ]
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
@@ -99,10 +83,18 @@ class RAGModel:
             except json.JSONDecodeError:
                 pass        
         return None
+    
+    def image_to_base64(self, image: Image.Image) -> str:
+        """
+        Convert a PIL Image to a base64 encoded string.
+        """
+        buffered = BytesIO()
+        image.save(buffered, format="PNG")
+        return base64.b64encode(buffered.getvalue()).decode()
 
 # The parts of the prompt that explains the JSON structure are to be changed according to the language since the JSON structure differs for each language's dataset.
 
-    def analyze_paragraph(self, pdf_path: str, page_number: int) -> Dict[str, str]:
+    def analyze_paragraph(self, image: Image.Image, pdf_name: str, page_number: int) -> Dict[str, str]:
         """
         Generate annotation results from paragraph text using an LLM, referencing similar data.
 
@@ -112,12 +104,24 @@ class RAGModel:
         Returns:
             Dict[str, str]: Annotation results in JSON format
         """
-        # relevant_docs = self.get_relevant_context(paragraph)
+        
+        # page_image = self.get_page_image(pdf_path, page_number)
+        # relevant_docs = self.get_relevant_context(page_image)
         # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
         
-        page_image = self.get_page_image(pdf_path, page_number)
-        relevant_docs = self.get_relevant_context(page_image)
-        context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
+        # relevant_docs = self.get_relevant_context(image)
+        # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
+        
+        relevant_docs = self.get_relevant_context(image)
+        
+        # Prepare the context with both text information and base64 encoded images
+        context = []
+        for doc in relevant_docs:
+            doc_info = {k: v for k, v in doc.items() if k != 'image'}
+            doc_info['image_base64'] = self.image_to_base64(doc['image'])
+            context.append(json.dumps(doc_info, ensure_ascii=False))
+
+        context_str = "\n".join(context)        
 
 # The prompt is written for Chinese data.
 
@@ -125,13 +129,13 @@ class RAGModel:
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
-        Follow the instructions below to provide careful and consistent annotations.
-        Output the results in the following JSON format.
+        I will provide image of actual company reports, so analyze the given image and follow the instructions below to provide careful and consistent annotations.
         Ensure that your response is a valid JSON object.
         Do not include any text before or after the JSON object.
-        Regarding the "data", be sure to output the content of the given paragraph without altering it and in str format.:
+        Regarding the "pdf" and "page_number", be sure to output the content of the given paragraph without altering it and in str format.:
         {{
-            "data": str,
+            "pdf": str,
+            "page_number": int,
             "promise_status": str,
             "promise_string": str or null,
             "verification_timeline": str,
@@ -142,14 +146,14 @@ class RAGModel:
         Although you are specified to output in JSON format, perform the thought process in natural language and output the result in JSON format at the end.
         
         Annotation procedure:
-        1. You will be given the content of a paragraph.
+        1. You will be given an image of a page from an ESG report.
         2. Determine if a promise is included, and indicate "Yes" if included, "No" if not included. (promise_status)
         3. If a promise is included (if promise_status is "Yes"), also provide the following information:
-        - The specific part of the promise (extract verbatim from the text without changing a single word) (promise_string)
-        - When the promise can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
+        - The specific part of the promise (extract verbatim from the text in the image without changing a single word) (promise_string)
+        - When the promise can be verified ("already", "Less than 2 years", "2 to 5 years", "More than 5 years", "N/A") (verification_timeline)
         - Whether evidence is included ("Yes", "No", "N/A") (evidence_status)
         4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
-        - The part containing the evidence (extract directly from the text without changing a single word) (evidence_string)
+        - The part containing the evidence (extract directly from the text in the image without changing a single word) (evidence_string)
         - The quality of the relationship between the promise and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
            
         Definitions and criteria for annotation labels:
@@ -159,9 +163,9 @@ class RAGModel:
         
         2. verification_timeline - The Verification Timeline is the assessment of when we could possibly see the final results of a given ESG-related action and thus verify the statement.:
         - "already": Qualifies ESG-related measures that have already been and keep on being applied and every small measure whose results can already be verified anyway.
-        - "within_2_years": ESG-related measures whose results can be verified within 2 years.
-        - "between_2_and_5_years": ESG-related measures whose results can be verified in 2 to 5 years.
-        - "more_than_5_years: ESG-related measures whose results can be verified in more than 5 years.
+        - "Less than 2 years": ESG-related measures whose results can be verified within 2 years.
+        - "2 to 5 years": ESG-related measures whose results can be verified in 2 to 5 years.
+        - "More than 5 years": ESG-related measures whose results can be verified in more than 5 years.
         - "N/A": When no promise exists. (Or when the promise is not verifiable.)
 
         3. evidence_status - Pieces of evidence are elements deemed the most relevant to exemplify and prove the core promise is being kept, which includes but is not limited to simple examples, company measures, numbers, etc.:
@@ -176,18 +180,19 @@ class RAGModel:
         - "N/A": When no evidence or promise exists.
         
         Important notes:
-        - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        - Consider the context of the entire image thoroughly. It's important to understand the meaning of the entire page, not just individual text bloks.
+        - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
         - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank. The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
-        - Understand and appropriately interpret industry-specific terms.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output a blank. The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
+        - Understand and appropriately interpret industry-specific terms and visual representations.
 
-        The following are annotation examples of texts similar to the text you want to analyze.
+        The following are annotation examples of image similar to the one you want to analyze.
         Refer to these examples, think about why these examples have such annotation results, and then output the results.
         Examples for your reference are as follows:
-        {context}
+        {context_str}
 
-        Analyze the following text and provide results in the format described above:
-        {paragraph}
+        The image is from the PDF file named "{pdf_name}" and is page number {page_number}.
+        Analyze the following image and provide results in the format described above:
         """
 
         client = OpenAI(api_key = openai.api_key)
@@ -204,9 +209,9 @@ class RAGModel:
                         "text": prompt
                     },
                     {
-                        "type": "pdf_image",
-                        "pdf_image": {
-                            "pdf": page_image,
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/png;base64,{self.image_to_base64(image)}",
                             "detail": "high"
                         }
                     },
@@ -224,12 +229,12 @@ class RAGModel:
                             "page_number": {"type": "int"},
                             "promise_status": {"type": "string", "enum": ["Yes", "No"]},
                             "promise_string": {"type": "string"},
-                            "verification_timeline": {"type": "string", "enum": ["already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A"]},
+                            "verification_timeline": {"type": "string", "enum": ["already", "Less than 2 years", "2 to 5 years", "More than 5 years", "N/A"]},
                             "evidence_status": {"type": "string", "enum": ["Yes", "No", "N/A"]},
                             "evidence_string": {"type": "string"},
-                            "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Misleading", "N/A"]}
+                            "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Potentially Misleading", "N/A"]}
                         },
-                        "required": ["data", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
+                        "required": ["pdf", "page_number", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
                     }
                 }
             ],

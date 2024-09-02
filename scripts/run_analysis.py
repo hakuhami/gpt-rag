@@ -9,6 +9,7 @@ from src.rag_model import RAGModel
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
 import json
+from PIL import Image
 
 def run_analysis(config_path: str) -> None:
     """
@@ -42,14 +43,15 @@ def run_analysis(config_path: str) -> None:
 
     # Prepare the RAG model with the search data
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
-    rag_model.prepare_documents(search_data)
+    rag_model.prepare_documents(search_data, "data/raw/PDFs")
     print("Documents are prepared.")
 
     # Analyze the test data
     predictions = []
-    # skipped_items = []
     for item in test_data:
-        result = rag_model.analyze_paragraph(item['data'])
+        pdf_path = os.path.join("data/raw/PDFs", f"{item['pdf']}")
+        image = rag_model.load_pdf_as_image(pdf_path, item['page_number'])
+        result = rag_model.analyze_paragraph(image, item['pdf'], item['page_number'])
         print(f"{result},")
         result_dict = json.loads(result)
         predictions.append(result_dict)
