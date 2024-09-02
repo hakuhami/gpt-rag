@@ -24,10 +24,14 @@ def run_analysis(config_path: str) -> None:
     # Load the search data from the file
     with open(config['search_data_path'], 'r', encoding='utf-8-sig') as f:
         search_data = json.load(f)
+        for item in search_data:
+            item['page_number'] = int(item['page_number'])
 
     # Load the test data from the file
     with open(config['test_data_path'], 'r', encoding='utf-8-sig') as f:
         test_data = json.load(f)
+        for item in test_data:
+            item['page_number'] = int(item['page_number'])
     
     # # Load the pre-prepared JSON data
     # json_data = load_json_data(config['sample_raw_data_path'])

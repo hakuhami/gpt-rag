@@ -37,7 +37,7 @@ class RAGModel:
         """
         inputs = self.processor([self.img_prompt], [image], return_tensors="pt", padding=True).to('cuda')
         with torch.no_grad():
-            emb = self.e5v_model(**inputs, output_hidden_states=True, return_dict=True).hidden_states[-1][:, -1, :]
+            emb = self.model(**inputs, output_hidden_states=True, return_dict=True).hidden_states[-1][:, -1, :]
         return F.normalize(emb, dim=-1)    
     
     def prepare_documents(self, search_data: List[Dict], pdf_dir: str) -> None:
@@ -56,8 +56,9 @@ class RAGModel:
             self.doc_images.append(image)
         self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
     
-    # # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
-    def get_relevant_context(self, query_image: Image.Image, top_k: int = 6) -> List[Dict]:
+    # # Retrieve the top 3 items from the target search data with the highest cosine similarity to the input paragraph.
+    # Because GPT context length strict, "top_k: int = 3"
+    def get_relevant_context(self, query_image: Image.Image, top_k: int = 3) -> List[Dict]:
         """
         Retrieve the top documents related to the query image
         """
@@ -127,8 +128,6 @@ class RAGModel:
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
         I will provide image of actual company reports, so analyze the given image and follow the instructions below to provide careful and consistent annotations.
-        Ensure that your response is a valid JSON object.
-        Do not include any text before or after the JSON object.
         Regarding the "pdf" and "page_number", be sure to output the content of the given paragraph without altering it and in str format.:
         {{
             "pdf": str,
