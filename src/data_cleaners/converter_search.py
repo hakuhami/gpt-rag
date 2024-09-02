@@ -2,16 +2,24 @@ import json
 from collections import OrderedDict
 
 # Original English JSON file.
-input_file = './data/processed/Chinese_search_extracted.json'
+input_file = './data/processed/pdf_Chinese_search_extracted.json'
 # New JSON file limited to only the labels needed for the experiment.
-output_file = './data/processed/Chinese_search_converted.json'
+output_file = './data/processed/pdf_Chinese_search_converted.json'
 
 with open(input_file, 'r', encoding='utf-8-sig') as file:
     data = json.load(file)
 
+# # Remove labels that are not needed for the experiment.
+# def remove_labels(record):
+#     labels_to_remove = ["URL", "page_number"]
+#     for label in labels_to_remove:
+#         if label in record:
+#             del record[label]
+#     return record
+
 # Remove labels that are not needed for the experiment.
 def remove_labels(record):
-    labels_to_remove = ["URL", "page_number"]
+    labels_to_remove = ["pdf", "page_number"]
     for label in labels_to_remove:
         if label in record:
             del record[label]
