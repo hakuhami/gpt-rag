@@ -41,6 +41,7 @@ def run_analysis(config_path: str) -> None:
     predictions = []
     for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
+        print(f"{result},")
         result_dict = json.loads(result)
         predictions.append(result_dict)
     print("Analysis is completed.")
@@ -53,5 +54,5 @@ def run_analysis(config_path: str) -> None:
     evaluate_scores = evaluate_results(config['test_data_path'], config['generated_data_path'])
     print("Evaluation is completed.")
     
-    save_average_results_to_file(evaluate_scores, config['average_results_path'])
+    save_average_results_to_file(evaluate_scores, config['evaluation_results_path'])
     print(f"F1 Scores and ROUGE Scores:{evaluate_scores}")
