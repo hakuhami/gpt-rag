@@ -73,6 +73,7 @@ class RAGModel:
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
 # The prompt is written for Chinese data.
+# verification_timelineは、中国語データセットのラベルに合わせている(9/2の実験)
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
@@ -97,11 +98,11 @@ class RAGModel:
         2. Determine if a promise is included, and indicate "Yes" if included, "No" if not included. (promise_status)
         3. If a promise is included (if promise_status is "Yes"), also provide the following information:
         - The specific part of the promise (extract verbatim from the text without changing a single word) (promise_string)
-        - When the promise can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
+        - When the promise can be verified ("already", "Less than 2 years", "2 to 5 years", "More than 5 years", "N/A") (verification_timeline)
         - Whether evidence is included ("Yes", "No", "N/A") (evidence_status)
         4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
         - The part containing the evidence (extract directly from the text without changing a single word) (evidence_string)
-        - The quality of the relationship between the promise and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
+        - The quality of the relationship between the promise and evidence ("Clear", "Not Clear", "Potentially Misleading", "N/A") (evidence_quality)
            
         Definitions and criteria for annotation labels:
         1. promise_status - A promise is composed of a statement (a company principle, commitment, or strategy related to ESG criteria).:
@@ -110,9 +111,9 @@ class RAGModel:
         
         2. verification_timeline - The Verification Timeline is the assessment of when we could possibly see the final results of a given ESG-related action and thus verify the statement.:
         - "already": Qualifies ESG-related measures that have already been and keep on being applied and every small measure whose results can already be verified anyway.
-        - "within_2_years": ESG-related measures whose results can be verified within 2 years.
-        - "between_2_and_5_years": ESG-related measures whose results can be verified in 2 to 5 years.
-        - "more_than_5_years: ESG-related measures whose results can be verified in more than 5 years.
+        - "Less than 2 years": ESG-related measures whose results can be verified within 2 years.
+        - "2 to 5 years": ESG-related measures whose results can be verified in 2 to 5 years.
+        - "More than 5 years": ESG-related measures whose results can be verified in more than 5 years.
         - "N/A": When no promise exists. (Or when the promise is not verifiable.)
 
         3. evidence_status - Pieces of evidence are elements deemed the most relevant to exemplify and prove the core promise is being kept, which includes but is not limited to simple examples, company measures, numbers, etc.:
@@ -128,6 +129,7 @@ class RAGModel:
         
         Important notes:
         - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        - The texts that need to be annotated were mechanically extracted from company reports in PDF format, so carefully consider the overall meaning of each text with that in mind.
         - For indirect evidence, carefully judge its relevance.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank. The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
         - Understand and appropriately interpret industry-specific terms.
@@ -158,10 +160,10 @@ class RAGModel:
                             "data": {"type": "string"},
                             "promise_status": {"type": "string", "enum": ["Yes", "No"]},
                             "promise_string": {"type": "string"},
-                            "verification_timeline": {"type": "string", "enum": ["already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A"]},
+                            "verification_timeline": {"type": "string", "enum": ["already", "Less than 2 years", "2 to 5 years", "More than 5 years", "N/A"]},
                             "evidence_status": {"type": "string", "enum": ["Yes", "No", "N/A"]},
                             "evidence_string": {"type": "string"},
-                            "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Misleading", "N/A"]}
+                            "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Potentially Misleading", "N/A"]}
                         },
                         "required": ["data", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
                     }
