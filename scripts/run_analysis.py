@@ -47,7 +47,6 @@ def run_analysis(config_path: str) -> None:
 
     # Analyze the test data
     predictions = []
-    # skipped_items = []
     for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
         print(f"{result},")
