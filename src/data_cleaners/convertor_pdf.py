@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 url_domain_to_pdf_file = "./data/raw/PDFs/.Chinese_URL-PDF_List.json"
 data_file_path = "./data/raw/Chinese_test.json"
-output_file_path = "./data/processed/pdf_Chinese_test_converted.json"
+output_file_path = "./data/processed/pdf_Chinese_test.json"
 
 # ドメイン名と対応するPDFファイル名のマッピングを読み込む
 with open(url_domain_to_pdf_file, 'r', encoding='utf-8-sig') as f:
