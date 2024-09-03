@@ -84,7 +84,7 @@ class RAGModel:
                 pass        
         return None
     
-    def resize_image(self, image: Image.Image, scale_factor: float = 0.5) -> Image.Image:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.7) -> Image.Image:
         """
         Resize the image by a given scale factor.
         
@@ -101,7 +101,7 @@ class RAGModel:
         
         return image.resize((new_width, new_height), Image.LANCZOS)
 
-    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.7, quality: int = 85) -> str:
+    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.7, quality: int = 70) -> str:
         """
         Convert a PIL Image to a base64 encoded string, with resizing and compression.
         
@@ -126,14 +126,6 @@ class RAGModel:
         
         # Encode to base64
         return base64.b64encode(buffered.getvalue()).decode()
-    
-    # def image_to_base64(self, image: Image.Image) -> str:
-    #     """
-    #     Convert a PIL Image to a base64 encoded string.
-    #     """
-    #     buffered = BytesIO()
-    #     image.save(buffered, format="PNG")
-    #     return base64.b64encode(buffered.getvalue()).decode()
 
 # The parts of the prompt that explains the JSON structure are to be changed according to the language since the JSON structure differs for each language's dataset.
 
@@ -161,7 +153,7 @@ class RAGModel:
         context = []
         for doc in relevant_docs:
             doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.7, quality=85)
+            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.7, quality=70)
             context.append(json.dumps(doc_info, ensure_ascii=False))
 
         context_str = "\n".join(context)        
@@ -249,7 +241,7 @@ class RAGModel:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.7, quality=85)}",
+                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.7, quality=70)}",
                             "detail": "high"
                         }
                     },
