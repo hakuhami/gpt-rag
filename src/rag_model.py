@@ -56,9 +56,9 @@ class RAGModel:
             self.doc_images.append(image)
         self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
     
-    # # Retrieve the top 2 items from the target search data with the highest cosine similarity to the input paragraph.
-    # Because GPT context length strict, "top_k: int = 2"
-    def get_relevant_context(self, query_image: Image.Image, top_k: int = 2) -> List[Dict]:
+    # # Retrieve the top 3 items from the target search data with the highest cosine similarity to the input paragraph.
+    # Because GPT context length strict, "top_k: int = 3"
+    def get_relevant_context(self, query_image: Image.Image, top_k: int = 3) -> List[Dict]:
         """
         Retrieve the top documents related to the query image
         """
@@ -84,7 +84,7 @@ class RAGModel:
                 pass        
         return None
     
-    def resize_image(self, image: Image.Image, scale_factor: float = 0.2) -> Image.Image:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.1) -> Image.Image:
         """
         Resize the image by a given scale factor.
         
