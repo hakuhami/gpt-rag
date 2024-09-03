@@ -84,13 +84,56 @@ class RAGModel:
                 pass        
         return None
     
-    def image_to_base64(self, image: Image.Image) -> str:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.5) -> Image.Image:
         """
-        Convert a PIL Image to a base64 encoded string.
+        Resize the image by a given scale factor.
+        
+        :param image: Original PIL Image
+        :param scale_factor: Scale factor for resizing (e.g., 0.5 for 50% of original size)
+        :return: Resized PIL Image
         """
+        if scale_factor <= 0 or scale_factor > 1:
+            raise ValueError("Scale factor must be between 0 and 1")
+        
+        width, height = image.size
+        new_width = int(width * scale_factor)
+        new_height = int(height * scale_factor)
+        
+        return image.resize((new_width, new_height), Image.LANCZOS)
+
+    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.7, quality: int = 85) -> str:
+        """
+        Convert a PIL Image to a base64 encoded string, with resizing and compression.
+        
+        :param image: Original PIL Image
+        :param scale_factor: Scale factor for resizing (e.g., 0.5 for 50% of original size)
+        :param quality: JPEG quality (0-100)
+        :return: Base64 encoded string of the image
+        """
+        # Create a copy of the image to avoid modifying the original
+        img_copy = image.copy()
+
+        # Convert to RGB if it's not (this handles RGBA or other color modes)
+        if img_copy.mode != 'RGB':
+            img_copy = img_copy.convert('RGB')
+        
+        # Resize the image
+        img_copy = self.resize_image(img_copy, scale_factor)
+        
+        # Save the image to a BytesIO object
         buffered = BytesIO()
-        image.save(buffered, format="PNG")
+        img_copy.save(buffered, format="PNG", quality=quality, optimize=True)
+        
+        # Encode to base64
         return base64.b64encode(buffered.getvalue()).decode()
+    
+    # def image_to_base64(self, image: Image.Image) -> str:
+    #     """
+    #     Convert a PIL Image to a base64 encoded string.
+    #     """
+    #     buffered = BytesIO()
+    #     image.save(buffered, format="PNG")
+    #     return base64.b64encode(buffered.getvalue()).decode()
 
 # The parts of the prompt that explains the JSON structure are to be changed according to the language since the JSON structure differs for each language's dataset.
 
@@ -118,7 +161,7 @@ class RAGModel:
         context = []
         for doc in relevant_docs:
             doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'])
+            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.7, quality=85)
             context.append(json.dumps(doc_info, ensure_ascii=False))
 
         context_str = "\n".join(context)        
@@ -206,7 +249,7 @@ class RAGModel:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{self.image_to_base64(image)}",
+                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.7, quality=85)}",
                             "detail": "high"
                         }
                     },
