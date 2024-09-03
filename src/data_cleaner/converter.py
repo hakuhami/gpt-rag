@@ -1,9 +1,9 @@
 import json
 
 # Original English JSON file.
-input_file = './data/raw/PromiseEval_Sample_Trainset_French.json'
+input_file = './data/raw/French_train.json'
 # New JSON file limited to only the labels needed for the experiment.
-output_file = './data/raw/French_experiment_data.json'
+output_file = './data/processed/French_train_converted.json'
 
 with open(input_file, 'r', encoding='utf-8-sig') as file:
     data = json.load(file)
@@ -20,3 +20,4 @@ filtered_data = [remove_labels(record) for record in data]
 
 with open(output_file, 'w', encoding='utf-8-sig') as file:
     json.dump(filtered_data, file, ensure_ascii=False, indent=2)
+print(f"length of filtered data: {len(filtered_data)}")
