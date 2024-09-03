@@ -75,10 +75,8 @@ class RAGModel:
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
         Follow the instructions below to provide careful and consistent annotations.
         Output the results in the following JSON format.
-        Ensure that your response is a valid JSON object.
-        Regarding the "data", be sure to output the content of the given paragraph without altering it and in str format.:
+        Ensure that your response is a valid JSON object.:
         {{
-            "data": str,
             "promise_status": str,
             "verification_timeline": str,
             "evidence_status": str,
@@ -146,13 +144,12 @@ class RAGModel:
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "data": {"type": "string"},
                             "promise_status": {"type": "string", "enum": ["Yes", "No"]},
                             "verification_timeline": {"type": "string", "enum": ["Already", "Less than 2 years", "2 to 5 years", "More than 5 years", "N/A"]},
                             "evidence_status": {"type": "string", "enum": ["Yes", "No", "N/A"]},
                             "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Misleading", "N/A"]}
                         },
-                        "required": ["data", "promise_status", "verification_timeline", "evidence_status", "evidence_quality"]
+                        "required": ["promise_status", "verification_timeline", "evidence_status", "evidence_quality"]
                     }
                 }
             ],
@@ -164,5 +161,9 @@ class RAGModel:
         generated_text = self.extract_json_text(response.choices[0].message.function_call.arguments)        
         load_generated_text = json.loads(generated_text)
         
-        result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
+        # result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
+        result = {
+            "data": paragraph,
+            **load_generated_text
+        }
         return result
