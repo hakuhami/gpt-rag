@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="kr" />
+<meta http-equiv="content-style-type" content="text/css" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="imagetoolbar" content="no" />
+<meta name="copyright" content="(c)2012" />
+<meta name="description" content="대한민국 대표 기업공시채널 KIND" />
+<meta name="keywords" content="대한민국 대표 기업공시채널 KIND" />
+<title>페이지 오류</title>
+<link rel="stylesheet" type="text/css" href="/css/default_new.css" media="all" />
+<link rel="stylesheet" type="text/css" href="/css/common.css" media="all" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="/js/html5shiv.js"></script>
+<![endif]-->
+</head>
+<body>
+	<section  class="errorpage">
+		<header>
+			<hgroup>
+				<h1>요청하신 페이지는 존재하지 않습니다.</h1>
+				<div class="alert">
+					<div class="inner warn">
+						<table class="pcontents"  summary="">
+							<caption>주의사항</caption>
+							<colgroup>
+								<col width="*">
+							</colgroup>
+							<tbody>
+								<tr>
+									<td>
+										해당 URL을 다시 확인해주시기 바랍니다.<br />
+										이와 관련해서 문의사항이 있으시면 시스템 담당자에게 연락해 주세요.
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</hgroup>
+		</header>
+	</section>
+</body>
+</html>

@@ -17,13 +17,8 @@ with open(data_file_path, 'r', encoding='utf-8-sig') as f:
 # データセットの各項目に対してPDF名を追加
 for item in data:
     url = item.get('URL')
-    if url:
-        parsed_url = urlparse(url)
-        domain = parsed_url.netloc
-        
-        # ドメイン名に対応するPDFファイル名を取得して追加
-        if domain in domain_to_pdf:
-            item['pdf'] = domain_to_pdf[domain]
+    if url in domain_to_pdf:
+        item['pdf'] = domain_to_pdf[url]
     
     # URL列を削除
     if 'URL' in item:
