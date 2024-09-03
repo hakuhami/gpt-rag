@@ -84,7 +84,7 @@ class RAGModel:
                 pass        
         return None
     
-    def resize_image(self, image: Image.Image, scale_factor: float = 0.1) -> Image.Image:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.2) -> Image.Image:
         """
         Resize the image by a given scale factor.
         
@@ -165,10 +165,10 @@ class RAGModel:
         I will provide image of actual company reports, so analyze the given image and follow the instructions below to provide careful and consistent annotations.:
         {{
             "promise_status": str,
-            "promise_string": str or null,
+            "promise_string": str,
             "verification_timeline": str,
             "evidence_status": str,
-            "evidence_string": str or null,
+            "evidence_string": str,
             "evidence_quality": str
         }}:
         Although you are specified to output in JSON format, perform the thought process in natural language and output the result in JSON format at the end.
@@ -211,7 +211,7 @@ class RAGModel:
         - Consider the context of the entire image thoroughly. It's important to understand the meaning of the entire page, not just individual text bloks.
         - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
         - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output a blank. The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output "N/A". The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
 
         The following are annotation examples of image similar to the one you want to analyze.
         Refer to these examples, think about why these examples have such annotation results, and then output the results.
@@ -250,10 +250,10 @@ class RAGModel:
                         "type": "object",
                         "properties": {
                             "promise_status": {"type": "string", "enum": ["Yes", "No"]},
-                            "promise_string": {"type": ["string", "null"]},
+                            "promise_string": {"type": "string"},
                             "verification_timeline": {"type": "string", "enum": ["already", "Less than 2 years", "2 to 5 years", "More than 5 years", "N/A"]},
                             "evidence_status": {"type": "string", "enum": ["Yes", "No", "N/A"]},
-                            "evidence_string": {"type": ["string", "null"]},
+                            "evidence_string": {"type": "string"},
                             "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Potentially Misleading", "N/A"]}
                         },
                         "required": ["pdf", "page_number", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
@@ -271,7 +271,7 @@ class RAGModel:
         # Add pdf_name and page_number to the result
         result = {
             "pdf": pdf_name,
-            "page_number": page_number,
+            "page_number": str(page_number),
             **load_generated_text
         }
         
