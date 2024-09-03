@@ -56,9 +56,9 @@ class RAGModel:
             self.doc_images.append(image)
         self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
     
-    # # Retrieve the top 3 items from the target search data with the highest cosine similarity to the input paragraph.
-    # Because GPT context length strict, "top_k: int = 3"
-    def get_relevant_context(self, query_image: Image.Image, top_k: int = 3) -> List[Dict]:
+    # # Retrieve the top 2 items from the target search data with the highest cosine similarity to the input paragraph.
+    # Because GPT context length strict, "top_k: int = 2"
+    def get_relevant_context(self, query_image: Image.Image, top_k: int = 2) -> List[Dict]:
         """
         Retrieve the top documents related to the query image
         """
@@ -84,7 +84,7 @@ class RAGModel:
                 pass        
         return None
     
-    def resize_image(self, image: Image.Image, scale_factor: float = 0.7) -> Image.Image:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.1) -> Image.Image:
         """
         Resize the image by a given scale factor.
         
@@ -101,7 +101,7 @@ class RAGModel:
         
         return image.resize((new_width, new_height), Image.LANCZOS)
 
-    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.7, quality: int = 70) -> str:
+    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.1, quality: int = 95) -> str:
         """
         Convert a PIL Image to a base64 encoded string, with resizing and compression.
         
@@ -153,7 +153,7 @@ class RAGModel:
         context = []
         for doc in relevant_docs:
             doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.7, quality=70)
+            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.1, quality=95)
             context.append(json.dumps(doc_info, ensure_ascii=False))
 
         context_str = "\n".join(context)        
@@ -162,11 +162,8 @@ class RAGModel:
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
-        I will provide image of actual company reports, so analyze the given image and follow the instructions below to provide careful and consistent annotations.
-        Regarding the "pdf" and "page_number", be sure to output the content of the given paragraph without altering it and in str format.:
+        I will provide image of actual company reports, so analyze the given image and follow the instructions below to provide careful and consistent annotations.:
         {{
-            "pdf": str,
-            "page_number": int,
             "promise_status": str,
             "promise_string": str or null,
             "verification_timeline": str,
@@ -215,14 +212,12 @@ class RAGModel:
         - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
         - For indirect evidence, carefully judge its relevance.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output a blank. The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
-        - Understand and appropriately interpret industry-specific terms and visual representations.
 
         The following are annotation examples of image similar to the one you want to analyze.
         Refer to these examples, think about why these examples have such annotation results, and then output the results.
         Examples for your reference are as follows:
         {context_str}
 
-        The image is from the PDF file named "{pdf_name}" and is page number {page_number}.
         Analyze the following image and provide results in the format described above:
         """
 
@@ -241,8 +236,7 @@ class RAGModel:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.7, quality=70)}",
-                            "detail": "high"
+                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.1, quality=95)}"
                         }
                     },
                  ]
@@ -255,13 +249,11 @@ class RAGModel:
                     "parameters": {
                         "type": "object",
                         "properties": {
-                            "pdf": {"type": "string"},
-                            "page_number": {"type": "int"},
                             "promise_status": {"type": "string", "enum": ["Yes", "No"]},
-                            "promise_string": {"type": "string"},
+                            "promise_string": {"type": ["string", "null"]},
                             "verification_timeline": {"type": "string", "enum": ["already", "Less than 2 years", "2 to 5 years", "More than 5 years", "N/A"]},
                             "evidence_status": {"type": "string", "enum": ["Yes", "No", "N/A"]},
-                            "evidence_string": {"type": "string"},
+                            "evidence_string": {"type": ["string", "null"]},
                             "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Potentially Misleading", "N/A"]}
                         },
                         "required": ["pdf", "page_number", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
@@ -275,6 +267,13 @@ class RAGModel:
         # Extract only the content generated by GPT from the response data containing a lot of information, and format it in JSON.
         generated_text = self.extract_json_text(response.choices[0].message.function_call.arguments)
         load_generated_text = json.loads(generated_text)
+
+        # Add pdf_name and page_number to the result
+        result = {
+            "pdf": pdf_name,
+            "page_number": page_number,
+            **load_generated_text
+        }
         
-        result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
+        # result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
         return result
