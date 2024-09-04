@@ -57,8 +57,8 @@ def run_analysis(config_path: str) -> None:
         image = rag_model.load_pdf_as_image(pdf_path, item['page_number'])
         result = rag_model.analyze_paragraph(image, item['pdf'], item['page_number'])
         print(f"{result},")
-        # result_dict = json.loads(result)
-        predictions.append(result)
+        result_dict = json.loads(result)
+        predictions.append(result_dict)
         
     # Save the prediction results
     save_json_data(predictions, config['generated_data_path'])
