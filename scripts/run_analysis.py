@@ -45,6 +45,7 @@ def run_analysis(config_path: str) -> None:
     # print("Search and test data is saved.")
 
     # Prepare the RAG model with the search data
+    print("Start embedding")
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
     rag_model.prepare_documents(search_data, "data/raw/PDFs")
     print("Documents are prepared.")

@@ -47,18 +47,28 @@ class RAGModel:
         self.search_data = search_data
         self.doc_embeddings = []
         self.doc_images = []
-        for item in search_data:
+        # for item in search_data:
+        #     pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
+        #     page_number = int(item['page_number'])
+        #     image = self.load_pdf_as_image(pdf_path, page_number)
+        #     embedding = self.embed_image(image)
+        #     self.doc_embeddings.append(embedding)
+        #     self.doc_images.append(image)
+        # self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
+        for index, item in enumerate(search_data):
             pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
             page_number = int(item['page_number'])
             image = self.load_pdf_as_image(pdf_path, page_number)
             embedding = self.embed_image(image)
             self.doc_embeddings.append(embedding)
-            self.doc_images.append(image)
-        self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
-    
-    # # Retrieve the top 3 items from the target search data with the highest cosine similarity to the input paragraph.
-    # Because GPT context length strict, "top_k: int = 3"
-    def get_relevant_context(self, query_image: Image.Image, top_k: int = 3) -> List[Dict]:
+            self.doc_images.append(image)            
+            # 何回目のループが終わったかを表示
+            print(f"ループ {index + 1} 回目が終了しました。")
+        self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)     
+
+    # # Retrieve the top 2 items from the target search data with the highest cosine similarity to the input paragraph.
+    # Because GPT context length strict, "top_k: int = 2"
+    def get_relevant_context(self, query_image: Image.Image, top_k: int = 2) -> List[Dict]:
         """
         Retrieve the top documents related to the query image
         """
@@ -84,7 +94,7 @@ class RAGModel:
                 pass        
         return None
     
-    def resize_image(self, image: Image.Image, scale_factor: float = 0.1) -> Image.Image:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.05) -> Image.Image:
         """
         Resize the image by a given scale factor.
         
@@ -101,7 +111,7 @@ class RAGModel:
         
         return image.resize((new_width, new_height), Image.LANCZOS)
 
-    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.1, quality: int = 95) -> str:
+    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.05, quality: int = 95) -> str:
         """
         Convert a PIL Image to a base64 encoded string, with resizing and compression.
         
@@ -153,7 +163,7 @@ class RAGModel:
         context = []
         for doc in relevant_docs:
             doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.1, quality=95)
+            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.05, quality=95)
             context.append(json.dumps(doc_info, ensure_ascii=False))
 
         context_str = "\n".join(context)        
@@ -162,15 +172,7 @@ class RAGModel:
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
-        I will provide image of actual company reports, so analyze the given image and follow the instructions below to provide careful and consistent annotations.:
-        {{
-            "promise_status": str,
-            "promise_string": str,
-            "verification_timeline": str,
-            "evidence_status": str,
-            "evidence_string": str,
-            "evidence_quality": str
-        }}:
+        I will provide image of actual company reports, so analyze the given image and follow the instructions below to provide careful and consistent annotations.
         Although you are specified to output in JSON format, perform the thought process in natural language and output the result in JSON format at the end.
         
         Annotation procedure:
@@ -210,7 +212,6 @@ class RAGModel:
         Important notes:
         - Consider the context of the entire image thoroughly. It's important to understand the meaning of the entire page, not just individual text bloks.
         - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
-        - For indirect evidence, carefully judge its relevance.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output "N/A". The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
 
         The following are annotation examples of image similar to the one you want to analyze.
@@ -236,7 +237,7 @@ class RAGModel:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.1, quality=95)}"
+                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.05, quality=95)}"
                         }
                     },
                  ]
@@ -275,5 +276,5 @@ class RAGModel:
             **load_generated_text
         }
         
-        # result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
+        # result = json.dumps(result, indent=2, ensure_ascii=False)
         return result
