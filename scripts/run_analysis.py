@@ -69,4 +69,4 @@ def run_analysis(config_path: str) -> None:
     print("Evaluation is completed.")
     
     save_average_results_to_file(evaluate_scores, config['evaluation_results_path'])
-    print(f"F1 Scores and ROUGE Scores:{evaluate_scores}")
+    print(f"F1 Scores:{evaluate_scores}")
