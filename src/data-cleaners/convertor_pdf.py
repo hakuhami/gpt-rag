@@ -2,9 +2,9 @@ import json
 from urllib.parse import urlparse
 from collections import OrderedDict
 
-url_domain_to_pdf_file = "./data/raw/PDFs/.Chinese_URL-PDF_List.json"
-data_file_path = "./data/raw/Chinese_sample.json"
-output_file_path = "./data/processed/Chinese_sample_converted.json"
+url_domain_to_pdf_file = "./data/raw/PDFs/.Korean_URL-PDF_List.json"
+data_file_path = "./data/raw/Korean_sample.json"
+output_file_path = "./data/processed/pdf_Korean_sample.json"
 
 # ドメイン名と対応するPDFファイル名のマッピングを読み込む
 with open(url_domain_to_pdf_file, 'r', encoding='utf-8-sig') as f:
@@ -17,13 +17,8 @@ with open(data_file_path, 'r', encoding='utf-8-sig') as f:
 # データセットの各項目に対してPDF名を追加
 for item in data:
     url = item.get('URL')
-    if url:
-        parsed_url = urlparse(url)
-        domain = parsed_url.netloc
-        
-        # ドメイン名に対応するPDFファイル名を取得して追加
-        if domain in domain_to_pdf:
-            item['pdf'] = domain_to_pdf[domain]
+    if url in domain_to_pdf:
+        item['pdf'] = domain_to_pdf[url]
     
     # URL列を削除
     if 'URL' in item:
@@ -44,18 +39,3 @@ print(f"data amount:{len(data)}")
 # 新しいデータセットを保存
 with open(output_file_path, 'w', encoding='utf-8-sig') as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
-
-
-
-# (問題調査)verification_timelineがN/Aであり、promise_statusがYesのデータのみを選択
-
-filtered_output_file_path = "./data/processed/verificationNA/Chinese_sample_filtered_verification-NA.json"
-    
-# フィルタリングされたデータのみを選択
-filtered_data = [item for item in data if item.get('promise_status') == 'Yes' and item.get('verification_timeline') == 'N/A']
-
-# フィルタリングされたデータを新しいファイルに保存
-with open(filtered_output_file_path, 'w', encoding='utf-8-sig') as f:
-    json.dump(filtered_data, f, ensure_ascii=False, indent=2)
-
-print(f"Total filtered records: {len(filtered_data)}")
