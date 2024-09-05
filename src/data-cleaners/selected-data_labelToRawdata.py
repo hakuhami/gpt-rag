@@ -1,3 +1,5 @@
+# 韓国語は先にテキストベースでtest:200, train:400とランダムサンプリングしているので、同じデータを使うべくどのデータが選択されたかをラベル付けする必要がある。
+
 import json
 
 def load_json_file(file_path):
@@ -11,7 +13,7 @@ def save_json_file(file_path, data):
 # ファイル名を定義
 labeled_file = "./data/processed/used_in_text-based/pdf_Korean_train_converted_selectedLabel.json"
 original_file = "./data/raw/Korean_train.json"
-output_file = "./data/processed/Korean_train_converted400.json"
+output_file = "./data/processed/Korean_train_selectedLabel.json"
 
 # データを読み込む
 labeled_data = load_json_file(labeled_file)

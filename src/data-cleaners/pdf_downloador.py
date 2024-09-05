@@ -1,10 +1,17 @@
+# 韓国語は先にテキストベースでtest:200, train:400とランダムサンプリングしているので、それらのデータからダウンロード(先生にやってもらってテキスト抽出できなかったpdf(2件)は除去)
+
 import json
 import requests
 import os
 from urllib.parse import urlparse
 
+# # JSONファイルのパスとPDFを保存するディレクトリの設定
+# json_file_path = "./data/raw/Korean_train.json"
+# save_dir = "./data/raw/PDFs"
+# output_json_file = "./data/raw/PDFs/.Korean_URL-PDF_List.json"
+
 # JSONファイルのパスとPDFを保存するディレクトリの設定
-json_file_path = "./data/raw/Korean_train.json"
+json_file_path = "./data/processed/Korean_train_selectedLabel.json"
 save_dir = "./data/raw/PDFs"
 output_json_file = "./data/raw/PDFs/.Korean_URL-PDF_List.json"
 
@@ -15,15 +22,22 @@ with open(json_file_path, 'r', encoding='utf-8-sig') as f:
 # ユニークなURLを格納するためのセットを作成
 unique_urls = set()
 
-# URLの種類をすべて取得するループ
+# # URLの種類をすべて取得するループ
+# for item in data:
+#     url = item.get('URL')
+#     if url and url not in unique_urls:
+#         unique_urls.add(url)
+
+# URLの種類をすべて取得するループ（"selected": "Yes" のみ）
 for item in data:
-    url = item.get('URL')
-    if url and url not in unique_urls:
-        unique_urls.add(url)
+    if item.get('selected') == "Yes":
+        url = item.get('URL')
+        if url and url not in unique_urls:
+            unique_urls.add(url)
 
 # URLリストをリスト形式に変換
 url_list = sorted(list(unique_urls))
-print("Chinese_train.json URL_List:")
+print("Korean_train.json URL_List:")
 for i, url in enumerate(url_list):
     print(f"{i+1}: {url}")
 
