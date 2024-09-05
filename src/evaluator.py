@@ -1,5 +1,4 @@
 from typing import List, Dict
-from rouge import Rouge
 from sklearn.metrics import f1_score
 import json
 
@@ -17,36 +16,6 @@ def load_json_data(file_path: str) -> List[Dict]:
     """
     with open(file_path, 'r', encoding='utf-8-sig') as file:
         return json.load(file)
-
-def calculate_rouge_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, Dict[str, float]]:
-    """
-    Calculate the ROUGE score for the prediction results.
-
-    Args:
-        true_data (List[Dict]): The ground truth data
-        pred_data (List[Dict]): The predicted data
-
-    Returns:
-        Dict[str, Dict[str, float]]: The ROUGE score for each element
-    """
-    rouge = Rouge()
-    rouge_scores = {}
-    
-    text_elements = ['promise_string', 'evidence_string']
-    
-    for element in text_elements:
-        true_texts = [item.get(element, "") for item in true_data if isinstance(item, dict)]
-        pred_texts = [item.get(element, "") for item in pred_data if isinstance(item, dict)]
-        
-        # Exclude empty strings.
-        valid_pairs = [(t, p) for t, p in zip(true_texts, pred_texts) if t and p]
-        
-        if valid_pairs:
-            true_valid, pred_valid = zip(*valid_pairs)
-            scores = rouge.get_scores(pred_valid, true_valid, avg=True)
-            rouge_scores[element] = scores['rouge-l']
-    
-    return rouge_scores
 
 def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[str, float]:
     """
@@ -102,11 +71,9 @@ def evaluate_results(true_data_path: str, pred_data_path: str) -> Dict[str, Dict
     true_data = load_json_data(true_data_path)
     pred_data = load_json_data(pred_data_path)
 
-    rouge_scores = calculate_rouge_scores(true_data, pred_data)
     f1_scores = calculate_f1_scores(true_data, pred_data)
     
     evaluation = {}
-    evaluation.update(rouge_scores)
     evaluation.update({k: {'f': v} for k, v in f1_scores.items()})
     
     return evaluation
