@@ -68,20 +68,6 @@ def calculate_f1_scores(true_data: List[Dict], pred_data: List[Dict]) -> Dict[st
         true_values = []
         pred_values = []
         
-        # # Filtering: Exclude pairs with N/A labels.
-        # for true_item, pred_item in zip(true_data, pred_data):
-        #     true_label = true_item.get(element)
-        #     pred_label = pred_item.get(element)
-            
-        #     # Only for the 'promise_status' label, pairs containing 'N/A' are included in the calculation.
-        #     if element == 'promise_status':
-        #         true_values.append(true_label)
-        #         pred_values.append(pred_label)
-        #     else:
-        #         if true_label != 'N/A' and pred_label != 'N/A':
-        #             true_values.append(true_label)
-        #             pred_values.append(pred_label)
-        
         # Filtering: Exclude pairs with N/A labels, with special handling for 'verification_timeline'.
         for true_item, pred_item in zip(true_data, pred_data):
             true_label = true_item.get(element)

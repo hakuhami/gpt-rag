@@ -29,57 +29,7 @@ class RAGModel:
         Load a specific page from a PDF as an image.
         """
         images = pdf2image.convert_from_path(pdf_path, first_page=page_number, last_page=page_number)
-        return images[0]
-
-    def embed_image(self, image: Image.Image) -> torch.Tensor:
-        """
-        Embed an image using the e5-v model.
-        """
-        inputs = self.processor([self.img_prompt], [image], return_tensors="pt", padding=True).to('cuda')
-        with torch.no_grad():
-            emb = self.model(**inputs, output_hidden_states=True, return_dict=True).hidden_states[-1][:, -1, :]
-        return F.normalize(emb, dim=-1)    
-    
-    def prepare_documents(self, search_data: List[Dict], pdf_dir: str) -> None:
-        """
-        Prepare and encode the search data
-        """
-        self.search_data = search_data
-        self.doc_embeddings = []
-        self.doc_images = []
-        # for item in search_data:
-        #     pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
-        #     page_number = int(item['page_number'])
-        #     image = self.load_pdf_as_image(pdf_path, page_number)
-        #     embedding = self.embed_image(image)
-        #     self.doc_embeddings.append(embedding)
-        #     self.doc_images.append(image)
-        # self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
-        for index, item in enumerate(search_data):
-            pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
-            page_number = int(item['page_number'])
-            image = self.load_pdf_as_image(pdf_path, page_number)
-            embedding = self.embed_image(image)
-            self.doc_embeddings.append(embedding)
-            self.doc_images.append(image)            
-            # 何回目のループが終わったかを表示
-            print(f"ループ {index + 1} 回目が終了しました。")
-        self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)     
-
-    # # Retrieve the top 2 items from the target search data with the highest cosine similarity to the input paragraph.
-    # Because GPT context length strict, "top_k: int = 2"
-    def get_relevant_context(self, query_image: Image.Image, top_k: int = 2) -> List[Dict]:
-        """
-        Retrieve the top documents related to the query image
-        """
-        query_embedding = self.embed_image(query_image)
-        similarities = F.cosine_similarity(query_embedding, self.doc_embeddings)
-        top_indices = torch.argsort(similarities, descending=True)[:top_k]
-        # return [self.search_data[i] for i in top_indices]
-        return [
-            {**self.search_data[i], "image": self.doc_images[i]}
-            for i in top_indices
-        ]
+        return images[0]  
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
@@ -148,25 +98,7 @@ class RAGModel:
 
         Returns:
             Dict[str, str]: Annotation results in JSON format
-        """
-        
-        # page_image = self.get_page_image(pdf_path, page_number)
-        # relevant_docs = self.get_relevant_context(page_image)
-        # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
-        
-        # relevant_docs = self.get_relevant_context(image)
-        # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
-        
-        relevant_docs = self.get_relevant_context(image)
-        
-        # Prepare the context with both text information and base64 encoded images
-        context = []
-        for doc in relevant_docs:
-            doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.05, quality=95)
-            context.append(json.dumps(doc_info, ensure_ascii=False))
-
-        context_str = "\n".join(context)        
+        """     
 
         # The prompt is written for Chinese data.
 
@@ -213,11 +145,6 @@ class RAGModel:
         - Consider the context of the entire image thoroughly. It's important to understand the meaning of the entire page, not just individual text bloks.
         - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output "N/A". The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
-
-        The following are annotation examples of image similar to the one you want to analyze.
-        Refer to these examples, think about why these examples have such annotation results, and then output the results.
-        Examples for your reference are as follows:
-        {context_str}
 
         Analyze the following image and provide results in the format described above:
         """
