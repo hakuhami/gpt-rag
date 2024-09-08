@@ -1,23 +1,31 @@
+# 1つのファイルにまとめられていない
+
 import pandas as pd
 import numpy as np
 import json
-from scipy import stats
 
 def fleiss_kappa(ratings):
     n_raters = ratings.shape[1]
     n_items = ratings.shape[0]
     
-    # カテゴリの数を動的に決定（0以上の整数値のみを考慮）
-    categories = np.unique(ratings[ratings >= 0])
+    # すべての値を文字列に変換（NaNは'nan'として扱う）
+    str_ratings = ratings.astype(str)
+    
+    # カテゴリの数を動的に決定
+    categories = np.unique(str_ratings)
     n_categories = len(categories)
     
     # カテゴリの再マッピング
     category_mapping = {cat: i for i, cat in enumerate(categories)}
-    mapped_ratings = np.vectorize(lambda x: category_mapping.get(x, -1))(ratings)
     
-    # カテゴリごとの評価者数をカウント（-1はカウントしない）
+    def map_category(x):
+        return category_mapping.get(x, -1)
+    
+    mapped_ratings = np.vectorize(map_category)(str_ratings)
+    
+    # カテゴリごとの評価者数をカウント
     category_counts = np.apply_along_axis(
-        lambda x: np.bincount(x[x >= 0], minlength=n_categories), 
+        lambda x: np.bincount(x, minlength=n_categories), 
         axis=1, 
         arr=mapped_ratings
     )
@@ -35,27 +43,26 @@ def fleiss_kappa(ratings):
     return kappa
 
 def process_sheet(sheet):
-    # NaNを含む行を削除
-    sheet_clean = sheet.dropna()
-    
-    # データを整数に変換（小数点以下は切り捨て）
-    ratings = sheet_clean.astype(float).astype(int).values
-    
+    # データをそのまま使用
+    ratings = sheet.values
     return fleiss_kappa(ratings)
 
 # Excelファイルを読み込む
-file_path = "./data/Freiss_Japanese/Freiss_1.xlsx"
-sheets = ["promise_status", "verification_timeline", "evidence_status", "evidence_quality"]
+file_path = "./data/Freiss_Japanese/Freiss_1_final.xlsx"
+sheet_name = "sample200"
 
-results = {}
+# 指定された列（H, I, J）のデータを読み込む
+df = pd.read_excel(file_path, sheet_name=sheet_name, usecols="AL:AN", header=None)
 
-for sheet_name in sheets:
-    df = pd.read_excel(file_path, sheet_name=sheet_name, usecols="A:C", header=None)
-    kappa = process_sheet(df)
-    results[sheet_name] = kappa
+# Fleissのカッパ係数を計算
+kappa = process_sheet(df)
+
+# 結果を辞書形式で保存
+results = {sheet_name: kappa}
 
 # 結果をJSONファイルに出力
-with open("./data/Freiss_Japanese/Freiss_1.json", "w") as f:
+with open("./data/Freiss_Japanese/Freiss_1_final_eq.json", "w") as f:
     json.dump(results, f, indent=4)
 
-print("Fleissのカッパ係数の計算が完了し、結果が./data/Freiss_1.jsonに保存されました。")
+print(f"Fleissのカッパ係数の計算が完了し、結果が./data/Freiss_1.jsonに保存されました。")
+print(f"計算されたFleissのカッパ係数: {kappa}")
