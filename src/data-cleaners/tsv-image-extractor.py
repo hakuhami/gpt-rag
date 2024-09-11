@@ -7,7 +7,7 @@ import io
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image as XLImage
 from openpyxl.utils import get_column_letter
-from openpyxl.styles import Alignment
+from openpyxl.styles import Alignment, Font
 
 # popplerのパスを指定（自分の環境に合わせて変更してください）
 POPPLER_PATH = r"C:\Users\hakusen_shu\OneDrive\データセット\確定版データセット\Experiment\poppler-24.07.0\Library\bin"
@@ -17,7 +17,7 @@ def load_url_pdf_mapping(json_path):
         mapping = json.load(f)
     return {v: k for k, v in mapping.items()}  # PDFファイル名をキー、URLを値とする辞書に変換
 
-def pdf_to_image(pdf_path, page_number, dpi=200):
+def pdf_to_image(pdf_path, page_number, dpi=300):
     """PDFの特定のページを画像に変換する"""
     images = pdf2image.convert_from_path(pdf_path, first_page=page_number, last_page=page_number, dpi=dpi, poppler_path=POPPLER_PATH)
     return images[0]
@@ -44,8 +44,8 @@ def process_tsv_and_add_to_excel(wb, tsv_path, pdf_dir, sheet_name, url_pdf_mapp
     # 新しいワークシートを作成
     ws = wb.create_sheet(sheet_name)
 
-    # ヘッダーを追加
-    headers = list(df.columns) + ['Image']
+    # ヘッダーを追加（URLを最後に移動）
+    headers = list(df.columns[:-1]) + ['Image', 'URL']
     for col, header in enumerate(headers, start=1):
         cell = ws.cell(row=1, column=col, value=header)
         cell.alignment = Alignment(horizontal='center', vertical='center')
@@ -55,14 +55,14 @@ def process_tsv_and_add_to_excel(wb, tsv_path, pdf_dir, sheet_name, url_pdf_mapp
         excel_row = index + 2  # Excelは1-indexedで、1行目はヘッダー
 
         # TSVデータをExcelに追加
-        for col, value in enumerate(row, start=1):
+        for col, value in enumerate(row[:-1], start=1):
             cell = ws.cell(row=excel_row, column=col, value=value)
             cell.alignment = Alignment(horizontal='center', vertical='center')
 
         # PDFから画像を抽出
         pdf_path = os.path.join(pdf_dir, row['PDF'])
         page_number = int(row['page_number'])
-        img = pdf_to_image(pdf_path, page_number, dpi=200)
+        img = pdf_to_image(pdf_path, page_number, dpi=300)
 
         # 画像をリサイズ（アスペクト比を維持）
         max_width = 600  # 最大幅を設定
@@ -72,8 +72,14 @@ def process_tsv_and_add_to_excel(wb, tsv_path, pdf_dir, sheet_name, url_pdf_mapp
         print(f"Extracted image from {pdf_path} page {page_number}")
 
         # 画像をExcelに追加
-        img_col = get_column_letter(len(row) + 1)
-        add_image_to_excel(ws, img, excel_row, img_col)
+        img_col = len(row)
+        add_image_to_excel(ws, img, excel_row, get_column_letter(img_col))
+        
+        # URLを最後の列に追加
+        url_col = len(row) + 1
+        cell = ws.cell(row=excel_row, column=url_col, value=row['URL'])
+        cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+        cell.font = Font(size=8)  # フォントサイズを小さくする
 
         # 行の高さを調整
         ws.row_dimensions[excel_row].height = max(new_height * 0.75, 100)  # ピクセルからポイントに変換、最小高さを設定
@@ -91,8 +97,9 @@ def process_tsv_and_add_to_excel(wb, tsv_path, pdf_dir, sheet_name, url_pdf_mapp
         adjusted_width = max((max_length + 2) * 1.2, 15)  # 最小幅を設定
         ws.column_dimensions[column_letter].width = adjusted_width
 
-    # 画像列の幅を設定
-    ws.column_dimensions[img_col].width = 80  # 適切な幅に調整
+    # 画像列とURL列の幅を設定
+    ws.column_dimensions[get_column_letter(img_col)].width = 100  # 画像列の幅を適切に調整
+    ws.column_dimensions[get_column_letter(url_col)].width = 70  # URL列の幅を適切に調整
 
 def process_directory_and_create_excel(input_dir, pdf_dir, output_excel_path, url_pdf_mapping):
     # Excelワークブックを作成
@@ -111,9 +118,9 @@ def process_directory_and_create_excel(input_dir, pdf_dir, output_excel_path, ur
 
 # スクリプトを実行
 if __name__ == "__main__":
-    input_dir = "./data/processed/statistics/non-coresspond/Korean_withRAG"
+    input_dir = "./data/processed/statistics/non-coresspond/Korean_withoutRAG"
     pdf_dir = "./data/raw/PDFs"
-    output_excel_path = "./data/processed/statistics/non-coresspond/Korean_withRAG_analysis.xlsx"
+    output_excel_path = "./data/processed/statistics/non-coresspond/Korean_withoutRAG_analysis.xlsx"
     url_pdf_json_path = "./data/raw/PDFs/.Korean_URL-PDF_List.json"
 
     # URL-PDF対応マッピングを読み込む
