@@ -52,6 +52,7 @@ file_path = "./data/Freiss_Japanese/Freiss_1_final.xlsx"
 sheet_name = "sample200"
 
 # 指定された列（H, I, J）のデータを読み込む
+# Fress: HIJ RST ABACAD ALAMAN
 df = pd.read_excel(file_path, sheet_name=sheet_name, usecols="AL:AN", header=None)
 
 # Fleissのカッパ係数を計算
@@ -60,9 +61,9 @@ kappa = process_sheet(df)
 # 結果を辞書形式で保存
 results = {sheet_name: kappa}
 
-# 結果をJSONファイルに出力
-with open("./data/Freiss_Japanese/Freiss_1_final_eq.json", "w") as f:
-    json.dump(results, f, indent=4)
+# # 結果をJSONファイルに出力
+# with open("./data/Freiss_Japanese/Freiss_1_final_eq.json", "w") as f:
+#     json.dump(results, f, indent=4)
 
-print(f"Fleissのカッパ係数の計算が完了し、結果が./data/Freiss_1.jsonに保存されました。")
+# print(f"Fleissのカッパ係数の計算が完了し、結果が./data/Freiss_1.jsonに保存されました。")
 print(f"計算されたFleissのカッパ係数: {kappa}")
