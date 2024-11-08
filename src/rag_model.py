@@ -26,22 +26,67 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
 
-    # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
-    def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
+    # # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
+    # def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
+    #     """
+    #     Retrieve the top documents related to the query
+
+    #     Args:
+    #         query (str): Input query
+    #         top_k (int): Number of documents to retrieve
+
+    #     Returns:
+    #         List[Dict]: List of relevant documents
+    #     """
+    #     query_embedding = self.embedder.encode([query])
+    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
+    #     top_indices = np.argsort(similarities)[-top_k:][::-1]
+    #     return [self.search_data[i] for i in top_indices]
+    
+    def get_relevant_context(self, query: str, yes_count: int = 4, no_count: int = 2) -> List[Dict]:
         """
-        Retrieve the top documents related to the query
+        Retrieve documents related to the query, maintaining a specific ratio of promise_status values
 
         Args:
             query (str): Input query
-            top_k (int): Number of documents to retrieve
+            yes_count (int): Number of documents with promise_status "Yes" to retrieve
+            no_count (int): Number of documents with promise_status "No" to retrieve
 
         Returns:
-            List[Dict]: List of relevant documents
+            List[Dict]: List of relevant documents with specified distribution of promise_status
         """
+        # Get query embedding and calculate similarities
         query_embedding = self.embedder.encode([query])
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-        top_indices = np.argsort(similarities)[-top_k:][::-1]
-        return [self.search_data[i] for i in top_indices]
+        
+        # Create a list of (index, similarity, promise_status) tuples
+        indexed_similarities = [
+            (i, sim, self.search_data[i].get('promise_status', 'No')) 
+            for i, sim in enumerate(similarities)
+        ]
+        
+        # Separate documents by promise_status
+        yes_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'Yes']
+        no_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'No']
+        
+        # Sort by similarity (descending order)
+        yes_docs.sort(key=lambda x: x[1], reverse=True)
+        no_docs.sort(key=lambda x: x[1], reverse=True)
+        
+        # Get top k documents for each category
+        selected_yes = yes_docs[:yes_count]
+        selected_no = no_docs[:no_count]
+        
+        # Combine the selected documents
+        selected_docs = selected_yes + selected_no
+        
+        # Get the corresponding documents
+        result = [self.search_data[i] for i, _ in selected_docs]
+        print(f"↓relevant_docs")
+        print(f"{result},")
+        print(f"↑relevant_docs")
+        
+        return result
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").

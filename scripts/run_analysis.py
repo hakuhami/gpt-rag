@@ -49,7 +49,9 @@ def run_analysis(config_path: str) -> None:
     predictions = []
     for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
+        print(f"↓result")
         print(f"{result},")
+        print(f"↑result")
         result_dict = json.loads(result)
         predictions.append(result_dict)
     print("Analysis is completed.")
