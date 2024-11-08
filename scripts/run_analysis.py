@@ -28,6 +28,8 @@ def run_analysis(config_path: str) -> None:
     # Load the test data from the file
     with open(config['test_data_path'], 'r', encoding='utf-8-sig') as f:
         test_data = json.load(f)
+        
+    print("Search and test data is loaded.")
     
     # # Load the pre-prepared JSON data
     # json_data = load_json_data(config['sample_raw_data_path'])
@@ -49,9 +51,7 @@ def run_analysis(config_path: str) -> None:
     predictions = []
     for item in test_data:
         result = rag_model.analyze_paragraph(item['data'])
-        print(f"↓result")
         print(f"{result},")
-        print(f"↑result")
         result_dict = json.loads(result)
         predictions.append(result_dict)
     print("Analysis is completed.")

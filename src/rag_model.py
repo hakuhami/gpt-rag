@@ -25,23 +25,6 @@ class RAGModel:
         self.search_data = search_data
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
-
-    # # Retrieve the top 6 items from the target search data with the highest cosine similarity to the input paragraph.
-    # def get_relevant_context(self, query: str, top_k: int = 6) -> List[Dict]:
-    #     """
-    #     Retrieve the top documents related to the query
-
-    #     Args:
-    #         query (str): Input query
-    #         top_k (int): Number of documents to retrieve
-
-    #     Returns:
-    #         List[Dict]: List of relevant documents
-    #     """
-    #     query_embedding = self.embedder.encode([query])
-    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-    #     top_indices = np.argsort(similarities)[-top_k:][::-1]
-    #     return [self.search_data[i] for i in top_indices]
     
     def get_relevant_context(self, query: str, yes_count: int = 4, no_count: int = 2) -> List[Dict]:
         """
@@ -55,7 +38,6 @@ class RAGModel:
         Returns:
             List[Dict]: List of relevant documents with specified distribution of promise_status
         """
-        # Get query embedding and calculate similarities
         query_embedding = self.embedder.encode([query])
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
         
@@ -73,18 +55,12 @@ class RAGModel:
         yes_docs.sort(key=lambda x: x[1], reverse=True)
         no_docs.sort(key=lambda x: x[1], reverse=True)
         
-        # Get top k documents for each category
         selected_yes = yes_docs[:yes_count]
         selected_no = no_docs[:no_count]
         
-        # Combine the selected documents
         selected_docs = selected_yes + selected_no
         
-        # Get the corresponding documents
         result = [self.search_data[i] for i, _ in selected_docs]
-        print(f"↓relevant_docs")
-        print(f"{result},")
-        print(f"↑relevant_docs")
         
         return result
 
