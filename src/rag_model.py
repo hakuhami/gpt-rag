@@ -26,7 +26,7 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
     
-    def get_relevant_context(self, query: str, yes_count: int = 4, no_count: int = 2) -> List[Dict]:
+    def get_relevant_context(self, query: str, yes_count: int = 5, no_count: int = 2) -> List[Dict]:
         """
         Retrieve documents related to the query, maintaining a specific ratio of promise_status values
 
