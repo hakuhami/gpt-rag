@@ -93,11 +93,17 @@ class RAGModel:
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
 
         prompt = f"""
-        You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
-        Follow the instructions below to provide careful and consistent annotations.
-        Output the results in the following JSON format.
-        Ensure that your response is a valid JSON object.
-        Regarding the "data", be sure to output the content of the given paragraph without altering it and in str format.:
+        You are an expert in extracting and classifying promise and supporting evidence from corporate texts related to ESG.
+        Extract and classify the promise and supporting evidence from the provided test data, and output each content to the corresponding label in the json format.
+        Carefully consider the detailed task explanation and reference examples step-by-step before proceeding with the task.
+        The content is provided under four tags: <json format>, <the details of the task>, <extraction/classification examples>, and <test data>.
+        
+                
+        <json format>
+        Output the results extracted and classified from the test data according to the json format below.
+        The reference examples also follow the json format below.
+        Put the text of the test data in the "data".
+        
         {{
             "data": str,
             "promise_status": str,
@@ -107,54 +113,67 @@ class RAGModel:
             "evidence_string": str or null,
             "evidence_quality": str
         }}:
-        Although you are specified to output in JSON format, perform the thought process in natural language and output the result in JSON format at the end.
         
-        Annotation procedure:
-        1. You will be given the content of a paragraph.
-        2. Determine if a promise is included, and indicate "Yes" if included, "No" if not included. (promise_status)
-        3. If a promise is included (if promise_status is "Yes"), also provide the following information:
-        - The specific part of the promise (extract verbatim from the text without changing a single word) (promise_string)
-        - When the promise can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
-        - Whether evidence is included ("Yes", "No", "N/A") (evidence_status)
-        4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
-        - The part containing the evidence (extract directly from the text without changing a single word) (evidence_string)
-        - The quality of the relationship between the promise and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
+        
+        <the details of the task>
+        
+        Task Steps:
+        1. Read the examples in <extraction/classification examples> carefully and learn the characteristics of extraction and classification.
+        2. Put the text of the test data verbatim in the "data" label, and read it carefully.
+        3. Classification task (About "promise_status"):
+           If the test data contains the contents that are considered to be promise, it is classified as "Yes".
+           If the test data does not contain the contents that are considered to be promise, it is classified as "No".
+        4. Extraction task (About "promise_string"):
+           If "promise_status" is "Yes", extract the promise from the test data. (extract verbatim from the text without changing a single word)
+           If "promise_status" is "No", output a blank.
+        5. Classification task (About "verification_timeline"):
+           If "promise_status" is "Yes", after carefully reading the "promise_string", classify the time when the promise can be verified into one of the four options: "already", "within_2_years", "between_2_and_5_years", or "more_than_5_years".
+           If "promise_status" is "No", output "N/A".
+        6. Classification task (About "evidence_status"):
+           If "promise_status" is "Yes" and there is content in the test data that is considered to be evidence supporting the content of "promise_string", classify it as "Yes".
+           If "promise_status" is "Yes" and there is no content in the test data that is considered to be evidence supporting the content of "promise_string", classify it as "No".
+           If "promise_status" is "No", output "N/A".
+        7. Extraction task (About "evidence_string"):
+           If "evidence_status" is "Yes", extract the evidence from the test data. (extract verbatim from the text without changing a single word)
+           If "evidence_status" is "No", output a blank.
+        8. Classification task (About "evidence_quality"):
+           If "evidence_status" is "Yes", after carefully reading the contents of "promise_string" and "evidence_string", consider how well the contents of "evidence_string" support the contents of "promise_string" and classify the relationship between the promise and the evidence as "Clear", "Not Clear", or "Misleading".  
+           If "evidence_status"is "No", output "N/A".     
            
-        Definitions and criteria for annotation labels:
-        1. promise_status - A promise is composed of a statement (a company principle, commitment, or strategy related to ESG criteria).:
-        - "Yes": A promise exists.
-        - "No": No promise exists.
-        
-        2. verification_timeline - The Verification Timeline is the assessment of when we could possibly see the final results of a given ESG-related action and thus verify the statement.:
-        - "already": Qualifies ESG-related measures that have already been and keep on being applied and every small measure whose results can already be verified anyway.
-        - "within_2_years": ESG-related measures whose results can be verified within 2 years.
-        - "between_2_and_5_years": ESG-related measures whose results can be verified in 2 to 5 years.
-        - "more_than_5_years: ESG-related measures whose results can be verified in more than 5 years.
-        - "N/A": When no promise exists.
-
-        3. evidence_status - Pieces of evidence are elements deemed the most relevant to exemplify and prove the core promise is being kept, which includes but is not limited to simple examples, company measures, numbers, etc.:
-        - "Yes": Evidence supporting the promise exists.
-        - "No": No evidence for the promise exists.
-        - "N/A": When no promise exists.
-
-        4. evidence_quality - The Evidence Quality is the assessment of the company's ability to back up their statement with enough clarity and precision.:
-        - "Clear": There is no lack of information and what is said is intelligible and logical.
-        - "Not Clear": An information is missing so much so that what is said may range from intelligible and logical to superficial and/or superfluous.
-        - "Misleading": The evidence, whether true or not, has no obvious connection with the point raised and is used to divert attention.
-        - "N/A": When no evidence or promise exists.
-        
+        Definitions of each label and the thought process behind the task:
+        1. Read the <extraction/classification examples> carefully and learn what content is considered to be a promise or evidence.
+           In particular, the judgment of "evidence_quality" is the most important and difficult part of this task, so learn how it can be classified.
+        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
+        3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
+              Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
+        5. Based on the features of the promise learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
+           "already": When the promise have already been applied, or whether or not it is applied, can already be verified.
+           "within_2_years": When the promise can be verified within 2 years. (When the promise can be verified in the near future.)
+           "between_2_and_5_years": When the promise can be verified in 2 to 5 years. (When the promise can be verified in the not too distant future, though not in the near future.)
+           "more_than_5_years: When the promise can be verified in more than 5 years. (When the promsie can be verified in the distant future.)
+        6, 7. In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the pledge," etc.
+              Based on the features of the evidence learned in the first step, and taking these concepts into account, determine whether the test data contains the evidence supporting the promise and which parts are the contents of the evidnece.
+        8. Based on the features learned in the first step, think carefully about how well the contents of "evidence_string" support the contents of "promise_string".
+           Then, think carefully about which label the quality of the relationship between the promise and the evidence falls into, following the definitions below.
+           "Clear": In the content of "evidence_string", there is no lack of information and what is said is intelligible and logical.
+           "Not Clear": In the content of "evidence_string", some information is missing or not well described so that what is said may range from intelligible and logical to superficial and/or superfluous.           
+           "Misleading": In the content of "evidence_string", it is not suitable to support the pledge, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
+                
         Important notes:
-        - Consider the context thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
-        - For indirect evidence, carefully judge its relevance.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
-        - Understand and appropriately interpret industry-specific terms.
-
-        The following are annotation examples of texts similar to the text you want to analyze.
-        Refer to these examples, think about why these examples have such annotation results, and then output the results.
-        Examples for your reference are as follows:
+        You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
+        Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        The evidence for the promise may not be directly stated, so think carefully.
+        "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
+        Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.  
+        
+        
+        <extraction/classification examples>
+        
         {context}
+            
+               
+        <test data>
 
-        Analyze the following text and provide results in the format described above:
         {paragraph}
         """
 
