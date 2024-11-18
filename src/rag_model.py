@@ -68,7 +68,7 @@ class RAGModel:
         try:
             # エンコードと検索を実行
             self.reranker.encode(candidate_texts)
-            rerank_results = self.reranker.search_encoded_documents(
+            rerank_results = self.reranker.search_encoded_docs(
                 query=query,
                 k=len(candidates)
             )
@@ -78,10 +78,11 @@ class RAGModel:
             for result in rerank_results:
                 original_idx = candidate_texts.index(result['content'])
                 reranked_docs.append(candidates[original_idx])
+            print("**Reranking number of documents: ", len(reranked_docs))
                 
         except Exception as e:
             # エラーが発生した場合は、元の順序をそのまま返す
-            print(f"Reranking error: {str(e)}")
+            print(f"***Reranking error: {str(e)}")
             reranked_docs = candidates
         
         return reranked_docs    
