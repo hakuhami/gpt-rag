@@ -4,9 +4,6 @@ from typing import Optional, List, Dict
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from ragatouille import RAGPretrainedModel
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-import torch
-import numpy as np
 import json
 import re
 
