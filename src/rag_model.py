@@ -42,21 +42,47 @@ class RAGModel:
         # リランカーのドキュメントをクリア
         self.reranker.clear_encoded_docs()
         
+        try:
+            # リランカーのドキュメントをクリア
+            self.reranker.clear_encoded_docs()
+        except AttributeError:
+            # in_memory_collectionが存在しない場合は無視
+            pass
+        
         # 候補文書をエンコード
         candidate_texts = [doc['data'] for doc in candidates]
-        self.reranker.encode(candidate_texts)
+        # self.reranker.encode(candidate_texts)
         
-        # リランキングの実行
-        rerank_results = self.reranker.search_encoded_documents(
-            query=query,
-            k=len(candidates)  # 全候補のランキングを取得
-        )
+        # # リランキングの実行
+        # rerank_results = self.reranker.search_encoded_documents(
+        #     query=query,
+        #     k=len(candidates)  # 全候補のランキングを取得
+        # )
         
-        # 結果の順序に基づいて文書を並び替え
-        reranked_docs = []
-        for result in rerank_results:
-            original_idx = candidate_texts.index(result['content'])
-            reranked_docs.append(candidates[original_idx])
+        # # 結果の順序に基づいて文書を並び替え
+        # reranked_docs = []
+        # for result in rerank_results:
+        #     original_idx = candidate_texts.index(result['content'])
+        #     reranked_docs.append(candidates[original_idx])
+        
+        try:
+            # エンコードと検索を実行
+            self.reranker.encode(candidate_texts)
+            rerank_results = self.reranker.search_encoded_documents(
+                query=query,
+                k=len(candidates)
+            )
+            
+            # 結果の順序に基づいて文書を並び替え
+            reranked_docs = []
+            for result in rerank_results:
+                original_idx = candidate_texts.index(result['content'])
+                reranked_docs.append(candidates[original_idx])
+                
+        except Exception as e:
+            # エラーが発生した場合は、元の順序をそのまま返す
+            print(f"Reranking error: {str(e)}")
+            reranked_docs = candidates
         
         return reranked_docs    
 
