@@ -39,8 +39,8 @@ class RAGModel:
         Returns:
             List[Dict]: リランキングされた文書
         """
-        # リランカーのドキュメントをクリア
-        self.reranker.clear_encoded_docs()
+        # # リランカーのドキュメントをクリア
+        # self.reranker.clear_encoded_docs()
         
         try:
             # リランカーのドキュメントをクリア
