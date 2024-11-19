@@ -39,8 +39,6 @@ class RAGModel:
         Returns:
             List[Dict]: リランキングされた文書
         """
-        # # リランカーのドキュメントをクリア
-        # self.reranker.clear_encoded_docs()
         
         try:
             # リランカーのドキュメントをクリア
@@ -52,18 +50,6 @@ class RAGModel:
         # 候補文書をエンコード
         candidate_texts = [doc['data'] for doc in candidates]
         # self.reranker.encode(candidate_texts)
-        
-        # # リランキングの実行
-        # rerank_results = self.reranker.search_encoded_documents(
-        #     query=query,
-        #     k=len(candidates)  # 全候補のランキングを取得
-        # )
-        
-        # # 結果の順序に基づいて文書を並び替え
-        # reranked_docs = []
-        # for result in rerank_results:
-        #     original_idx = candidate_texts.index(result['content'])
-        #     reranked_docs.append(candidates[original_idx])
         
         try:
             # エンコードと検索を実行
@@ -78,7 +64,6 @@ class RAGModel:
             for result in rerank_results:
                 original_idx = candidate_texts.index(result['content'])
                 reranked_docs.append(candidates[original_idx])
-            print("**Reranking number of documents: ", len(reranked_docs))
                 
         except Exception as e:
             # エラーが発生した場合は、元の順序をそのまま返す
