@@ -3,7 +3,7 @@ from openai import OpenAI
 from typing import Optional, List, Dict
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-# from ragatouille import RAGPretrainedModel
+from ragatouille import RAGPretrainedModel
 import json
 import re
 
@@ -14,7 +14,7 @@ class RAGModel:
         openai.api_key = api_key
         self.model_name = model_name
         self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct') 
-        # self.reranker =  RAGPretrainedModel.from_pretrained("bclavie/JaColBERTv2")
+        self.reranker =  RAGPretrainedModel.from_pretrained("bclavie/JaColBERTv2")
 
     def prepare_documents(self, search_data: List[Dict]) -> None:
         """
@@ -27,7 +27,7 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
         
-    #リランクをする場合
+    # リランクをする場合
     def rerank_documents(self, query: str, candidates: List[Dict]) -> List[Dict]:
         """
         JaColBERTを使用して候補文書をリランキング
@@ -49,7 +49,7 @@ class RAGModel:
         
         # 候補文書をエンコード
         candidate_texts = [doc['data'] for doc in candidates]
-        # self.reranker.encode(candidate_texts)
+        self.reranker.encode(candidate_texts)
         
         try:
             # エンコードと検索を実行
@@ -129,7 +129,8 @@ class RAGModel:
                 break
         
         return final_yes + final_no
-    ##リランクをしない場合
+    
+    ## リランクをしない場合
     # def get_relevant_context(self, query: str, yes_count: int = 8, no_count: int = 2) -> List[Dict]:
     #     """
     #     Retrieve documents related to the query, maintaining a specific ratio of promise_status values
