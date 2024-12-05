@@ -130,7 +130,7 @@ class RAGModel:
         
     #     return final_yes + final_no
     
-    def get_relevant_context(self, query: str, yes_count: int = 8, no_count: int = 2) -> List[Dict]:
+    def get_relevant_context(self, query: str, yes_count: int = 9, no_count: int = 2) -> List[Dict]:
         """
         Retrieve documents related to the query, maintaining a specific ratio of promise_status values
 
