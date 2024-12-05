@@ -27,121 +27,64 @@ class RAGModel:
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
         
-
-    # def rerank_documents(self, query: str, candidates: List[Dict]) -> List[Dict]:
-    #     """
-    #     JaColBERTを使用して候補文書をリランキング
-
-    #     Args:
-    #         query (str): 入力クエリ
-    #         candidates (List[Dict]): 初期候補文書
-
-    #     Returns:
-    #         List[Dict]: リランキングされた文書
-    #     """
-        
-    #     try:
-    #         # リランカーのドキュメントをクリア
-    #         self.reranker.clear_encoded_docs()
-    #     except AttributeError:
-    #         # in_memory_collectionが存在しない場合は無視
-    #         pass
-        
-    #     # 候補文書をエンコード
-    #     candidate_texts = [doc['data'] for doc in candidates]
-    #     # self.reranker.encode(candidate_texts)
-        
-    #     try:
-    #         # エンコードと検索を実行
-    #         self.reranker.encode(candidate_texts)
-    #         rerank_results = self.reranker.search_encoded_docs(
-    #             query=query,
-    #             k=len(candidates)
-    #         )
-            
-    #         # 結果の順序に基づいて文書を並び替え
-    #         reranked_docs = []
-    #         for result in rerank_results:
-    #             original_idx = candidate_texts.index(result['content'])
-    #             reranked_docs.append(candidates[original_idx])
-                
-    #     except Exception as e:
-    #         # エラーが発生した場合は、元の順序をそのまま返す
-    #         print(f"***Reranking error: {str(e)}")
-    #         reranked_docs = candidates
-        
-    #     return reranked_docs    
-
-    # def get_relevant_context(self, query: str, yes_count: int = 6, no_count: int = 2) -> List[Dict]:
-    #     """
-    #     コサイン類似度による初期検索とJaColBERTによるリランキングを使用して関連文書を検索
-
-    #     Args:
-    #         query (str): 入力クエリ
-    #         yes_count (int): 取得するpromise_status "Yes"の文書数
-    #         no_count (int): 取得するpromise_status "No"の文書数
-
-    #     Returns:
-    #         List[Dict]: 指定された分布のpromise_statusを持つ関連文書のリスト
-    #     """
-    #     # 初期検索（コサイン類似度）
-    #     query_embedding = self.embedder.encode([query])
-    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-        
-    #     # Create a list of (index, similarity, promise_status) tuples
-    #     indexed_similarities = [
-    #         (i, sim, self.search_data[i].get('promise_status', 'No')) 
-    #         for i, sim in enumerate(similarities)
-    #     ]
-        
-    #     # Separate documents by promise_status
-    #     yes_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'Yes']
-    #     no_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'No']
-        
-    #     # Sort by similarity (descending order)
-    #     yes_docs.sort(key=lambda x: x[1], reverse=True)
-    #     no_docs.sort(key=lambda x: x[1], reverse=True)
-        
-    #     # 初期候補を選択（Yes: 18件、No: 6件）
-    #     initial_yes = yes_docs[:18]
-    #     initial_no = no_docs[:6]
-        
-    #     # 初期候補のドキュメントを取得
-    #     initial_candidates = (
-    #         [self.search_data[i] for i, _ in initial_yes] +
-    #         [self.search_data[i] for i, _ in initial_no]
-    #     )
-        
-    #     # JaColBERTを使用したリランキング
-    #     reranked_docs = self.rerank_documents(query, initial_candidates)
-        
-    #     # 最終的な結果を選択（Yes: 6件、No: 2件）
-    #     final_yes = []
-    #     final_no = []
-        
-    #     for doc in reranked_docs:
-    #         if doc.get('promise_status') == 'Yes' and len(final_yes) < yes_count:
-    #             final_yes.append(doc)
-    #         elif doc.get('promise_status') == 'No' and len(final_no) < no_count:
-    #             final_no.append(doc)
-                
-    #         if len(final_yes) == yes_count and len(final_no) == no_count:
-    #             break
-        
-    #     return final_yes + final_no
-    
-    def get_relevant_context(self, query: str, yes_count: int = 9, no_count: int = 2) -> List[Dict]:
+    #リランクをする場合
+    def rerank_documents(self, query: str, candidates: List[Dict]) -> List[Dict]:
         """
-        Retrieve documents related to the query, maintaining a specific ratio of promise_status values
+        JaColBERTを使用して候補文書をリランキング
 
         Args:
-            query (str): Input query
-            yes_count (int): Number of documents with promise_status "Yes" to retrieve
-            no_count (int): Number of documents with promise_status "No" to retrieve
+            query (str): 入力クエリ
+            candidates (List[Dict]): 初期候補文書
 
         Returns:
-            List[Dict]: List of relevant documents with specified distribution of promise_status
+            List[Dict]: リランキングされた文書
         """
+        
+        try:
+            # リランカーのドキュメントをクリア
+            self.reranker.clear_encoded_docs()
+        except AttributeError:
+            # in_memory_collectionが存在しない場合は無視
+            pass
+        
+        # 候補文書をエンコード
+        candidate_texts = [doc['data'] for doc in candidates]
+        # self.reranker.encode(candidate_texts)
+        
+        try:
+            # エンコードと検索を実行
+            self.reranker.encode(candidate_texts)
+            rerank_results = self.reranker.search_encoded_docs(
+                query=query,
+                k=len(candidates)
+            )
+            
+            # 結果の順序に基づいて文書を並び替え
+            reranked_docs = []
+            for result in rerank_results:
+                original_idx = candidate_texts.index(result['content'])
+                reranked_docs.append(candidates[original_idx])
+                
+        except Exception as e:
+            # エラーが発生した場合は、元の順序をそのまま返す
+            print(f"***Reranking error: {str(e)}")
+            reranked_docs = candidates
+        
+        return reranked_docs    
+
+    def get_relevant_context(self, query: str, yes_count: int = 8, no_count: int = 2) -> List[Dict]:
+        """
+        コサイン類似度による初期検索とJaColBERTによるリランキングを使用して関連文書を検索
+
+        Args:
+            query (str): 入力クエリ
+            yes_count (int): 取得するpromise_status "Yes"の文書数
+            no_count (int): 取得するpromise_status "No"の文書数
+
+        Returns:
+            List[Dict]: 指定された分布のpromise_statusを持つ関連文書のリスト
+        """
+        # 初期検索（コサイン類似度）
         query_embedding = self.embedder.encode([query])
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
         
@@ -159,14 +102,71 @@ class RAGModel:
         yes_docs.sort(key=lambda x: x[1], reverse=True)
         no_docs.sort(key=lambda x: x[1], reverse=True)
         
-        selected_yes = yes_docs[:yes_count]
-        selected_no = no_docs[:no_count]
+        # 初期候補を選択（Yes: 24件、No: 6件）
+        initial_yes = yes_docs[:24]
+        initial_no = no_docs[:6]
         
-        selected_docs = selected_yes + selected_no
+        # 初期候補のドキュメントを取得
+        initial_candidates = (
+            [self.search_data[i] for i, _ in initial_yes] +
+            [self.search_data[i] for i, _ in initial_no]
+        )
         
-        result = [self.search_data[i] for i, _ in selected_docs]
+        # JaColBERTを使用したリランキング
+        reranked_docs = self.rerank_documents(query, initial_candidates)
         
-        return result
+        # 最終的な結果を選択（Yes: 8件、No: 2件）
+        final_yes = []
+        final_no = []
+        
+        for doc in reranked_docs:
+            if doc.get('promise_status') == 'Yes' and len(final_yes) < yes_count:
+                final_yes.append(doc)
+            elif doc.get('promise_status') == 'No' and len(final_no) < no_count:
+                final_no.append(doc)
+                
+            if len(final_yes) == yes_count and len(final_no) == no_count:
+                break
+        
+        return final_yes + final_no
+    ##リランクをしない場合
+    # def get_relevant_context(self, query: str, yes_count: int = 8, no_count: int = 2) -> List[Dict]:
+    #     """
+    #     Retrieve documents related to the query, maintaining a specific ratio of promise_status values
+
+    #     Args:
+    #         query (str): Input query
+    #         yes_count (int): Number of documents with promise_status "Yes" to retrieve
+    #         no_count (int): Number of documents with promise_status "No" to retrieve
+
+    #     Returns:
+    #         List[Dict]: List of relevant documents with specified distribution of promise_status
+    #     """
+    #     query_embedding = self.embedder.encode([query])
+    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
+        
+    #     # Create a list of (index, similarity, promise_status) tuples
+    #     indexed_similarities = [
+    #         (i, sim, self.search_data[i].get('promise_status', 'No')) 
+    #         for i, sim in enumerate(similarities)
+    #     ]
+        
+    #     # Separate documents by promise_status
+    #     yes_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'Yes']
+    #     no_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'No']
+        
+    #     # Sort by similarity (descending order)
+    #     yes_docs.sort(key=lambda x: x[1], reverse=True)
+    #     no_docs.sort(key=lambda x: x[1], reverse=True)
+        
+    #     selected_yes = yes_docs[:yes_count]
+    #     selected_no = no_docs[:no_count]
+        
+    #     selected_docs = selected_yes + selected_no
+        
+    #     result = [self.search_data[i] for i, _ in selected_docs]
+        
+    #     return result
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
