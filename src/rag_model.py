@@ -131,41 +131,66 @@ class RAGModel:
     #     return final_yes + final_no
     
     # リランクをしない場合
-    def get_relevant_context(self, query: str, yes_count: int = 8, no_count: int = 2) -> List[Dict]:
+    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
         """
-        Retrieve documents related to the query, maintaining a specific ratio of promise_status values
+        Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
 
         Args:
             query (str): Input query
-            yes_count (int): Number of documents with promise_status "Yes" to retrieve
-            no_count (int): Number of documents with promise_status "No" to retrieve
+            yes_with_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "Yes" to retrieve
+            yes_without_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "No" to retrieve
+            no_promise_count (int): Number of documents with promise_status "No" to retrieve
 
         Returns:
-            List[Dict]: List of relevant documents with specified distribution of promise_status
+            List[Dict]: List of relevant documents with specified distribution of status values
         """
         query_embedding = self.embedder.encode([query])
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
         
-        # Create a list of (index, similarity, promise_status) tuples
+        # Create a list of (index, similarity, status) tuples
         indexed_similarities = [
-            (i, sim, self.search_data[i].get('promise_status', 'No')) 
+            (i, sim, {
+                'promise_status': self.search_data[i].get('promise_status', 'No'),
+                'evidence_status': self.search_data[i].get('evidence_status', 'N/A')
+            }) 
             for i, sim in enumerate(similarities)
         ]
         
-        # Separate documents by promise_status
-        yes_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'Yes']
-        no_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'No']
+        # Separate documents by status combinations
+        yes_with_evidence = [
+            (i, sim) for i, sim, status in indexed_similarities 
+            if status['promise_status'] == 'Yes' and status['evidence_status'] == 'Yes'
+        ]
+        yes_without_evidence = [
+            (i, sim) for i, sim, status in indexed_similarities 
+            if status['promise_status'] == 'Yes' and status['evidence_status'] == 'No'
+        ]
+        no_promise = [
+            (i, sim) for i, sim, status in indexed_similarities 
+            if status['promise_status'] == 'No'
+        ]
         
-        # Sort by similarity (descending order)
-        yes_docs.sort(key=lambda x: x[1], reverse=True)
-        no_docs.sort(key=lambda x: x[1], reverse=True)
+        # Sort each category by similarity
+        yes_with_evidence.sort(key=lambda x: x[1], reverse=True)
+        yes_without_evidence.sort(key=lambda x: x[1], reverse=True)
+        no_promise.sort(key=lambda x: x[1], reverse=True)
         
-        selected_yes = yes_docs[:yes_count]
-        selected_no = no_docs[:no_count]
+        # Select top documents from each category
+        selected_yes_with_evidence = yes_with_evidence[:yes_with_evidence_count]
+        selected_yes_without_evidence = yes_without_evidence[:yes_without_evidence_count]
+        selected_no_promise = no_promise[:no_promise_count]
         
-        selected_docs = selected_yes + selected_no
+        # Combine all selected documents in the specified order
+        all_selected = (
+            selected_yes_with_evidence +
+            selected_yes_without_evidence +
+            selected_no_promise
+        )
         
-        result = [self.search_data[i] for i, _ in selected_docs]
+        # Get the corresponding documents
+        result = [self.search_data[i] for i, _ in all_selected]
+        print("Relevant documents:")
+        print(result)
         
         return result
 
