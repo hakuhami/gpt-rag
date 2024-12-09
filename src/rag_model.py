@@ -189,8 +189,6 @@ class RAGModel:
         
         # Get the corresponding documents
         result = [self.search_data[i] for i, _ in all_selected]
-        print("Relevant documents:")
-        print(result)
         
         return result
 
