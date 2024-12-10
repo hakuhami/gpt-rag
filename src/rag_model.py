@@ -279,13 +279,13 @@ class RAGModel:
            "within_2_years": When the promise can be verified within 2 years. (When the promise can be verified in the near future.)
            "between_2_and_5_years": When the promise can be verified in 2 to 5 years. (When the promise can be verified in the not too distant future, though not in the near future.)
            "more_than_5_years: When the promise can be verified in more than 5 years. (When the promsie can be verified in the distant future.)
-        6, 7. In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the pledge," etc.
+        6, 7. In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the promise," etc.
               Based on the features of the evidence learned in the first step, and taking these concepts into account, determine whether the test data contains the evidence supporting the promise and which parts are the contents of the evidnece.
         8. Based on the features learned in the first step, think carefully about how well the contents of "evidence_string" support the contents of "promise_string".
            Then, think carefully about which label the quality of the relationship between the promise and the evidence falls into, following the definitions below.
            "Clear": In the content of "evidence_string", there is no lack of information and what is said is intelligible and logical.
            "Not Clear": In the content of "evidence_string", some information is missing or not well described so that what is said may range from intelligible and logical to superficial and/or superfluous.           
-           "Misleading": In the content of "evidence_string", it is not suitable to support the pledge, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
+           "Misleading": In the content of "evidence_string", it is not suitable to support the promise, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
                 
         Important notes:
         You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.

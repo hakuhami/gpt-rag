@@ -31,15 +31,42 @@ class EvidenceQualityExplainer:
             return None
             
         prompt = f"""
-        Analyze the following ESG-related promise and evidence pair, and explain why the evidence quality is classified as {data['evidence_quality']}.
+        You are an expert in generating ESG-related documents and reading corporate ESG-related documents.
+        Do document generation task for ESG-related corporate texts.
+        Carefully consider the detailed task explanation and reference examples step-by-step before proceeding with the task.
+        The content is provided under five tags: <task description>, <task steps>, <promise_string>, <evidence_string>, and <evidence_quality>.
         
-        Promise: {data['promise_string']}
-        Evidence: {data['evidence_string']}
-        Quality Classification: {data['evidence_quality']}
+        <task description>
+        You will be given two extracted texts from a section of company documentation: an ESG promise statement and an evidence statement.
+        The promise statement is given in the <promise_string> below, and the evidence statement is provided in the <evidence_string> below.
+        Additionally, a evaluation item will be given that evaluates the extent to which the contents of the <evidence_string> supports the contents of the <promise_string>.
+        This evaluation item is given as the <evidence_quality> below.
+        The <evidence_quality> item has three values: Clear, Not Clear, and Misleading.
+        The definition of each value is as follows:
+        "Clear": In the content of "evidence_string", there is no lack of information and what is said is intelligible and logical.
+        "Not Clear": In the content of "evidence_string", some information is missing or not well described so that what is said may range from intelligible and logical to superficial and/or superfluous.           
+        "Misleading": In the content of "evidence_string", it is not suitable to support the promise, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
+        According to <task steps> below, generate a sentence explaining why <evidence_quality> has the value it does.
+        Output only the sentences specified in the <task steps> below, and do not output other strings.
         
-        Provide a detailed explanation of why this evidence quality classification is appropriate.
+        <task steps>
+        Follow the steps below to do the task step by step.
+        Use natural language to think at each step.
+        Step1: Carefully read and understand each of the sentences in <promise_string> and <evidence_string>.
+        Step2: Considering the sentences in <promise_string> and <evidence_string>, think carefully about why the value of <evidence_quality> is evaluated to this value.
+        Step3: Think of a logical and easy-to-understand explanation of why <evidence_quality> has the value it does.
+        Step4: Output the explanation you thought of in the Step 3.
+        
+        <promise_string>
+        {data['promise_string']}
+        
+        <evidnece_string>
+        {data['evidence_string']}
+        
+        <evidence_quality>
+        {data['evidence_quality']}
         """
-        
+                
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
@@ -48,6 +75,9 @@ class EvidenceQualityExplainer:
             ],
             temperature=0
         )
+        
+        print(f"Generating explanation for promise: {data['promise_string']}/// and evidence: {data['evidence_string']}/// with quality: {data['evidence_quality']}")
+        print(f"Response: {response.choices[0].message.content.strip()}")
         
         return response.choices[0].message.content.strip()
 
