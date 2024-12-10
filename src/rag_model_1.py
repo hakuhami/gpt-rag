@@ -1,21 +1,16 @@
-import numpy as np
 import openai
 from openai import OpenAI
 from typing import Optional, List, Dict
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-#from ragatouille import RAGPretrainedModel
 import json
 import re
-
-# For the embedding model, use the 'multilingual-e5-large-instruct' which supports multiple languages
+from rank_bm25 import BM25Okapi
+from nltk.tokenize import word_tokenize
+import nltk
 
 class RAGModel:
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name
-        self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct') 
-        #self.reranker =  RAGPretrainedModel.from_pretrained("bclavie/JaColBERTv2")
 
     def prepare_documents(self, search_data: List[Dict]) -> None:
         """
@@ -26,115 +21,11 @@ class RAGModel:
         """
         self.search_data = search_data
         self.documents = [item['data'] for item in search_data]
-        self.doc_embeddings = self.embedder.encode(self.documents)
-        
-    # # リランクをする場合
-    # def rerank_documents(self, query: str, candidates: List[Dict]) -> List[Dict]:
-    #     """
-    #     JaColBERTを使用して候補文書をリランキング
-
-    #     Args:
-    #         query (str): 入力クエリ
-    #         candidates (List[Dict]): 初期候補文書
-
-    #     Returns:
-    #         List[Dict]: リランキングされた文書
-    #     """
-        
-    #     try:
-    #         # リランカーのドキュメントをクリア
-    #         self.reranker.clear_encoded_docs()
-    #     except AttributeError:
-    #         # in_memory_collectionが存在しない場合は無視
-    #         pass
-        
-    #     # 候補文書をエンコード
-    #     candidate_texts = [doc['data'] for doc in candidates]
-    #     self.reranker.encode(candidate_texts)
-        
-    #     try:
-    #         # エンコードと検索を実行
-    #         self.reranker.encode(candidate_texts)
-    #         rerank_results = self.reranker.search_encoded_docs(
-    #             query=query,
-    #             k=len(candidates)
-    #         )
             
-    #         # 結果の順序に基づいて文書を並び替え
-    #         reranked_docs = []
-    #         for result in rerank_results:
-    #             original_idx = candidate_texts.index(result['content'])
-    #             reranked_docs.append(candidates[original_idx])
-                
-    #     except Exception as e:
-    #         # エラーが発生した場合は、元の順序をそのまま返す
-    #         print(f"***Reranking error: {str(e)}")
-    #         reranked_docs = candidates
-        
-    #     return reranked_docs    
-
-    # def get_relevant_context(self, query: str, yes_count: int = 8, no_count: int = 2) -> List[Dict]:
-    #     """
-    #     コサイン類似度による初期検索とJaColBERTによるリランキングを使用して関連文書を検索
-
-    #     Args:
-    #         query (str): 入力クエリ
-    #         yes_count (int): 取得するpromise_status "Yes"の文書数
-    #         no_count (int): 取得するpromise_status "No"の文書数
-
-    #     Returns:
-    #         List[Dict]: 指定された分布のpromise_statusを持つ関連文書のリスト
-    #     """
-    #     # 初期検索（コサイン類似度）
-    #     query_embedding = self.embedder.encode([query])
-    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-        
-    #     # Create a list of (index, similarity, promise_status) tuples
-    #     indexed_similarities = [
-    #         (i, sim, self.search_data[i].get('promise_status', 'No')) 
-    #         for i, sim in enumerate(similarities)
-    #     ]
-        
-    #     # Separate documents by promise_status
-    #     yes_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'Yes']
-    #     no_docs = [(i, sim) for i, sim, status in indexed_similarities if status == 'No']
-        
-    #     # Sort by similarity (descending order)
-    #     yes_docs.sort(key=lambda x: x[1], reverse=True)
-    #     no_docs.sort(key=lambda x: x[1], reverse=True)
-        
-    #     # 初期候補を選択（Yes: 24件、No: 6件）
-    #     initial_yes = yes_docs[:24]
-    #     initial_no = no_docs[:6]
-        
-    #     # 初期候補のドキュメントを取得
-    #     initial_candidates = (
-    #         [self.search_data[i] for i, _ in initial_yes] +
-    #         [self.search_data[i] for i, _ in initial_no]
-    #     )
-        
-    #     # JaColBERTを使用したリランキング
-    #     reranked_docs = self.rerank_documents(query, initial_candidates)
-        
-    #     # 最終的な結果を選択（Yes: 8件、No: 2件）
-    #     final_yes = []
-    #     final_no = []
-        
-    #     for doc in reranked_docs:
-    #         if doc.get('promise_status') == 'Yes' and len(final_yes) < yes_count:
-    #             final_yes.append(doc)
-    #         elif doc.get('promise_status') == 'No' and len(final_no) < no_count:
-    #             final_no.append(doc)
-                
-    #         if len(final_yes) == yes_count and len(final_no) == no_count:
-    #             break
-        
-    #     return final_yes + final_no
-    
     # リランクをしない場合
     def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
         """
-        Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
+        Retrieve documents related to the query using BM25 algorithm, maintaining specific ratios of promise_status and evidence_status values.
 
         Args:
             query (str): Input query
@@ -145,69 +36,69 @@ class RAGModel:
         Returns:
             List[Dict]: List of relevant documents with specified distribution of status values
         """
-        query_embedding = self.embedder.encode([query])
-        similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-
-        # Create a list of (index, similarity, status) tuples
-        indexed_similarities = [
-            (i, sim, {
+        
+        # Download necessary NLTK data
+        try:
+            nltk.data.find('tokenizers/punkt')
+            print("NLTK data is already downloaded.")
+        except LookupError:
+            nltk.download('punkt')
+            print("tokenizers/punkt is not found.")
+        
+        # Tokenize documents and query
+        tokenized_docs = [word_tokenize(doc.lower()) for doc in self.documents]
+        tokenized_query = word_tokenize(query.lower())
+        
+        # Create BM25 instance
+        bm25 = BM25Okapi(tokenized_docs)
+        
+        # Calculate BM25 scores
+        scores = bm25.get_scores(tokenized_query)
+        
+        # Create a list of (index, score, status) tuples
+        indexed_scores = [
+            (i, score, {
                 'promise_status': self.search_data[i].get('promise_status', 'No'),
                 'evidence_status': self.search_data[i].get('evidence_status', 'N/A')
             }) 
-            for i, sim in enumerate(similarities)
+            for i, score in enumerate(scores)
         ]
-
+        
         # Separate documents by status combinations
         yes_with_evidence = [
-            (i, sim) for i, sim, status in indexed_similarities 
+            (i, score) for i, score, status in indexed_scores 
             if status['promise_status'] == 'Yes' and status['evidence_status'] == 'Yes'
         ]
         yes_without_evidence = [
-            (i, sim) for i, sim, status in indexed_similarities 
+            (i, score) for i, score, status in indexed_scores 
             if status['promise_status'] == 'Yes' and status['evidence_status'] == 'No'
         ]
         no_promise = [
-            (i, sim) for i, sim, status in indexed_similarities 
+            (i, score) for i, score, status in indexed_scores 
             if status['promise_status'] == 'No'
         ]
-
-        # Sort each category by similarity
+        
+        # Sort each category by BM25 score
         yes_with_evidence.sort(key=lambda x: x[1], reverse=True)
         yes_without_evidence.sort(key=lambda x: x[1], reverse=True)
         no_promise.sort(key=lambda x: x[1], reverse=True)
-
+        
         # Select top documents from each category
         selected_yes_with_evidence = yes_with_evidence[:yes_with_evidence_count]
         selected_yes_without_evidence = yes_without_evidence[:yes_without_evidence_count]
         selected_no_promise = no_promise[:no_promise_count]
-
+        
         # Combine all selected documents in the specified order
         all_selected = (
             selected_yes_with_evidence +
             selected_yes_without_evidence +
             selected_no_promise
         )
-
+        
         # Get the corresponding documents
         result = [self.search_data[i] for i, _ in all_selected]
-
+        
         return result
-    
-    # def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
-    #     """
-    #     Retrieve the top documents related to the query
-
-    #     Args:
-    #         query (str): Input query
-    #         top_k (int): Number of documents to retrieve
-
-    #     Returns:
-    #         List[Dict]: List of relevant documents
-    #     """
-    #     query_embedding = self.embedder.encode([query])
-    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-    #     top_indices = np.argsort(similarities)[-top_k:][::-1]
-    #     return [self.search_data[i] for i in top_indices]
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
@@ -221,8 +112,6 @@ class RAGModel:
             except json.JSONDecodeError:
                 pass        
         return None
-
-# The parts of the prompt that explains the JSON structure are to be changed according to the language since the JSON structure differs for each language's dataset.
 
     def analyze_paragraph(self, paragraph: str) -> Dict[str, str]:
         """
