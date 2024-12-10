@@ -229,7 +229,7 @@ class RAGModel:
                 
         <json format>
         Output the results extracted and classified from the test data according to the json format below.
-        The reference examples also follow the json format below. (In the reference examples, if the "evidence_status" value is "Yes", the "eq_explanation" label is added, which contains a logical and easy-to-understand explanation of why <evidence_quality> has the value it does.)
+        The reference examples also follow the json format below.
         Put the text of the test data in the "data".
         
         {{
@@ -271,8 +271,6 @@ class RAGModel:
         Definitions of each label and the thought process behind the task:
         1. Read the <extraction/classification examples> carefully and learn what content is considered to be a promise or evidence.
            In particular, the judgment of "evidence_quality" is the most important and difficult part of this task, so learn how it can be classified.
-           If the value of "evidence_status" is "Yes", an "eq_explanation" label is added, which contains a logical and easy-to-understand explanation of why <evidence_quality> has the value it does.
-           Read the text of the "eq_explanation" label carefully to learn how to classify the "evidence_quality" labels.
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
               Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
