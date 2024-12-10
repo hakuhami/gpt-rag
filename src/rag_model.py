@@ -131,14 +131,25 @@ class RAGModel:
     #     return final_yes + final_no
     
     # リランクをしない場合
-    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
+    def get_relevant_context(
+        self, 
+        query: str, 
+        yes_clear_count: int = 2,
+        yes_not_clear_count: int = 2,
+        yes_misleading_count: int = 2,
+        yes_without_evidence_count: int = 2,
+        no_promise_count: int = 2
+    ) -> List[Dict]:
         """
-        Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
+        Retrieve documents related to the query, maintaining specific ratios of promise_status, 
+        evidence_status and evidence_quality values.
 
         Args:
             query (str): Input query
-            yes_with_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "Yes" to retrieve
-            yes_without_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "No" to retrieve
+            yes_clear_count (int): Number of documents with evidence_quality "Clear" to retrieve
+            yes_not_clear_count (int): Number of documents with evidence_quality "Not Clear" to retrieve
+            yes_misleading_count (int): Number of documents with evidence_quality "Misleading" to retrieve
+            yes_without_evidence_count (int): Number of documents with evidence_status "No" to retrieve
             no_promise_count (int): Number of documents with promise_status "No" to retrieve
 
         Returns:
@@ -151,19 +162,35 @@ class RAGModel:
         indexed_similarities = [
             (i, sim, {
                 'promise_status': self.search_data[i].get('promise_status', 'No'),
-                'evidence_status': self.search_data[i].get('evidence_status', 'N/A')
+                'evidence_status': self.search_data[i].get('evidence_status', 'N/A'),
+                'evidence_quality': self.search_data[i].get('evidence_quality', 'N/A')
             }) 
             for i, sim in enumerate(similarities)
         ]
         
         # Separate documents by status combinations
-        yes_with_evidence = [
+        yes_clear = [
             (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and status['evidence_status'] == 'Yes'
+            if status['promise_status'] == 'Yes' and 
+            status['evidence_status'] == 'Yes' and 
+            status['evidence_quality'] == 'Clear'
+        ]
+        yes_not_clear = [
+            (i, sim) for i, sim, status in indexed_similarities 
+            if status['promise_status'] == 'Yes' and 
+            status['evidence_status'] == 'Yes' and 
+            status['evidence_quality'] == 'Not Clear'
+        ]
+        yes_misleading = [
+            (i, sim) for i, sim, status in indexed_similarities 
+            if status['promise_status'] == 'Yes' and 
+            status['evidence_status'] == 'Yes' and 
+            status['evidence_quality'] == 'Misleading'
         ]
         yes_without_evidence = [
             (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and status['evidence_status'] == 'No'
+            if status['promise_status'] == 'Yes' and 
+            status['evidence_status'] == 'No'
         ]
         no_promise = [
             (i, sim) for i, sim, status in indexed_similarities 
@@ -171,18 +198,24 @@ class RAGModel:
         ]
         
         # Sort each category by similarity
-        yes_with_evidence.sort(key=lambda x: x[1], reverse=True)
+        yes_clear.sort(key=lambda x: x[1], reverse=True)
+        yes_not_clear.sort(key=lambda x: x[1], reverse=True)
+        yes_misleading.sort(key=lambda x: x[1], reverse=True)
         yes_without_evidence.sort(key=lambda x: x[1], reverse=True)
         no_promise.sort(key=lambda x: x[1], reverse=True)
         
         # Select top documents from each category
-        selected_yes_with_evidence = yes_with_evidence[:yes_with_evidence_count]
+        selected_yes_clear = yes_clear[:yes_clear_count]
+        selected_yes_not_clear = yes_not_clear[:yes_not_clear_count]
+        selected_yes_misleading = yes_misleading[:yes_misleading_count]
         selected_yes_without_evidence = yes_without_evidence[:yes_without_evidence_count]
         selected_no_promise = no_promise[:no_promise_count]
         
         # Combine all selected documents in the specified order
         all_selected = (
-            selected_yes_with_evidence +
+            selected_yes_clear +
+            selected_yes_not_clear +
+            selected_yes_misleading +
             selected_yes_without_evidence +
             selected_no_promise
         )
