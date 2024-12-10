@@ -48,6 +48,7 @@ class EvidenceQualityExplainer:
         "Misleading": In the content of "evidence_string", it is not suitable to support the promise, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
         According to <task steps> below, generate a sentence explaining why <evidence_quality> has the value it does.
         Output only the sentences specified in the <task steps> below, and do not output other strings.
+        The output sentences must be written in Japanese.
         
         <task steps>
         Follow the steps below to do the task step by step.
