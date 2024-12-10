@@ -189,7 +189,7 @@ class RAGModel:
         )
 
         # Get the corresponding documents
-        result = [self.searchdata[i] for i,  in all_selected]
+        result = [self.search_data[i] for i,  in all_selected]
 
         return result
     
