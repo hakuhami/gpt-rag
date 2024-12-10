@@ -71,15 +71,12 @@ class EvidenceQualityExplainer:
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
-                {"role": "system", "content": "You are an expert in analyzing ESG reports and evaluating the quality of evidence supporting corporate promises."},
+                {"role": "system", "content": "You are an expert in generating ESG-related documents and reading corporate ESG-related documents."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0
         )
-        
-        print(f"Generating explanation for promise: {data['promise_string']}/// and evidence: {data['evidence_string']}/// with quality: {data['evidence_quality']}")
-        print(f"Response: {response.choices[0].message.content.strip()}")
-        
+                
         return response.choices[0].message.content.strip()
 
     def process_file(self, input_path: str, output_path: str) -> None:
