@@ -107,7 +107,7 @@ class EvidenceQualityExplainer:
 
 def main():
     # Load configuration
-    with open('config.yaml', 'r') as f:
+    with open('config/config.yml', 'r') as f:
         config = yaml.safe_load(f)
     
     # Initialize explainer
