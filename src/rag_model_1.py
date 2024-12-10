@@ -72,9 +72,6 @@ class RAGModel:
         self.search_data = search_data
         self.documents = [item['data'] for item in search_data]
         
-        # Prepare embeddings for potential future use
-        self.doc_embeddings = self.embedder.encode(self.documents)
-        
         # Prepare tokenized documents for BM25
         self.tokenized_docs = [self.tokenize_with_mecab(doc) for doc in self.documents]
         
