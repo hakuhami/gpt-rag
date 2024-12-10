@@ -3,26 +3,84 @@ from openai import OpenAI
 from typing import Optional, List, Dict
 import json
 import re
+import MeCab
 from rank_bm25 import BM25Okapi
-from nltk.tokenize import word_tokenize
-import nltk
 
 class RAGModel:
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name
+        self.mecab = MeCab.Tagger("-Ochasen")
+        self.tokenized_docs = None
+        self.bm25 = None
+
+    def tokenize_with_mecab(self, text: str) -> List[str]:
+        """
+        Tokenize text using MeCab with custom processing rules.
+        
+        Args:
+            text (str): Input text to tokenize
+            
+        Returns:
+            list: List of processed tokens
+        """
+        # Normalize text
+        text = text.lower()
+        
+        # Get MeCab output
+        parsed = self.mecab.parse(text)
+        
+        # Process each token
+        tokens = []
+        for line in parsed.split('\n'):
+            if line == 'EOS' or line == '':
+                continue
+            
+            parts = line.split('\t')
+            if len(parts) < 2:
+                continue
+                
+            word = parts[0]
+            pos = parts[3] if len(parts) > 3 else ''
+            
+            # Filter out unnecessary parts of speech
+            if any(skip_pos in pos for skip_pos in ['助詞', '助動詞', '記号']):
+                continue
+            
+            # Process numbers consistently
+            if re.match(r'^[0-9]+$', word):
+                tokens.append('NUM')
+            # Process percentages
+            elif re.match(r'^[0-9]+%$', word):
+                tokens.append('PERCENTAGE')
+            # Process years
+            elif re.match(r'^[0-9]{4}年$', word):
+                tokens.append('YEAR')
+            # Process regular tokens
+            else:
+                tokens.append(word)
+        
+        return tokens
 
     def prepare_documents(self, search_data: List[Dict]) -> None:
         """
-        Prepare and encode the search data
+        Prepare and encode the search data, including BM25 tokenization
 
         Args:
             search_data (List[Dict]): Data for search
         """
         self.search_data = search_data
         self.documents = [item['data'] for item in search_data]
-            
-    # リランクをしない場合
+        
+        # Prepare embeddings for potential future use
+        self.doc_embeddings = self.embedder.encode(self.documents)
+        
+        # Prepare tokenized documents for BM25
+        self.tokenized_docs = [self.tokenize_with_mecab(doc) for doc in self.documents]
+        
+        # Initialize BM25 model
+        self.bm25 = BM25Okapi(self.tokenized_docs)
+
     def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
         """
         Retrieve documents related to the query using BM25 algorithm, maintaining specific ratios of promise_status and evidence_status values.
@@ -36,24 +94,11 @@ class RAGModel:
         Returns:
             List[Dict]: List of relevant documents with specified distribution of status values
         """
+        # Tokenize query
+        tokenized_query = self.tokenize_with_mecab(query)
         
-        # Download necessary NLTK data
-        try:
-            nltk.data.find('tokenizers/punkt')
-            print("NLTK data is already downloaded.")
-        except LookupError:
-            nltk.download('punkt')
-            print("tokenizers/punkt is not found.")
-        
-        # Tokenize documents and query
-        tokenized_docs = [word_tokenize(doc.lower()) for doc in self.documents]
-        tokenized_query = word_tokenize(query.lower())
-        
-        # Create BM25 instance
-        bm25 = BM25Okapi(tokenized_docs)
-        
-        # Calculate BM25 scores
-        scores = bm25.get_scores(tokenized_query)
+        # Calculate BM25 scores using pre-computed tokenization
+        scores = self.bm25.get_scores(tokenized_query)
         
         # Create a list of (index, score, status) tuples
         indexed_scores = [
