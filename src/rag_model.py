@@ -1,3 +1,4 @@
+import numpy as np
 import openai
 from openai import OpenAI
 from typing import Optional, List, Dict
@@ -131,99 +132,82 @@ class RAGModel:
     #     return final_yes + final_no
     
     # リランクをしない場合
-    def get_relevant_context(
-        self, 
-        query: str, 
-        yes_clear_count: int = 2,
-        yes_not_clear_count: int = 2,
-        yes_misleading_count: int = 2,
-        yes_without_evidence_count: int = 2,
-        no_promise_count: int = 2
-    ) -> List[Dict]:
+    # def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
+    #     """
+    #     Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
+
+    #     Args:
+    #         query (str): Input query
+    #         yes_with_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "Yes" to retrieve
+    #         yes_without_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "No" to retrieve
+    #         no_promise_count (int): Number of documents with promise_status "No" to retrieve
+
+    #     Returns:
+    #         List[Dict]: List of relevant documents with specified distribution of status values
+    #     """
+    #     query_embedding = self.embedder.encode([query])
+    #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
+
+    #     # Create a list of (index, similarity, status) tuples
+    #     indexed_similarities = [
+    #         (i, sim, {
+    #             'promise_status': self.search_data[i].get('promise_status', 'No'),
+    #             'evidence_status': self.search_data[i].get('evidence_status', 'N/A')
+    #         }) 
+    #         for i, sim in enumerate(similarities)
+    #     ]
+
+    #     # Separate documents by status combinations
+    #     yes_with_evidence = [
+    #         (i, sim) for i, sim, status in indexed_similarities 
+    #         if status['promise_status'] == 'Yes' and status['evidence_status'] == 'Yes'
+    #     ]
+    #     yes_without_evidence = [
+    #         (i, sim) for i, sim, status in indexed_similarities 
+    #         if status['promise_status'] == 'Yes' and status['evidence_status'] == 'No'
+    #     ]
+    #     no_promise = [
+    #         (i, sim) for i, sim, status in indexed_similarities 
+    #         if status['promise_status'] == 'No'
+    #     ]
+
+    #     # Sort each category by similarity
+    #     yes_with_evidence.sort(key=lambda x: x[1], reverse=True)
+    #     yes_without_evidence.sort(key=lambda x: x[1], reverse=True)
+    #     no_promise.sort(key=lambda x: x[1], reverse=True)
+
+    #     # Select top documents from each category
+    #     selected_yes_with_evidence = yes_with_evidence[:yes_with_evidence_count]
+    #     selected_yes_without_evidence = yes_without_evidence[:yes_without_evidence_count]
+    #     selected_no_promise = no_promise[:no_promise_count]
+
+    #     # Combine all selected documents in the specified order
+    #     all_selected = (
+    #         selected_yes_with_evidence +
+    #         selected_yes_without_evidence +
+    #         selected_no_promise
+    #     )
+
+    #     # Get the corresponding documents
+    #     result = [self.searchdata[i] for i,  in all_selected]
+
+    #     return result
+    
+    def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
         """
-        Retrieve documents related to the query, maintaining specific ratios of promise_status, 
-        evidence_status and evidence_quality values.
+        Retrieve the top documents related to the query
 
         Args:
             query (str): Input query
-            yes_clear_count (int): Number of documents with evidence_quality "Clear" to retrieve
-            yes_not_clear_count (int): Number of documents with evidence_quality "Not Clear" to retrieve
-            yes_misleading_count (int): Number of documents with evidence_quality "Misleading" to retrieve
-            yes_without_evidence_count (int): Number of documents with evidence_status "No" to retrieve
-            no_promise_count (int): Number of documents with promise_status "No" to retrieve
+            top_k (int): Number of documents to retrieve
 
         Returns:
-            List[Dict]: List of relevant documents with specified distribution of status values
+            List[Dict]: List of relevant documents
         """
         query_embedding = self.embedder.encode([query])
         similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-        
-        # Create a list of (index, similarity, status) tuples
-        indexed_similarities = [
-            (i, sim, {
-                'promise_status': self.search_data[i].get('promise_status', 'No'),
-                'evidence_status': self.search_data[i].get('evidence_status', 'N/A'),
-                'evidence_quality': self.search_data[i].get('evidence_quality', 'N/A')
-            }) 
-            for i, sim in enumerate(similarities)
-        ]
-        
-        # Separate documents by status combinations
-        yes_clear = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and 
-            status['evidence_status'] == 'Yes' and 
-            status['evidence_quality'] == 'Clear'
-        ]
-        yes_not_clear = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and 
-            status['evidence_status'] == 'Yes' and 
-            status['evidence_quality'] == 'Not Clear'
-        ]
-        yes_misleading = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and 
-            status['evidence_status'] == 'Yes' and 
-            status['evidence_quality'] == 'Misleading'
-        ]
-        yes_without_evidence = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and 
-            status['evidence_status'] == 'No'
-        ]
-        no_promise = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'No'
-        ]
-        
-        # Sort each category by similarity
-        yes_clear.sort(key=lambda x: x[1], reverse=True)
-        yes_not_clear.sort(key=lambda x: x[1], reverse=True)
-        yes_misleading.sort(key=lambda x: x[1], reverse=True)
-        yes_without_evidence.sort(key=lambda x: x[1], reverse=True)
-        no_promise.sort(key=lambda x: x[1], reverse=True)
-        
-        # Select top documents from each category
-        selected_yes_clear = yes_clear[:yes_clear_count]
-        selected_yes_not_clear = yes_not_clear[:yes_not_clear_count]
-        selected_yes_misleading = yes_misleading[:yes_misleading_count]
-        selected_yes_without_evidence = yes_without_evidence[:yes_without_evidence_count]
-        selected_no_promise = no_promise[:no_promise_count]
-        
-        # Combine all selected documents in the specified order
-        all_selected = (
-            selected_yes_clear +
-            selected_yes_not_clear +
-            selected_yes_misleading +
-            selected_yes_without_evidence +
-            selected_no_promise
-        )
-        
-        # Get the corresponding documents
-        result = [self.search_data[i] for i, _ in all_selected]
-        
-        return result
+        top_indices = np.argsort(similarities)[-top_k:][::-1]
+        return [self.search_data[i] for i in top_indices]
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
