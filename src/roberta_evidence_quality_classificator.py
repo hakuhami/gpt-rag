@@ -46,6 +46,23 @@ class ESGQualityClassifier:
         self.prompt_template = self._create_prompt_template()
         self._initialize_model()
         
+    # def _create_prompt_template(self) -> Dict[str, str]:
+    #     """
+    #     評価に使用するプロンプトテンプレートを定義
+    #     """
+    #     return {
+    #         'context': "以下の2つの文章は、企業のESGレポートから抽出された公約と、それを裏付ける根拠です。",
+    #         'task_description': "根拠の内容が公約の内容をどの程度支持できているか、評価してください。",
+    #         'evaluation_criteria': """
+    #             評価基準:
+    #             - Clear: 根拠が公約を明確に支持し、情報不足も無く述べられている内容は分かりやすくかつ論理的
+    #             - Not Clear: 根拠は公約を支持してはいるが、一部の情報が欠落しているか、十分に説明されていないため、述べられている内容は分かりやすく論理的なものから、表面的または余分なものまで、さまざまなものが含まれる
+    #             - Misleading: 根拠が公約を裏付けるのに不適切であったり、公約の内容と関係がなかったり、読者の注意をそらす恐れがあったり、真実でなかったりする場合
+    #         """,
+    #         'input_format': "公約：{promise}\n根拠：{evidence}",
+    #         'instruction': "上記の根拠の内容が、上記の公約の内容をどの程度支持できているか、評価してください。"
+    #     }
+    
     def _create_prompt_template(self) -> Dict[str, str]:
         """
         評価に使用するプロンプトテンプレートを定義
@@ -55,9 +72,9 @@ class ESGQualityClassifier:
             'task_description': "根拠の内容が公約の内容をどの程度支持できているか、評価してください。",
             'evaluation_criteria': """
                 評価基準:
-                - Clear: 根拠が公約を明確に支持し、情報不足も無く述べられている内容は分かりやすくかつ論理的
-                - Not Clear: 根拠は公約を支持してはいるが、一部の情報が欠落しているか、十分に説明されていないため、述べられている内容は分かりやすく論理的なものから、表面的または余分なものまで、さまざまなものが含まれる
-                - Misleading: 根拠が公約を裏付けるのに不適切であったり、公約の内容と関係がなかったり、読者の注意をそらす恐れがあったり、真実でなかったりする場合
+                - Clear: 根拠が公約を具体的に裏付けている
+                - Not Clear: 根拠は根拠を裏付けている不十分
+                - Misleading: 根拠が公約を適切に裏付けていないか不十分
             """,
             'input_format': "公約：{promise}\n根拠：{evidence}",
             'instruction': "上記の根拠の内容が、上記の公約の内容をどの程度支持できているか、評価してください。"
