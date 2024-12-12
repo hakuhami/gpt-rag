@@ -544,8 +544,4 @@ class RAGModel:
             'evidence_quality': extracted_data['evidence_quality']
         }
         
-<<<<<<< HEAD
-        return json.dumps(extracted_data, ensure_ascii=False, indent=2)
-=======
         return json.dumps(ordered_data, ensure_ascii=False, indent=2)
->>>>>>> dec2d8ed20164a072cb5f66e137eb6ab560c317d
