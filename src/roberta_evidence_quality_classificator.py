@@ -164,41 +164,39 @@ class ESGQualityClassifier:
                 return_tensors="pt",
                 truncation=True,
                 max_length=self.max_length,
-                padding="max_length",  # パディングを明示的に指定
+                padding="max_length",
                 return_attention_mask=True
             )
             
-            # デバイスへの転送を最適化
             inputs = {k: v.to(self.device) for k, v in inputs.items()}
             
-            # メモリ効率の良い推論処理
-            with torch.cuda.amp.autocast(enabled=False):  # 混合精度を無効化
+            with torch.cuda.amp.autocast(enabled=False):
                 with torch.no_grad():
-                    # バッチサイズを1に固定
-                    outputs = self.model(
+                    # モデルからの出力を直接取得
+                    logits = self.model(
                         input_ids=inputs["input_ids"],
                         attention_mask=inputs["attention_mask"],
                     )
                     
-                    probabilities = torch.softmax(outputs.logits, dim=1)
+                    # logitsテンソルに対して直接softmaxを適用
+                    probabilities = torch.softmax(logits, dim=1)
                     predicted_class = torch.argmax(probabilities, dim=1).item()
                     confidence_score = probabilities[0][predicted_class].item()
             
-            quality_mapping = {
-                0: QualityLabel.CLEAR,
-                1: QualityLabel.NOT_CLEAR,
-                2: QualityLabel.MISLEADING
-            }
-            
-            # 明示的にキャッシュをクリア
-            torch.cuda.empty_cache()
-            
-            return ClassificationResult(
-                quality_label=quality_mapping[predicted_class],
-                confidence_score=confidence_score
-            )
-            
+                quality_mapping = {
+                    0: QualityLabel.CLEAR,
+                    1: QualityLabel.NOT_CLEAR,
+                    2: QualityLabel.MISLEADING
+                }
+                
+                torch.cuda.empty_cache()
+                
+                return ClassificationResult(
+                    quality_label=quality_mapping[predicted_class],
+                    confidence_score=confidence_score
+                )
+                
         except Exception as e:
-            torch.cuda.empty_cache()  # エラー時もキャッシュをクリア
+            torch.cuda.empty_cache()
             raise RuntimeError(f"Classification failed: {e}")
   
