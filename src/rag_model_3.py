@@ -50,7 +50,6 @@ class RAGModel:
         promise_status=Yes, evidence_status=Noの場合の類似データ検索
         verification_timelineの分類用の類似データを返す
         """
-        print("!!!verification_timelineの分類用の類似データを返す!!!")
         query_embedding = self.embedder.encode([promise_text])
         similarities = cosine_similarity(query_embedding, self.promise_only_embeddings)[0]
         
@@ -96,7 +95,6 @@ class RAGModel:
         promise_status=Yes, evidence_status=Yesの場合の類似データ検索
         verification_timelineとevidence_qualityの分類用の類似データを返す
         """
-        print("!!!verification_timelineとevidence_qualityの分類用の類似データを返す!!!")
         query_embedding = self.embedder.encode([promise_text])
         similarities = cosine_similarity(query_embedding, self.promise_evidence_embeddings)[0]
         
@@ -244,7 +242,8 @@ class RAGModel:
         Definitions of each label and the thought process behind the task:
         1. Read the <classification examples> carefully and learn why the label are classified the way they are.
         2. Based on the features learned from the examples in step 1, carefully read the contents of the <test data>.
-        3. Based on the features of the promise learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
+        3. Based on the features of the promise learned in the step 1, think carefully about when the contents of "promise_string" can be verified, following the definition below.
+           Make full use of the classification characteristics learned in step 1.
            "already": When the promise have already been applied, or whether or not it is applied, can already be verified.
            "within_2_years": When the promise can be verified within 2 years. (When the promise can be verified in the near future.)
            "between_2_and_5_years": When the promise can be verified in 2 to 5 years. (When the promise can be verified in the not too distant future, though not in the near future.)
@@ -335,13 +334,15 @@ class RAGModel:
         1. Read the <classification examples> carefully and learn why the two labels are classified the way they are.
            In particular, the judgment of "evidence_quality" is the most important and difficult part of this task, so learn how it can be classified thoroughly.
         2. Based on the features learned from the examples in step 1, carefully read the contents of the <test data>.
-        3. Based on the features of the promise learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
+        3. Based on the features of the promise learned in the step 1, think carefully about when the contents of "promise_string" can be verified, following the definition below.
+           Make full use of the classification characteristics learned in step 1.
            "already": When the promise have already been applied, or whether or not it is applied, can already be verified.
            "within_2_years": When the promise can be verified within 2 years. (When the promise can be verified in the near future.)
            "between_2_and_5_years": When the promise can be verified in 2 to 5 years. (When the promise can be verified in the not too distant future, though not in the near future.)
            "more_than_5_years: When the promise can be verified in more than 5 years. (When the promsie can be verified in the distant future.)
-        4. Based on the features learned in the first step, think carefully about how well the contents of "evidence_string" support the contents of "promise_string".
+        4. Based on the features learned in the step 1, think carefully about how well the contents of "evidence_string" support the contents of "promise_string".
            Then, think carefully about which label the quality of the relationship between the promise and the evidence falls into, following the definitions below.
+           Make full use of the classification characteristics learned in step 1.
            "Clear": In the content of "evidence_string", there is no lack of information and what is said is intelligible and logical.
            "Not Clear": In the content of "evidence_string", some information is missing or not well described so that what is said may range from intelligible and logical to superficial and/or superfluous.           
            "Misleading": In the content of "evidence_string", it is not suitable to support the promise, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
@@ -530,6 +531,21 @@ class RAGModel:
                 extracted_data['evidence_quality'] = 'N/A'
         else:
             extracted_data['verification_timeline'] = 'N/A'
-            extracted_data['evidence_status'] = 'N/A'
+            extracted_data['evidence_quality'] = 'N/A'
+            
+        # 指定された順序でデータを再構成
+        ordered_data = {
+            'data': extracted_data['data'],
+            'promise_status': extracted_data['promise_status'],
+            'promise_string': extracted_data['promise_string'],
+            'verification_timeline': extracted_data['verification_timeline'],
+            'evidence_status': extracted_data['evidence_status'],
+            'evidence_string': extracted_data['evidence_string'],
+            'evidence_quality': extracted_data['evidence_quality']
+        }
         
+<<<<<<< HEAD
         return json.dumps(extracted_data, ensure_ascii=False, indent=2)
+=======
+        return json.dumps(ordered_data, ensure_ascii=False, indent=2)
+>>>>>>> dec2d8ed20164a072cb5f66e137eb6ab560c317d
