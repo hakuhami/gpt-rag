@@ -72,12 +72,17 @@ class ESGQualityClassifier:
             self.model = AutoModelForSequenceClassification.from_pretrained(
                 self.model_name,
                 num_labels=3,
-                output_attentions=True  # アテンションスコアの取得を有効化
+                output_attentions=True,
+                torch_dtype=torch.float32  # 明示的に32ビット浮動小数点精度を指定
             ).to(self.device)
             
             # モデルの最適化設定
             self.model.config.use_cache = False
-            torch.backends.cudnn.benchmark = True
+            
+            # 演算精度の設定を調整
+            torch.backends.cudnn.enabled = True
+            torch.backends.cudnn.benchmark = False  # ベンチマークを無効化
+            torch.backends.cudnn.deterministic = True  # 決定論的な動作を保証
             
         except Exception as e:
             raise RuntimeError(f"Failed to initialize model: {e}")
@@ -159,30 +164,22 @@ class ESGQualityClassifier:
                 padding=True
             ).to(self.device)
             
-            with torch.cuda.amp.autocast():
-                with torch.no_grad():
-                    outputs = self.model(**inputs)
-                    probabilities = torch.softmax(outputs.logits, dim=1)
-                    predicted_class = torch.argmax(probabilities, dim=1).item()
-                    confidence_score = probabilities[0][predicted_class].item()
-                    
-                    # アテンションスコアの分析
-                    tokens = self.tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
-                    attention_scores = self._get_attention_highlights(
-                        outputs.attentions,
-                        tokens
-                    )
-            
-            quality_mapping = {
-                0: QualityLabel.CLEAR,
-                1: QualityLabel.NOT_CLEAR,
-                2: QualityLabel.MISLEADING
-            }
+            # 混合精度演算を無効化し、float32で統一
+            with torch.no_grad():
+                outputs = self.model(**inputs)
+                probabilities = torch.softmax(outputs.logits, dim=1)
+                predicted_class = torch.argmax(probabilities, dim=1).item()
+                confidence_score = probabilities[0][predicted_class].item()
+                
+                quality_mapping = {
+                    0: QualityLabel.CLEAR,
+                    1: QualityLabel.NOT_CLEAR,
+                    2: QualityLabel.MISLEADING
+                }
             
             return ClassificationResult(
                 quality_label=quality_mapping[predicted_class],
-                confidence_score=confidence_score,
-                attention_scores=attention_scores
+                confidence_score=confidence_score
             )
             
         except Exception as e:
