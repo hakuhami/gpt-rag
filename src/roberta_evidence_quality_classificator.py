@@ -27,7 +27,7 @@ class ESGQualityClassifier:
         self,
         gpu_required: bool = True,
         model_name: str = "nlp-waseda/roberta-large-japanese",
-        max_length: int = 1024
+        max_length: int = 512
     ):
         """
         分類器の初期化
@@ -135,23 +135,12 @@ class ESGQualityClassifier:
         
         return dict(sorted(important_tokens.items(), key=lambda x: x[1], reverse=True))
     
-    def classify_evidence_quality(
-        self,
-        promise_string: str,
-        evidence_string: str
-    ) -> ClassificationResult:
-        """
-        公約と根拠の質を評価
-        
-        Args:
-            promise_string (str): 公約テキスト
-            evidence_string (str): 根拠テキスト
-            
-        Returns:
-            ClassificationResult: 評価結果
-        """
+    def classify_evidence_quality(self, promise_string: str, evidence_string: str) -> ClassificationResult:
         if not promise_string or not evidence_string:
-            raise ValueError("Both promise and evidence strings must be provided")
+            return ClassificationResult(
+                quality_label=QualityLabel.NOT_APPLICABLE,
+                confidence_score=0.0
+            )
             
         formatted_text = self._format_input_text(promise_string, evidence_string)
         
@@ -161,21 +150,34 @@ class ESGQualityClassifier:
                 return_tensors="pt",
                 truncation=True,
                 max_length=self.max_length,
-                padding=True
-            ).to(self.device)
+                padding="max_length",  # パディングを明示的に指定
+                return_attention_mask=True
+            )
             
-            # 混合精度演算を無効化し、float32で統一
-            with torch.no_grad():
-                outputs = self.model(**inputs)
-                probabilities = torch.softmax(outputs.logits, dim=1)
-                predicted_class = torch.argmax(probabilities, dim=1).item()
-                confidence_score = probabilities[0][predicted_class].item()
-                
-                quality_mapping = {
-                    0: QualityLabel.CLEAR,
-                    1: QualityLabel.NOT_CLEAR,
-                    2: QualityLabel.MISLEADING
-                }
+            # デバイスへの転送を最適化
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
+            # メモリ効率の良い推論処理
+            with torch.cuda.amp.autocast(enabled=False):  # 混合精度を無効化
+                with torch.no_grad():
+                    # バッチサイズを1に固定
+                    outputs = self.model(
+                        input_ids=inputs["input_ids"],
+                        attention_mask=inputs["attention_mask"],
+                    )
+                    
+                    probabilities = torch.softmax(outputs.logits, dim=1)
+                    predicted_class = torch.argmax(probabilities, dim=1).item()
+                    confidence_score = probabilities[0][predicted_class].item()
+            
+            quality_mapping = {
+                0: QualityLabel.CLEAR,
+                1: QualityLabel.NOT_CLEAR,
+                2: QualityLabel.MISLEADING
+            }
+            
+            # 明示的にキャッシュをクリア
+            torch.cuda.empty_cache()
             
             return ClassificationResult(
                 quality_label=quality_mapping[predicted_class],
@@ -183,5 +185,6 @@ class ESGQualityClassifier:
             )
             
         except Exception as e:
+            torch.cuda.empty_cache()  # エラー時もキャッシュをクリア
             raise RuntimeError(f"Classification failed: {e}")
   
