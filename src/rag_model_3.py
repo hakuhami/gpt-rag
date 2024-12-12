@@ -88,6 +88,9 @@ class RAGModel:
                 'promise_string': doc['promise_string'],
                 'verification_timeline': doc['verification_timeline']
             } for _, _, doc in category_docs[:count]])
+        print("selected_docs_promise_only")
+        print(f"{selected_docs}")
+        print("selected_docs_promise_only")
         return selected_docs
 
     def search_similar_promise_evidence(self, promise_text: str) -> List[Dict]:
@@ -133,6 +136,9 @@ class RAGModel:
                 'evidence_string': doc['evidence_string'],
                 'evidence_quality': doc['evidence_quality']
             } for _, _, doc in category_docs[:count]])
+        print("selected_docs_promise_evidence")
+        print(f"{selected_docs}")
+        print("selected_docs_promise_evidence")
         return selected_docs
 
     def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
@@ -544,8 +550,4 @@ class RAGModel:
             'evidence_quality': extracted_data['evidence_quality']
         }
         
-<<<<<<< HEAD
-        return json.dumps(extracted_data, ensure_ascii=False, indent=2)
-=======
         return json.dumps(ordered_data, ensure_ascii=False, indent=2)
->>>>>>> dec2d8ed20164a072cb5f66e137eb6ab560c317d
