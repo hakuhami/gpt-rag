@@ -1,7 +1,7 @@
 import torch
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+import torch.nn as nn
+from transformers import AutoTokenizer, AutoConfig, AutoModel
 from typing import Optional, Dict, List
-import json
 from dataclasses import dataclass
 from enum import Enum
 
@@ -64,25 +64,39 @@ class ESGQualityClassifier:
         }
     
     def _initialize_model(self) -> None:
-        """
-        モデルとトークナイザーの初期化と最適化設定
-        """
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-            self.model = AutoModelForSequenceClassification.from_pretrained(
+            # モデル設定の最適化
+            config = AutoConfig.from_pretrained(
                 self.model_name,
                 num_labels=3,
-                output_attentions=True,
-                torch_dtype=torch.float32  # 明示的に32ビット浮動小数点精度を指定
-            ).to(self.device)
+                hidden_dropout_prob=0.1,
+                attention_probs_dropout_prob=0.1,
+                classifier_dropout=None
+            )
             
-            # モデルの最適化設定
-            self.model.config.use_cache = False
+            # モデルの初期化を改善
+            base_model = AutoModel.from_pretrained(self.model_name)
             
-            # 演算精度の設定を調整
-            torch.backends.cudnn.enabled = True
-            torch.backends.cudnn.benchmark = False  # ベンチマークを無効化
-            torch.backends.cudnn.deterministic = True  # 決定論的な動作を保証
+            class CustomRobertaClassifier(nn.Module):
+                def __init__(self, base_model, num_labels):
+                    super().__init__()
+                    self.roberta = base_model
+                    self.dropout = nn.Dropout(0.1)
+                    self.classifier = nn.Linear(base_model.config.hidden_size, num_labels)
+                    
+                    # 分類層の重みを適切に初期化
+                    torch.nn.init.xavier_normal_(self.classifier.weight)
+                    self.classifier.bias.data.zero_()
+                
+                def forward(self, input_ids, attention_mask):
+                    outputs = self.roberta(input_ids=input_ids, attention_mask=attention_mask)
+                    pooled_output = outputs.last_hidden_state[:, 0, :]
+                    pooled_output = self.dropout(pooled_output)
+                    logits = self.classifier(pooled_output)
+                    return logits
+            
+            self.model = CustomRobertaClassifier(base_model, num_labels=3).to(self.device)
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             
         except Exception as e:
             raise RuntimeError(f"Failed to initialize model: {e}")
