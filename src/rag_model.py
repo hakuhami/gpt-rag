@@ -227,7 +227,7 @@ class RAGModel:
 
         result = {
             "id": id,
-            "data": data
+            "data": data,
             **load_generated_text
         }
         
