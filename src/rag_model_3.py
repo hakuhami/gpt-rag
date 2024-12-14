@@ -75,10 +75,10 @@ class RAGModel:
         # 各カテゴリをsimilarityでソートし、指定件数を取得
         selected_docs = []
         category_counts = {
-            'already': 3,
+            'already': 4,
             'within_2_years': 2,
             'between_2_and_5_years': 2,
-            'more_than_5_years': 3
+            'more_than_5_years': 2
         }
         
         for category, count in category_counts.items():
@@ -123,8 +123,8 @@ class RAGModel:
         selected_docs = []
         category_counts = {
             'Clear': 4,
-            'Not Clear': 3,
-            'Misleading': 3
+            'Not Clear': 4,
+            'Misleading': 2
         }
         
         for category, count in category_counts.items():
