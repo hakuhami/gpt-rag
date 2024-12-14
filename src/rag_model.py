@@ -179,9 +179,11 @@ class RAGModel:
         1. You will be given an image of a page from an ESG report.
         2. Determine if a promise is included, and indicate "Yes" if included, "No" if not included. (promise_status)
         3. If a promise is included (if promise_status is "Yes"), also provide the following information:
+        - The specific part of the promise (extract verbatim from the text in the image without changing a single word) (promise_string)
         - When the promise can be verified ("already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A") (verification_timeline)
         - Whether evidence is included ("Yes", "No", "N/A") (evidence_status)
         4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
+        - The part containing the evidence (extract directly from the text in the image without changing a single word) (evidence_string)
         - The quality of the relationship between the promise and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
            
         Definitions and criteria for annotation labels:
@@ -194,7 +196,7 @@ class RAGModel:
         - "within_2_years": ESG-related measures whose results can be verified within 2 years.
         - "between_2_and_5_years": ESG-related measures whose results can be verified in 2 to 5 years.
         - "more_than_5_years": ESG-related measures whose results can be verified in more than 5 years.
-        - "N/A": When no promise exists.
+        - "N/A": When no promise exists. (Or when the promise is not verifiable.)
 
         3. evidence_status - Pieces of evidence are elements deemed the most relevant to exemplify and prove the core promise is being kept, which includes but is not limited to simple examples, company measures, numbers, etc.:
         - "Yes": Evidence supporting the promise exists.
@@ -210,6 +212,7 @@ class RAGModel:
         Important notes:
         - Consider the context of the entire image thoroughly. It's important to understand the meaning of the entire page, not just individual text bloks.
         - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output "N/A". The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
 
         The following are annotation examples of image similar to the one you want to analyze.
         Refer to these examples, think about why these examples have such annotation results, and then output the results.
@@ -248,11 +251,13 @@ class RAGModel:
                         "type": "object",
                         "properties": {
                             "promise_status": {"type": "string", "enum": ["Yes", "No"]},
-                            "verification_timeline": {"type": "string", "enum": ["already", "less_than_2_years", "between_2_and_5_years", "more_than_5_years", "N/A"]},
+                            "promise_string": {"type": "string"},
+                            "verification_timeline": {"type": "string", "enum": ["already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A"]},
                             "evidence_status": {"type": "string", "enum": ["Yes", "No", "N/A"]},
+                            "evidence_string": {"type": "string"},
                             "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Misleading", "N/A"]}
                         },
-                        "required": ["pdf", "page_number", "promise_status", "verification_timeline", "evidence_status", "evidence_quality"]
+                        "required": ["pdf", "page_number", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
                     }
                 }
             ],
