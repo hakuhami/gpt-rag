@@ -263,6 +263,7 @@ class RAGModel:
         <the details of the task>
         First, understand the details of the steps in the task.
         Then, understand the definitions of each label for extraction and classification, and the thought process at each step.
+        Use the theory of self-consistency to perform task from multiple perspectives, and finally output the answer that is considered the most appropriate from the answers obtained from each perspective.
         
         # Task Steps:
         1. Read the examples in <extraction/classification examples> carefully and learn the characteristics of extraction and classification.
@@ -311,9 +312,8 @@ class RAGModel:
         - Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
         - Apply self-consistency by reasoning from multiple perspectives to ensure that the extraction and classification results are logical and align with the context of <test data>.  
         - Revisit earlier steps, if necessary, to ensure that all outputs are consistent with each other.
-        - Always verify the logical consistency between extracted "promise_string" and "evidence_string".
+        - Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when "promise_status" or "evidence_status" is "No"), output a blank.
-        - When ambiguous cases arise, reason through examples from <extraction/classification examples> to ensure the results are grounded and consistent.
         
         
         <extraction/classification examples>
