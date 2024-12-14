@@ -291,7 +291,7 @@ class RAGModel:
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
               Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
-        5. Based on the features of the promise learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
+        5. Based on the features learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
            "already": When the promise have already been applied, or whether or not it is applied, can already be verified.
            "within_2_years": When the promise can be verified within 2 years. (When the promise can be verified in the near future.)
            "between_2_and_5_years": When the promise can be verified in 2 to 5 years. (When the promise can be verified in the not too distant future, though not in the near future.)
@@ -309,7 +309,7 @@ class RAGModel:
         Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
         The evidence for the promise may not be directly stated, so think carefully.
         "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
-        Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.  
+        Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.
         
         
         <extraction/classification examples>
