@@ -4,7 +4,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.data_loader import save_json_data, load_json_data
-# from src.data_preprocessor import split_data
 from src.rag_model import RAGModel
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
@@ -25,37 +24,26 @@ def run_analysis(config_path: str) -> None:
     with open(config['search_data_path'], 'r', encoding='utf-8-sig') as f:
         search_data = json.load(f)
         for item in search_data:
-            item['page_number'] = int(item['page_number'])
+            item['id'] = int(item['id'])
 
     # Load the test data from the file
     with open(config['test_data_path'], 'r', encoding='utf-8-sig') as f:
         test_data = json.load(f)
         for item in test_data:
-            item['page_number'] = int(item['page_number'])
-    
-    # # Load the pre-prepared JSON data
-    # json_data = load_json_data(config['sample_raw_data_path'])
-
-    # # Split the data into search and test sets
-    # search_data, test_data = split_data(json_data, test_size=config['test_size'])
-
-    # # Save the search and test data
-    # save_json_data(search_data, config['search_data_path'])
-    # save_json_data(test_data, config['test_data_path'])
-    # print("Search and test data is saved.")
+            item['id'] = int(item['id'])
 
     # Prepare the RAG model with the search data
     print("Start embedding")
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
-    rag_model.prepare_documents(search_data, "data/raw/PDFs")
+    rag_model.prepare_documents(search_data, "data/processed/images_experiment")
     print("Documents are prepared.")
 
     # Analyze the test data
     predictions = []
     for item in test_data:
-        pdf_path = os.path.join("data/raw/PDFs", f"{item['pdf']}")
-        image = rag_model.load_pdf_as_image(pdf_path, item['page_number'])
-        result = rag_model.analyze_paragraph(image, item['pdf'], item['page_number'])
+        image_path = os.path.join("data/processed/images_experiment", f"{item['id']}.png")
+        image = rag_model.load_image(image_path)
+        result = rag_model.analyze_paragraph(image, item['id'])
         print(f"{result},")
         result_dict = json.loads(result)
         predictions.append(result_dict)

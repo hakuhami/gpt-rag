@@ -9,12 +9,11 @@ import os
 import torch
 import torch.nn.functional as F
 from PIL import Image
-import pdf2image
 from transformers import LlavaNextProcessor, LlavaNextForConditionalGeneration
+import json
+import re
 import base64
 from io import BytesIO
-
-# For the embedding model, use the 'royokong/e5-v' which supports multiple languages
 
 class RAGModel:
     def __init__(self, api_key, model_name):
@@ -24,12 +23,11 @@ class RAGModel:
         self.model = LlavaNextForConditionalGeneration.from_pretrained('royokong/e5-v', torch_dtype=torch.float16).cuda()
         self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
     
-    def load_pdf_as_image(self, pdf_path: str, page_number: int) -> Image.Image:
+    def load_image(self, image_path: str) -> Image.Image:
         """
-        Load a specific page from a PDF as an image.
+        Load an image from a file path.
         """
-        images = pdf2image.convert_from_path(pdf_path, first_page=page_number, last_page=page_number)
-        return images[0]
+        return Image.open(image_path)
 
     def embed_image(self, image: Image.Image) -> torch.Tensor:
         """
@@ -40,34 +38,23 @@ class RAGModel:
             emb = self.model(**inputs, output_hidden_states=True, return_dict=True).hidden_states[-1][:, -1, :]
         return F.normalize(emb, dim=-1)    
     
-    def prepare_documents(self, search_data: List[Dict], pdf_dir: str) -> None:
+    def prepare_documents(self, search_data: List[Dict], images_dir: str) -> None:
         """
         Prepare and encode the search data
         """
         self.search_data = search_data
         self.doc_embeddings = []
         self.doc_images = []
-        # for item in search_data:
-        #     pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
-        #     page_number = int(item['page_number'])
-        #     image = self.load_pdf_as_image(pdf_path, page_number)
-        #     embedding = self.embed_image(image)
-        #     self.doc_embeddings.append(embedding)
-        #     self.doc_images.append(image)
-        # self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)    
+        
         for index, item in enumerate(search_data):
-            pdf_path = os.path.join(pdf_dir, f"{item['pdf']}")
-            page_number = int(item['page_number'])
-            image = self.load_pdf_as_image(pdf_path, page_number)
+            image_path = os.path.join(images_dir, f"{item['id']}.png")
+            image = self.load_image(image_path)
             embedding = self.embed_image(image)
             self.doc_embeddings.append(embedding)
             self.doc_images.append(image)            
-            # 何回目のループが終わったかを表示
             print(f"ループ {index + 1} 回目が終了しました。")
         self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)     
 
-    # # Retrieve the top 2 items from the target search data with the highest cosine similarity to the input paragraph.
-    # Because GPT context length strict, "top_k: int = 2"
     def get_relevant_context(self, query_image: Image.Image, top_k: int = 2) -> List[Dict]:
         """
         Retrieve the top documents related to the query image
@@ -75,14 +62,23 @@ class RAGModel:
         query_embedding = self.embed_image(query_image)
         similarities = F.cosine_similarity(query_embedding, self.doc_embeddings)
         top_indices = torch.argsort(similarities, descending=True)[:top_k]
-        # return [self.search_data[i] for i in top_indices]
-        return [
-            {**self.search_data[i], "image": self.doc_images[i]}
-            for i in top_indices
-        ]
+        
+        context_data = []
+        for i in top_indices:
+            # 必要な情報のみを抽出
+            filtered_data = {
+                "promise_status": self.search_data[i]["promise_status"],
+                "promise_string": self.search_data[i]["promise_string"],
+                "verification_timeline": self.search_data[i]["verification_timeline"],
+                "evidence_status": self.search_data[i]["evidence_status"],
+                "evidence_string": self.search_data[i]["evidence_string"],
+                "evidence_quality": self.search_data[i]["evidence_quality"],
+                "image": self.doc_images[i]
+            }
+            context_data.append(filtered_data)
+        return context_data
 
     def extract_json_text(self, text: str) -> Optional[str]:
-        # Extract only the JSON data (the part enclosed in "{}").
         json_pattern = re.compile(r'\{[^{}]*\}')
         matches = json_pattern.findall(text)
         
@@ -95,13 +91,6 @@ class RAGModel:
         return None
     
     def resize_image(self, image: Image.Image, scale_factor: float = 0.05) -> Image.Image:
-        """
-        Resize the image by a given scale factor.
-        
-        :param image: Original PIL Image
-        :param scale_factor: Scale factor for resizing (e.g., 0.5 for 50% of original size)
-        :return: Resized PIL Image
-        """
         if scale_factor <= 0 or scale_factor > 1:
             raise ValueError("Scale factor must be between 0 and 1")
         
@@ -112,54 +101,23 @@ class RAGModel:
         return image.resize((new_width, new_height), Image.LANCZOS)
 
     def image_to_base64(self, image: Image.Image, scale_factor: float = 0.05, quality: int = 95) -> str:
-        """
-        Convert a PIL Image to a base64 encoded string, with resizing and compression.
-        
-        :param image: Original PIL Image
-        :param scale_factor: Scale factor for resizing (e.g., 0.5 for 50% of original size)
-        :param quality: JPEG quality (0-100)
-        :return: Base64 encoded string of the image
-        """
-        # Create a copy of the image to avoid modifying the original
         img_copy = image.copy()
-
-        # Convert to RGB if it's not (this handles RGBA or other color modes)
         if img_copy.mode != 'RGB':
             img_copy = img_copy.convert('RGB')
         
-        # Resize the image
         img_copy = self.resize_image(img_copy, scale_factor)
         
-        # Save the image to a BytesIO object
         buffered = BytesIO()
         img_copy.save(buffered, format="PNG", quality=quality, optimize=True)
         
-        # Encode to base64
         return base64.b64encode(buffered.getvalue()).decode()
 
-# The parts of the prompt that explains the JSON structure are to be changed according to the language since the JSON structure differs for each language's dataset.
-
-    def analyze_paragraph(self, image: Image.Image, pdf_name: str, page_number: int) -> Dict[str, str]:
+    def analyze_paragraph(self, image: Image.Image, id: int) -> Dict[str, str]:
         """
-        Generate annotation results from paragraph text using an LLM, referencing similar data.
-
-        Args:
-            paragraph (str): Input paragraph text
-
-        Returns:
-            Dict[str, str]: Annotation results in JSON format
+        Generate annotation results from image using an LLM, referencing similar data.
         """
-        
-        # page_image = self.get_page_image(pdf_path, page_number)
-        # relevant_docs = self.get_relevant_context(page_image)
-        # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
-        
-        # relevant_docs = self.get_relevant_context(image)
-        # context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in relevant_docs])
-        
         relevant_docs = self.get_relevant_context(image)
         
-        # Prepare the context with both text information and base64 encoded images
         context = []
         for doc in relevant_docs:
             doc_info = {k: v for k, v in doc.items() if k != 'image'}
@@ -167,8 +125,6 @@ class RAGModel:
             context.append(json.dumps(doc_info, ensure_ascii=False))
 
         context_str = "\n".join(context)        
-
-        # The prompt is written for Chinese data.
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
@@ -185,7 +141,7 @@ class RAGModel:
         4. If evidence is included (if evidence_status is "Yes"), also provide the following information:
         - The part containing the evidence (extract directly from the text in the image without changing a single word) (evidence_string)
         - The quality of the relationship between the promise and evidence ("Clear", "Not Clear", "Misleading", "N/A") (evidence_quality)
-           
+        
         Definitions and criteria for annotation labels:
         1. promise_status - A promise is composed of a statement (a company principle, commitment, or strategy related to ESG criteria).:
         - "Yes": A promise exists.
@@ -228,8 +184,8 @@ class RAGModel:
             messages=[
                 {"role": "system", "content": "You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."},
                 {
-                 "role": "user",
-                 "content": [
+                "role": "user",
+                "content": [
                     {
                         "type": "text",
                         "text": prompt
@@ -240,7 +196,7 @@ class RAGModel:
                             "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.05, quality=95)}"
                         }
                     },
-                 ]
+                ]
                 }
             ],
             functions=[
@@ -250,6 +206,7 @@ class RAGModel:
                     "parameters": {
                         "type": "object",
                         "properties": {
+                            "id": {"type": "integer"},
                             "promise_status": {"type": "string", "enum": ["Yes", "No"]},
                             "promise_string": {"type": "string"},
                             "verification_timeline": {"type": "string", "enum": ["already", "within_2_years", "between_2_and_5_years", "more_than_5_years", "N/A"]},
@@ -257,7 +214,7 @@ class RAGModel:
                             "evidence_string": {"type": "string"},
                             "evidence_quality": {"type": "string", "enum": ["Clear", "Not Clear", "Misleading", "N/A"]}
                         },
-                        "required": ["pdf", "page_number", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
+                        "required": ["id", "promise_status", "promise_string", "verification_timeline", "evidence_status", "evidence_string", "evidence_quality"]
                     }
                 }
             ],
@@ -265,14 +222,11 @@ class RAGModel:
             temperature=0
         )
         
-        # Extract only the content generated by GPT from the response data containing a lot of information, and format it in JSON.
         generated_text = self.extract_json_text(response.choices[0].message.function_call.arguments)
         load_generated_text = json.loads(generated_text)
 
-        # Add pdf_name and page_number to the result
         result = {
-            "pdf": pdf_name,
-            "page_number": str(page_number),
+            "id": id,
             **load_generated_text
         }
         
