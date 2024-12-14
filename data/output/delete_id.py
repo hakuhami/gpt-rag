@@ -19,7 +19,7 @@ def process_json_file(input_path: str, output_path: str):
 
 if __name__ == "__main__":
     input_path = "./data/output/predictions.json"
-    output_path = "./data/output/Japanese_withRAG.json"
+    output_path = "./data/output/Japanese_withoutRAG.json"
     
     try:
         process_json_file(input_path, output_path)
