@@ -1,0 +1,24 @@
+{
+  "promise_string": {
+    "r": 0.0,
+    "p": 0.0,
+    "f": 0.0
+  },
+  "evidence_string": {
+    "r": 0.0,
+    "p": 0.0,
+    "f": 0.0
+  },
+  "promise_status": {
+    "f": 0.7760869565217391
+  },
+  "verification_timeline": {
+    "f": 0.01496408619313647
+  },
+  "evidence_status": {
+    "f": 0.5181569030489894
+  },
+  "evidence_quality": {
+    "f": 0.4063424947145877
+  }
+}
