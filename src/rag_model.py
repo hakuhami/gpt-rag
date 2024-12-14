@@ -29,55 +29,6 @@ class RAGModel:
         """
         return Image.open(image_path)
 
-    def embed_image(self, image: Image.Image) -> torch.Tensor:
-        """
-        Embed an image using the e5-v model.
-        """
-        inputs = self.processor([self.img_prompt], [image], return_tensors="pt", padding=True).to('cuda')
-        with torch.no_grad():
-            emb = self.model(**inputs, output_hidden_states=True, return_dict=True).hidden_states[-1][:, -1, :]
-        return F.normalize(emb, dim=-1)    
-    
-    def prepare_documents(self, search_data: List[Dict], images_dir: str) -> None:
-        """
-        Prepare and encode the search data - 訓練データのみを対象とする
-        """
-        self.search_data = [item for item in search_data if 201 <= item['id'] <= 600]
-        self.doc_embeddings = []
-        self.doc_images = []
-        
-        for item in self.search_data:
-            image_path = os.path.join(images_dir, f"{item['id']}.png")
-            image = self.load_image(image_path)
-            embedding = self.embed_image(image)
-            self.doc_embeddings.append(embedding)
-            self.doc_images.append(image)            
-        
-        self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)
-
-    def get_relevant_context(self, query_image: Image.Image, top_k: int = 2) -> List[Dict]:
-        """
-        Retrieve the top documents related to the query image
-        """
-        query_embedding = self.embed_image(query_image)
-        similarities = F.cosine_similarity(query_embedding, self.doc_embeddings)
-        top_indices = torch.argsort(similarities, descending=True)[:top_k]
-        
-        context_data = []
-        for i in top_indices:
-            # 必要な情報のみを抽出
-            filtered_data = {
-                "promise_status": self.search_data[i]["promise_status"],
-                "promise_string": self.search_data[i]["promise_string"],
-                "verification_timeline": self.search_data[i]["verification_timeline"],
-                "evidence_status": self.search_data[i]["evidence_status"],
-                "evidence_string": self.search_data[i]["evidence_string"],
-                "evidence_quality": self.search_data[i]["evidence_quality"],
-                "image": self.doc_images[i]
-            }
-            context_data.append(filtered_data)
-        return context_data
-
     def extract_json_text(self, text: str) -> Optional[str]:
         json_pattern = re.compile(r'\{[^{}]*\}')
         matches = json_pattern.findall(text)
@@ -113,18 +64,6 @@ class RAGModel:
         return base64.b64encode(buffered.getvalue()).decode()
 
     def analyze_paragraph(self, image: Image.Image, id: int, data: str) -> Dict[str, str]:
-        """
-        Generate annotation results from image using an LLM, referencing similar data.
-        """
-        relevant_docs = self.get_relevant_context(image)
-        
-        context = []
-        for doc in relevant_docs:
-            doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.05, quality=95)
-            context.append(json.dumps(doc_info, ensure_ascii=False))
-
-        context_str = "\n".join(context)        
 
         prompt = f"""
         You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters.
@@ -170,10 +109,6 @@ class RAGModel:
         - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image and they are must be extracted in Japanese. If there is no corresponding text (when promise_status or evidence_status is No), output "N/A". The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
 
-        The following are annotation examples of image similar to the one you want to analyze.
-        Refer to these examples, think about why these examples have such annotation results, and then output the results.
-        Examples for your reference are as follows:
-        {context_str}
 
         Analyze the following image and provide results in the format described above:
         """
