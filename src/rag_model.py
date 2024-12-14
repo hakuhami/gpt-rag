@@ -40,20 +40,20 @@ class RAGModel:
     
     def prepare_documents(self, search_data: List[Dict], images_dir: str) -> None:
         """
-        Prepare and encode the search data
+        Prepare and encode the search data - 訓練データのみを対象とする
         """
-        self.search_data = search_data
+        self.search_data = [item for item in search_data if 201 <= item['id'] <= 600]
         self.doc_embeddings = []
         self.doc_images = []
         
-        for index, item in enumerate(search_data):
+        for item in self.search_data:
             image_path = os.path.join(images_dir, f"{item['id']}.png")
             image = self.load_image(image_path)
             embedding = self.embed_image(image)
             self.doc_embeddings.append(embedding)
             self.doc_images.append(image)            
-            print(f"ループ {index + 1} 回目が終了しました。")
-        self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)     
+        
+        self.doc_embeddings = torch.cat(self.doc_embeddings, dim=0)
 
     def get_relevant_context(self, query_image: Image.Image, top_k: int = 2) -> List[Dict]:
         """
@@ -168,7 +168,7 @@ class RAGModel:
         Important notes:
         - Consider the context of the entire image thoroughly. It's important to understand the meaning of the entire page, not just individual text bloks.
         - Pay attention to both textual and visual elements such as charts, diagrams, and illustrations in the image that might contain ESG-related information.
-        - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image. If there is no corresponding text (when promise_status or evidence_status is No), output "N/A". The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text in the image and they are must be extracted in Japanese. If there is no corresponding text (when promise_status or evidence_status is No), output "N/A". The promise are written simply and concisely, so carefully read the text and extract the parts that are truly considered appropriate.
 
         The following are annotation examples of image similar to the one you want to analyze.
         Refer to these examples, think about why these examples have such annotation results, and then output the results.
