@@ -306,11 +306,11 @@ class RAGModel:
            "Not Clear": In the content of "evidence_string", some information is missing or not well described so that what is said may range from intelligible and logical to superficial and/or superfluous.           
            "Misleading": In the content of "evidence_string", it is not suitable to support the promise, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
                 
-        # Important notes:        
+        # Important notes:
         - You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
         - Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
         - Apply self-consistency by reasoning from multiple perspectives to ensure that the extraction and classification results are logical and align with the context of <test data>.  
-        - Revisit earlier steps, if necessary, to ensure that all outputs (promise_status, promise_string, evidence_quality, etc.) are consistent with each other.
+        - Revisit earlier steps, if necessary, to ensure that all outputs are consistent with each other.
         - Always verify the logical consistency between extracted "promise_string" and "evidence_string".
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when "promise_status" or "evidence_status" is "No"), output a blank.
         - When ambiguous cases arise, reason through examples from <extraction/classification examples> to ensure the results are grounded and consistent.

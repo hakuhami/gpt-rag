@@ -258,10 +258,11 @@ class RAGModel:
            "more_than_5_years: When the promise can be verified in more than 5 years. (When the promsie can be verified in the distant future.)
                 
         # Important notes:
-        You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
-        Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
-        The evidence for the promise may not be directly stated, so think carefully.
-        Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.  
+        - You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
+        - Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        - Apply self-consistency by reasoning from multiple perspectives to ensure that the classification result are logical and align with the context of <test data>.  
+        - Revisit earlier steps, if necessary, to ensure that all outputs are consistent with each other.
+        - When ambiguous cases arise, reason through examples from <classification examples> to ensure the results are grounded and consistent.
         
         
         <classification examples>
@@ -358,10 +359,11 @@ class RAGModel:
            "Misleading": In the content of "evidence_string", it is not suitable to support the promise, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
                 
         # Important notes:
-        You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
-        Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
-        The evidence for the promise may not be directly stated, so think carefully.
-        Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.  
+        - You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
+        - Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        - Apply self-consistency by reasoning from multiple perspectives to ensure that the classification results are logical and align with the context of <test data>.  
+        - Revisit earlier steps, if necessary, to ensure that all outputs are consistent with each other.
+        - When ambiguous cases arise, reason through examples from <classification examples> to ensure the results are grounded and consistent.
         
         
         <classification examples>
@@ -478,11 +480,13 @@ class RAGModel:
               Based on the features of the evidence learned in step 1, and taking these concepts into account, determine whether <test data> contains the evidence supporting the promise and which parts are the contents of the evidnece.
                 
         # Important notes:
-        You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
-        Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
-        The evidence for the promise may not be directly stated, so think carefully.
-        "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when promise_status or evidence_status is No), output a blank.
-        Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.  
+        - You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
+        - Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        - Apply self-consistency by reasoning from multiple perspectives to ensure that the extraction and classification results are logical and align with the context of <test data>.  
+        - Revisit earlier steps, if necessary, to ensure that all outputs are consistent with each other.
+        - Always verify the logical consistency between extracted "promise_string" and "evidence_string".
+        - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when "promise_status" or "evidence_status" is "No"), output a blank.
+        - When ambiguous cases arise, reason through examples from <extraction/classification examples> to ensure the results are grounded and consistent.
         
         
         <extraction/classification examples>

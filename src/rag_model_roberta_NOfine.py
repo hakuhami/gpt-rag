@@ -107,6 +107,10 @@ class RAGModel:
                 pass        
         return None
 
+
+
+
+    ### プロンプトはアップデートする必要がある
     def analyze_paragraph(self, paragraph: str) -> Dict[str, str]:
         """
         Generate annotation results from paragraph text using an LLM, referencing similar data.
