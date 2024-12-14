@@ -43,7 +43,7 @@ def run_analysis(config_path: str) -> None:
     for item in test_data:
         image_path = os.path.join("data/processed/images_experiment", f"{item['id']}.png")
         image = rag_model.load_image(image_path)
-        result = rag_model.analyze_paragraph(image, item['id'])
+        result = rag_model.analyze_paragraph(image, item['id'], item['data'])
         print(f"{result},")
         result_dict = json.loads(result)
         predictions.append(result_dict)

@@ -112,7 +112,7 @@ class RAGModel:
         
         return base64.b64encode(buffered.getvalue()).decode()
 
-    def analyze_paragraph(self, image: Image.Image, id: int) -> Dict[str, str]:
+    def analyze_paragraph(self, image: Image.Image, id: int, data: str) -> Dict[str, str]:
         """
         Generate annotation results from image using an LLM, referencing similar data.
         """
@@ -227,6 +227,7 @@ class RAGModel:
 
         result = {
             "id": id,
+            "data": data
             **load_generated_text
         }
         
