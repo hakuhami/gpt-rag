@@ -263,7 +263,6 @@ class RAGModel:
         <the details of the task>
         First, understand the details of the steps in the task.
         Then, understand the definitions of each label for extraction and classification, and the thought process at each step.
-        To ensure that extraction or classification result is logical and based on features learned from the <extraction/classification examples> at each step, use the theory of self-consistency to perform task from multiple perspectives, and finally output the answer that is considered the most appropriate from the answers obtained from each perspective. (If necessary, revisit earlier steps to ensure that all outputs are consistent with each other.)
         
         # Task Steps:
         1. Read the examples in <extraction/classification examples> carefully and learn the characteristics of extraction and classification.
@@ -289,7 +288,7 @@ class RAGModel:
            If "evidence_status"is "No", output "N/A".     
            
         # Definitions of each label and the thought process behind the task:
-        1. Read the <extraction/classification examples> carefully and learn what content is considered to be a promise or evidence.
+        1. Read the <extraction/classification examples> carefully and learn the features of the content and relationships of promise and evidence, and the classification features of "verification_timeline" and "evidence_quality".
            In particular, the judgment of "evidence_quality" is the most important and difficult part of this task, so learn how it can be classified thoroughly.
         2. Based on the features learned from the examples in step 1, carefully read the contents of <test data>.
         3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
@@ -310,6 +309,7 @@ class RAGModel:
         # Important notes:
         - You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
         - Consider the context and logical relationships of the sentences thoroughly. It's important to understand the meaning of the entire paragraph, not just individual sentences.
+        - The evidence for the promise may not be directly stated, so think carefully.
         - Concepts specific to each company or industry may appear in the text, so think carefully about their meaning and appropriately interpret them.
         - "promise_string" and "evidence_string" should be extracted verbatim from the original text. If there is no corresponding text (when "promise_status" or "evidence_status" is "No"), output a blank.
         
