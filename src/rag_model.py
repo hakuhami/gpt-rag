@@ -25,6 +25,7 @@ class RAGModel:
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name
+        self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
         
         try:
             # GPUデバイスの設定
