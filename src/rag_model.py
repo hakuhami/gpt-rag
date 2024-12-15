@@ -1,8 +1,6 @@
 import openai
 from openai import OpenAI
 from typing import Optional, List, Dict
-from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
 import json
 import re
 import os
