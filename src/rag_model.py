@@ -9,7 +9,7 @@ import os
 import torch
 import torch.nn.functional as F
 from PIL import Image
-from transformers import LlavaNextProcessor, LlavaNextForConditionalGeneration
+from transformers import LlavaNextForConditionalGeneration
 import json
 import re
 import base64
@@ -19,15 +19,16 @@ class RAGModel:
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name        
-        self.processor = LlavaNextProcessor.from_pretrained('royokong/e5-v')
-        self.model = LlavaNextForConditionalGeneration.from_pretrained('royokong/e5-v', torch_dtype=torch.float16).cuda()
-        self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
     
     def load_image(self, image_path: str) -> Image.Image:
-        """
-        Load an image from a file path.
-        """
-        return Image.open(image_path)
+        if not os.path.exists(image_path):
+            raise FileNotFoundError(f"画像ファイルが見つかりません: {image_path}")
+        try:
+            image = Image.open(image_path)
+            print(f"画像の読み込みに成功しました。サイズ: {image.size}")
+            return image
+        except Exception as e:
+            raise ValueError(f"画像の読み込みに失敗しました: {e}")
 
     def extract_json_text(self, text: str) -> Optional[str]:
         json_pattern = re.compile(r'\{[^{}]*\}')
