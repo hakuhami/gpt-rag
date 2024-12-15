@@ -14,12 +14,42 @@ import base64
 from io import BytesIO
 
 class RAGModel:
+    # def __init__(self, api_key, model_name):
+    #     openai.api_key = api_key
+    #     self.model_name = model_name        
+    #     self.processor = LlavaNextProcessor.from_pretrained('royokong/e5-v')
+    #     self.model = LlavaNextForConditionalGeneration.from_pretrained('royokong/e5-v', torch_dtype=torch.float16).cuda()
+    #     self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
+    
+    # とりあえず、キャッシュの仕様を明示してみる
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
-        self.model_name = model_name        
-        self.processor = LlavaNextProcessor.from_pretrained('royokong/e5-v')
-        self.model = LlavaNextForConditionalGeneration.from_pretrained('royokong/e5-v', torch_dtype=torch.float16).cuda()
-        self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
+        self.model_name = model_name
+        
+        try:
+            # キャッシュの使用を明示的に指定
+            self.processor = LlavaNextProcessor.from_pretrained(
+                'royokong/e5-v',
+                cache_dir="./model_cache",  # キャッシュディレクトリを指定
+                trust_remote_code=True      # リモートコードを信頼
+            )
+            
+            self.model = LlavaNextForConditionalGeneration.from_pretrained(
+                'royokong/e5-v',
+                cache_dir="./model_cache",  # キャッシュディレクトリを指定
+                torch_dtype=torch.float16,
+                trust_remote_code=True,     # リモートコードを信頼
+                device_map="auto"          # デバイスの自動割り当て
+            ).cuda()
+            
+            print("モデルの初期化が完了しました")
+        except Exception as e:
+            print(f"モデルの初期化中にエラーが発生しました: {e}")
+            raise
+            
+        self.img_prompt = ('<|start_header_id|>user<|end_header_id|>\n\n<image>\n'
+                        'Analyze an ESG-related report image, and extract promise and evidence information: '
+                        '<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n')
     
     def load_image(self, image_path: str) -> Image.Image:
         if not os.path.exists(image_path):
