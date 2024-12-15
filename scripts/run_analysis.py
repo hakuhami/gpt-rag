@@ -17,7 +17,7 @@ def run_analysis(config_path: str) -> None:
         config_path (str): The path to the configuration file
     """
     # Load the configuration file
-    with open(config_path, 'r') as f:
+    with open(config_path, 'r', encoding='utf-8-sig') as f:
         config = yaml.safe_load(f)
     
     # Load the search data from the file
