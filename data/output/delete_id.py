@@ -18,8 +18,8 @@ def process_json_file(input_path: str, output_path: str):
         json.dump(processed_data, f, indent=2, ensure_ascii=False)
 
 if __name__ == "__main__":
-    input_path = "./data/output/predictions.json"
-    output_path = "./data/output/Japanese_withoutRAG.json"
+    input_path = "./data/output/predictions_0.4.json"
+    output_path = "./data/output/Japanese_withoutRAG_0.4.json"
     
     try:
         process_json_file(input_path, output_path)
