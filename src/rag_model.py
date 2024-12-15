@@ -137,7 +137,7 @@ class RAGModel:
                 pass        
         return None
     
-    def resize_image(self, image: Image.Image, scale_factor: float = 0.35) -> Image.Image:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.25) -> Image.Image:
         if scale_factor <= 0 or scale_factor > 1:
             raise ValueError("Scale factor must be between 0 and 1")
         
@@ -147,7 +147,7 @@ class RAGModel:
         
         return image.resize((new_width, new_height), Image.LANCZOS)
 
-    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.35, quality: int = 95) -> str:
+    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.25, quality: int = 95) -> str:
         img_copy = image.copy()
         if img_copy.mode != 'RGB':
             img_copy = img_copy.convert('RGB')
@@ -168,7 +168,7 @@ class RAGModel:
         context = []
         for doc in relevant_docs:
             doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.35, quality=95)
+            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.25, quality=95)
             context.append(json.dumps(doc_info, ensure_ascii=False))
 
         context_str = "\n".join(context)        
@@ -240,7 +240,7 @@ class RAGModel:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.35, quality=95)}"
+                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.25, quality=95)}"
                         }
                     },
                 ]
