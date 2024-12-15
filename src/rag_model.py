@@ -24,10 +24,14 @@ class RAGModel:
         self.img_prompt = '<|start_header_id|>user<|end_header_id|>\n\n<image>\nAnalyze an ESG-related report image, and extract promise and evidence information: <|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n'
     
     def load_image(self, image_path: str) -> Image.Image:
-        """
-        Load an image from a file path.
-        """
-        return Image.open(image_path)
+        if not os.path.exists(image_path):
+            raise FileNotFoundError(f"画像ファイルが見つかりません: {image_path}")
+        try:
+            image = Image.open(image_path)
+            print(f"画像の読み込みに成功しました。サイズ: {image.size}")
+            return image
+        except Exception as e:
+            raise ValueError(f"画像の読み込みに失敗しました: {e}")
 
     def embed_image(self, image: Image.Image) -> torch.Tensor:
         """
@@ -90,7 +94,7 @@ class RAGModel:
                 pass        
         return None
     
-    def resize_image(self, image: Image.Image, scale_factor: float = 0.05) -> Image.Image:
+    def resize_image(self, image: Image.Image, scale_factor: float = 0.2) -> Image.Image:
         if scale_factor <= 0 or scale_factor > 1:
             raise ValueError("Scale factor must be between 0 and 1")
         
@@ -100,7 +104,7 @@ class RAGModel:
         
         return image.resize((new_width, new_height), Image.LANCZOS)
 
-    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.05, quality: int = 95) -> str:
+    def image_to_base64(self, image: Image.Image, scale_factor: float = 0.2, quality: int = 95) -> str:
         img_copy = image.copy()
         if img_copy.mode != 'RGB':
             img_copy = img_copy.convert('RGB')
@@ -121,7 +125,7 @@ class RAGModel:
         context = []
         for doc in relevant_docs:
             doc_info = {k: v for k, v in doc.items() if k != 'image'}
-            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.05, quality=95)
+            doc_info['image_base64'] = self.image_to_base64(doc['image'], scale_factor=0.2, quality=95)
             context.append(json.dumps(doc_info, ensure_ascii=False))
 
         context_str = "\n".join(context)        
@@ -193,7 +197,7 @@ class RAGModel:
                     {
                         "type": "image_url",
                         "image_url": {
-                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.05, quality=95)}"
+                            "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.2, quality=95)}"
                         }
                     },
                 ]

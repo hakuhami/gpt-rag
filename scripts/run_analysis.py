@@ -41,12 +41,31 @@ def run_analysis(config_path: str) -> None:
     # Analyze the test data
     predictions = []
     for item in test_data:
-        image_path = os.path.join("data/processed/images_experiment", f"{item['id']}.png")
-        image = rag_model.load_image(image_path)
-        result = rag_model.analyze_paragraph(image, item['id'], item['data'])
-        print(f"{result},")
-        result_dict = json.loads(result)
-        predictions.append(result_dict)
+        try:
+            item['id'] = int(item['id'])
+            image_path = os.path.join("data/processed/images_experiment", f"{item['id']}.png")
+            
+            if not os.path.exists(image_path):
+                raise FileNotFoundError(f"画像ファイルが存在しません: {image_path}")
+            
+            print(f"画像 {item['id']} の処理を開始します")
+            image = rag_model.load_image(image_path)
+            
+            result = rag_model.analyze_paragraph(image, item['id'], item['data'])
+            print(f"{result}")
+            result_dict = json.loads(result)
+            
+            required_keys = ["id", "promise_status", "promise_string", "verification_timeline", 
+                           "evidence_status", "evidence_string", "evidence_quality"]
+            if not all(key in result_dict for key in required_keys):
+                print(f"警告: 画像 {item['id']} の結果に必要なキーが不足しています")
+            
+            predictions.append(result_dict)
+            print(f"画像 {item['id']} の処理が完了しました")
+            
+        except Exception as e:
+            print(f"画像 {item['id']} の処理中にエラーが発生しました: {e}")
+            raise
         
     # Save the prediction results
     save_json_data(predictions, config['generated_data_path'])
