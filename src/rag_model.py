@@ -27,29 +27,33 @@ class RAGModel:
         self.model_name = model_name
         
         try:
-            # キャッシュの使用を明示的に指定
+            # GPUデバイスの設定
+            if torch.cuda.is_available():
+                self.device = torch.device("cuda:0")  # 明示的にcuda:0を指定
+                print(f"Using GPU: {torch.cuda.get_device_name(0)}")
+            else:
+                self.device = torch.device("cpu")
+                print("Using CPU")
+            
+            # プロセッサーの初期化
             self.processor = LlavaNextProcessor.from_pretrained(
                 'royokong/e5-v',
-                cache_dir="./model_cache",  # キャッシュディレクトリを指定
-                trust_remote_code=True      # リモートコードを信頼
+                cache_dir="./model_cache",
+                trust_remote_code=True
             )
             
+            # モデルの初期化とデバイス配置
             self.model = LlavaNextForConditionalGeneration.from_pretrained(
                 'royokong/e5-v',
-                cache_dir="./model_cache",  # キャッシュディレクトリを指定
+                cache_dir="./model_cache",
                 torch_dtype=torch.float16,
-                trust_remote_code=True,     # リモートコードを信頼
-                device_map="auto"          # デバイスの自動割り当て
-            ).cuda()
+                trust_remote_code=True,
+            ).to(self.device)  # 指定したデバイスに配置
             
             print("モデルの初期化が完了しました")
         except Exception as e:
             print(f"モデルの初期化中にエラーが発生しました: {e}")
             raise
-            
-        self.img_prompt = ('<|start_header_id|>user<|end_header_id|>\n\n<image>\n'
-                        'Analyze an ESG-related report image, and extract promise and evidence information: '
-                        '<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n \n')
     
     def load_image(self, image_path: str) -> Image.Image:
         if not os.path.exists(image_path):
@@ -65,10 +69,20 @@ class RAGModel:
         """
         Embed an image using the e5-v model.
         """
-        inputs = self.processor([self.img_prompt], [image], return_tensors="pt", padding=True).to('cuda')
-        with torch.no_grad():
-            emb = self.model(**inputs, output_hidden_states=True, return_dict=True).hidden_states[-1][:, -1, :]
-        return F.normalize(emb, dim=-1)    
+        try:
+            inputs = self.processor([self.img_prompt], [image], return_tensors="pt", padding=True)
+            # 入力を指定したデバイスに移動
+            inputs = {k: v.to(self.device) if hasattr(v, 'to') else v for k, v in inputs.items()}
+            
+            with torch.no_grad():
+                outputs = self.model(**inputs, output_hidden_states=True, return_dict=True)
+                emb = outputs.hidden_states[-1][:, -1, :]
+                # 出力を同じデバイスに保持
+                emb = emb.to(self.device)
+            return F.normalize(emb, dim=-1)
+        except Exception as e:
+            print(f"画像のエンベディング中にエラーが発生: {e}")
+            raise
     
     def prepare_documents(self, search_data: List[Dict], images_dir: str) -> None:
         """
