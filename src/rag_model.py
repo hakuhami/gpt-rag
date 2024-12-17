@@ -288,7 +288,6 @@ class RAGModel:
         Definitions of each label and the thought process behind the task:
         1. Read the <extraction/classification examples> carefully and learn the features of what content is considered to be promise or evidence, and the classification features of "verification_timeline" and "evidence_quality".
            In particular, the judgment of "evidence_quality" is the most important and difficult part of this task, so learn how it can be classified.
-           (There are three types of examples in <extraction/classification examples>: when there is the promise, when there is the promise and the evidence, and when there is neither the promise nor the evidence. So learn the features of each of these three cases.)
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
               Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
