@@ -12,7 +12,7 @@ class RAGModel:
     def __init__(self, api_key, model_name):
         openai.api_key = api_key
         self.model_name = model_name
-        self.mecab = MeCab.Tagger("-Ochasen")
+        self.mecab = MeCab.Tagger("")
         self.tokenized_docs = None
         self.bm25 = None
 

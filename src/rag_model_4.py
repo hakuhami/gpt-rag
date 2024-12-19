@@ -15,7 +15,7 @@ class RAGModel:
         openai.api_key = api_key
         self.model_name = model_name
         self.embedder = SentenceTransformer('intfloat/multilingual-e5-large-instruct')
-        self.mecab = MeCab.Tagger("-Ochasen")
+        self.mecab = MeCab.Tagger("")
         self.tokenized_docs = None
         self.bm25 = None
 
