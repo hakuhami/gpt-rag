@@ -3,6 +3,7 @@ from openai import OpenAI
 import json
 from typing import Dict, Optional
 import yaml
+import re
 
 class AllRabelExplainer:
     def __init__(self, api_key: str, model_name: str):
@@ -16,6 +17,19 @@ class AllRabelExplainer:
         openai.api_key = api_key
         self.model_name = model_name
         self.client = OpenAI(api_key=api_key)
+        
+    def extract_json_text(self, text: str) -> Optional[str]:
+        # Extract only the JSON data (the part enclosed in "{}").
+        json_pattern = re.compile(r'\{[^{}]*\}')
+        matches = json_pattern.findall(text)
+        
+        if matches:
+            try:
+                json_obj = json.loads(matches[0])
+                return json.dumps(json_obj, ensure_ascii=False, indent=2)
+            except json.JSONDecodeError:
+                pass        
+        return None
 
     def generate_explanation(self, data: Dict) -> Optional[str]:
         """
@@ -153,8 +167,12 @@ class AllRabelExplainer:
             function_call={"name": "explain_esg_paragraph"},
             temperature=0
         )
-                
-        return response.choices[0].message.function_call.arguments
+        
+        generated_text = self.extract_json_text(response.choices[0].message.function_call.arguments)        
+        load_generated_text = json.loads(generated_text)
+        
+        result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
+        return result
 
     def process_file(self, input_path: str, output_path: str) -> None:
         """
@@ -167,14 +185,6 @@ class AllRabelExplainer:
         # Read input data
         with open(input_path, 'r', encoding='utf-8-sig') as f:
             data = json.load(f)
-        
-        # # Process each entry
-        # for entry in data:
-        #     if entry.get('evidence_quality') != 'N/A':
-        #         explanation = self.generate_explanation(entry)
-        #         if explanation:
-        #             entry['eq_explanation'] = explanation
-        #             print(f"\n{explanation}\n")
         
         # Process each entry
         for entry in data:
