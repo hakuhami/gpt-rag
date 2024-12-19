@@ -194,16 +194,16 @@ class AllRabelExplainer:
 
             if entry['promise_status'] == 'Yes':
                 if entry['evidence_status'] == 'Yes':
-                  # 公約も根拠もある場合
+                    # 公約も根拠もある場合
                     entry['explanation'] = explanation
                     print(f"出力の説明文:::\n{explanation}\n")
                 elif entry['evidence_status'] == 'No':
-                  # 公約はあるが根拠が無い場合
+                    # 公約はあるが根拠が無い場合
                     del explanation['evidence_quality_explanation']
                     entry['explanation'] = explanation
                     print(f"出力の説明文:::\n{explanation}\n")
-            elif entry['evidence_status'] == 'No':
-              # 公約も根拠もない場合
+            elif entry['promise_status'] == 'No':
+                # 公約も根拠もない場合
                 del explanation['verification_timeline_explanation']
                 del explanation['evidence_explanation']
                 del explanation['evidence_quality_explanation']
