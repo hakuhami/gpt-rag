@@ -95,6 +95,7 @@ class RAGModel:
         print("selected_docs_promise_only")
         return selected_docs
 
+    # この検索の仕方では、verification_timelineは比率を考慮していない
     def search_similar_promise_evidence(self, promise_text: str) -> List[Dict]:
         """
         promise_status=Yes, evidence_status=Yesの場合の類似データ検索
@@ -143,7 +144,7 @@ class RAGModel:
         print("selected_docs_promise_evidence")
         return selected_docs
 
-    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 3, no_promise_count: int = 3) -> List[Dict]:
+    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 4, no_promise_count: int = 4) -> List[Dict]:
         """
         Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
 
