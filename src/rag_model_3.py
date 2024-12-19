@@ -125,8 +125,8 @@ class RAGModel:
         selected_docs = []
         category_counts = {
             'Clear': 4,
-            'Not Clear': 4,
-            'Misleading': 2
+            'Not Clear': 3,
+            'Misleading': 3
         }
         
         for category, count in category_counts.items():
@@ -143,7 +143,7 @@ class RAGModel:
         print("selected_docs_promise_evidence")
         return selected_docs
 
-    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
+    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 3, no_promise_count: int = 3) -> List[Dict]:
         """
         Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
 
