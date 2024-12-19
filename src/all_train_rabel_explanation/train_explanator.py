@@ -134,6 +134,23 @@ class AllRabelExplainer:
                 {"role": "system", "content": "You are an expert in reading and generating ESG-related documents."},
                 {"role": "user", "content": prompt}
             ],
+            functions=[
+                {
+                    "name": "explain_esg_paragraph",
+                    "description": "Explanation the features of extraction and classification",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "promise_explanation": {"type": "string"},
+                            "verification_timeline_explanation": {"type": "string"},
+                            "evidence_explanation": {"type": "string"},
+                            "evidence_quality_explanation": {"type": "string"}
+                        },
+                        "required": ["promise_explanation", "verification_timeline_explanation", "evidence_explanation", "evidence_quality_explanation"]
+                    }
+                }
+            ],
+            function_call={"name": "explain_esg_paragraph"},
             temperature=0
         )
                 
@@ -163,9 +180,24 @@ class AllRabelExplainer:
         for entry in data:
             print(f"入力のjsonデータ:::\n{entry}\n")
             explanation = self.generate_explanation(entry)
-            if explanation:
+
+            if entry['promise_status'] == 'Yes':
+                if entry['evidence_status'] == 'Yes':
+                  # 公約も根拠もある場合
+                    entry['explanation'] = explanation
+                    print(f"出力の説明文:::\n{explanation}\n")
+                elif entry['evidence_status'] == 'No':
+                  # 公約はあるが根拠が無い場合
+                    del explanation['evidence_quality_explanation']
+                    entry['explanation'] = explanation
+                    print(f"出力の説明文:::\n{explanation}\n")
+            elif entry['evidence_status'] == 'No':
+              # 公約も根拠もない場合
+                del explanation['verification_timeline_explanation']
+                del explanation['evidence_explanation']
+                del explanation['evidence_quality_explanation']
                 entry['explanation'] = explanation
-                print(f"出力の説明文\n{explanation}\n")        
+                print(f"出力の説明文:::\n{explanation}\n")           
         
         # Write output data
         with open(output_path, 'w', encoding='utf-8-sig') as f:
