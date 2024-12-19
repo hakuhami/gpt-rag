@@ -171,8 +171,9 @@ class AllRabelExplainer:
         generated_text = self.extract_json_text(response.choices[0].message.function_call.arguments)        
         load_generated_text = json.loads(generated_text)
         
-        result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
-        return result
+        # result = json.dumps(load_generated_text, indent=2, ensure_ascii=False)
+        # return result
+        return load_generated_text
 
     def process_file(self, input_path: str, output_path: str) -> None:
         """
