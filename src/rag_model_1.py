@@ -1,3 +1,5 @@
+# BM25による語彙一致検索
+
 import openai
 from openai import OpenAI
 from typing import Optional, List, Dict

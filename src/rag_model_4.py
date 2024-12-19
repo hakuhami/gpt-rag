@@ -1,3 +1,5 @@
+# E5による密検索と、BM25による語彙一致検索の組み合わせ
+
 import openai
 from openai import OpenAI
 from typing import Optional, List, Dict

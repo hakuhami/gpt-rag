@@ -1,3 +1,5 @@
+# 抽出をgptでやった後、分類をgptでやるように、2段階にした（検索方法はrag_modelと同じくE5による密検索）
+
 import openai
 from openai import OpenAI
 from typing import Optional, List, Dict

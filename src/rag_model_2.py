@@ -1,3 +1,5 @@
+# ColBERTによる検索
+
 import numpy as np
 import openai
 from openai import OpenAI
