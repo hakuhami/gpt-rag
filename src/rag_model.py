@@ -132,7 +132,7 @@ class RAGModel:
     #     return final_yes + final_no
     
     # リランクをしない場合
-    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 3, no_promise_count: int = 3) -> List[Dict]:
+    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
         """
         Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
 
