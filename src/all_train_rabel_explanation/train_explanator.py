@@ -154,7 +154,7 @@ class AllRabelExplainer:
             temperature=0
         )
                 
-        return response.choices[0].message.content.strip()
+        return response.choices[0].message.function_call.arguments
 
     def process_file(self, input_path: str, output_path: str) -> None:
         """
