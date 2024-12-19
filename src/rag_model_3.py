@@ -144,7 +144,7 @@ class RAGModel:
         print("selected_docs_promise_evidence")
         return selected_docs
 
-    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 4, no_promise_count: int = 4) -> List[Dict]:
+    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
         """
         Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
 
