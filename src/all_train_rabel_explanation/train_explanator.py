@@ -31,7 +31,7 @@ class AllRabelExplainer:
                 pass        
         return None
 
-    def generate_explanation(self, data: Dict) -> Optional[str]:
+    def generate_explanation(self, data: Dict) -> Dict[str, str]:
         """
         Generate explanation for all train rabel
         
