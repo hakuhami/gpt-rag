@@ -217,7 +217,7 @@ class RAGModel:
                 'evidence_explanation': doc.get('explanation', {}).get('evidence_explanation', '')
             }
             print("↓が抽出時の参考データ")
-            print({filtered_doc})
+            print(json.dumps(filtered_doc, ensure_ascii=False, indent=2))
             print("↑が抽出時の参考データ")
             result.append(filtered_doc)
 
