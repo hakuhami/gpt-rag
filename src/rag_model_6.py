@@ -213,9 +213,11 @@ class RAGModel:
                 'promise_string': doc.get('promise_string', ''),
                 'evidence_status': doc.get('evidence_status', 'N/A'),
                 'evidence_string': doc.get('evidence_string', ''),
-                'promise_explanation': doc.get('explanation', {}).get('promise_explanation', ''),
-                'evidence_explanation': doc.get('explanation', {}).get('evidence_explanation', '')
+                'promise_explanation': doc.get('explanation', {}).get('promise_explanation', '')
             }
+            if doc.get('evidence_status', 'N/A') != 'N/A':
+                filtered_doc['evidence_explanation'] = doc.get('explanation', {}).get('evidence_explanation', '')
+                
             print("↓が抽出時の参考データ")
             print(json.dumps(filtered_doc, ensure_ascii=False, indent=2))
             print("↑が抽出時の参考データ")
@@ -476,7 +478,7 @@ class RAGModel:
         1. Read the <extraction/classification examples> carefully and learn the features of what content is considered to be promise or evidence.
            The "promise_explanation" label and "evidence_explanation" label contain the explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
           "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
-          "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string".
+          "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string". (If "evidence_status" is "N/A", this label does not exist.)
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
               Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
