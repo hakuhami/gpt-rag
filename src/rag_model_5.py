@@ -182,12 +182,11 @@ class RAGModel:
         Definitions of each label and the thought process behind the task:
         1. Read the <extraction/classification examples> carefully and learn the features of what content is considered to be promise or evidence, and the classification features of "verification_timeline" and "evidence_quality".
            In particular, the judgment of "evidence_quality" is the most important and difficult part of this task, so learn how it can be classified.
-           The "explain" label contains the explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
+           The "explanation" label contains the explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
           "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
           "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
           "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string".
-          "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".           
-           
+          "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
               Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
