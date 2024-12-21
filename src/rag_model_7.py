@@ -91,7 +91,8 @@ class RAGModel:
             category_docs.sort(key=lambda x: x[1], reverse=True)
             selected_docs.extend([{
                 'promise_string': doc['promise_string'],
-                'verification_timeline': doc['verification_timeline']
+                'verification_timeline': doc['verification_timeline'],
+                'verification_timeline_explanation': doc.get('explanation', {}).get('verification_timeline_explanation', '')
             } for _, _, doc in category_docs[:count]])
         print("selected_docs_promise_only")
         print(f"{selected_docs}")
@@ -140,7 +141,9 @@ class RAGModel:
                 'promise_string': doc['promise_string'],
                 'verification_timeline': doc['verification_timeline'],
                 'evidence_string': doc['evidence_string'],
-                'evidence_quality': doc['evidence_quality']
+                'evidence_quality': doc['evidence_quality'],
+                'verification_timeline_explanation': doc.get('explanation', {}).get('verification_timeline_explanation', ''),
+                'evidence_quality_explanation': doc.get('explanation', {}).get('evidence_quality_explanation', '')
             } for _, _, doc in category_docs[:count]])
         print("selected_docs_promise_evidence")
         print(f"{selected_docs}")
@@ -247,6 +250,7 @@ class RAGModel:
         {{
             "promise_string": str
             "verification_timeline": str
+            "verification_timeline_explanation": str
         }}:
         
         
@@ -260,6 +264,8 @@ class RAGModel:
            
         Definitions of each label and the thought process behind the task:
         1. Read the <classification examples> carefully and learn the classification features of "verification_timeline".
+           The "verification_timeline_explanation" label contains the explanation of the features of classification, so read the explanation carefully and understand them well, following the definitions below.
+          "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3. Based on the features learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
            Make full use of the classification characteristics learned in the first step.
@@ -335,6 +341,8 @@ class RAGModel:
             "verification_timeline": str
             "evidence_string": str
             "evidence_quality": str
+            "verification_timeline_explanation": str
+            "evidence_quality_explanation": str
         }}:
         
         
@@ -350,6 +358,9 @@ class RAGModel:
            
         Definitions of each label and the thought process behind the task:
         1. Read the <classification examples> carefully and learn the classification features of "verification_timeline" and "evidence_quality".
+           The "verification_timeline_explanation" label and "evidence_quality_explanation" label contain the explanations of the features of classification, so read the explanations carefully and understand them well, following the definitions below.
+          "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
+          "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3. Based on the features learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
            Make full use of the classification characteristics learned in the first step.
