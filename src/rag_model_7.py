@@ -241,7 +241,7 @@ class RAGModel:
         
                 
         <json format>
-        <classification examples> examples follow the json format below.
+        <classification examples> follow the json format below.
         Output the classification results specified in <the details of the task> to the following corresponding labels.
         
         {{
@@ -327,7 +327,7 @@ class RAGModel:
         
                 
         <json format>
-        <classification examples> examples follow the json format below.
+        <classification examples> follow the json format below.
         Output the classification results specified in <the details of the task> to the following corresponding labels.
         
         {{
