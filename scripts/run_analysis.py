@@ -48,7 +48,8 @@ def run_analysis(config_path: str) -> None:
     # Analyze the test data
     predictions = []
     for item in test_data:
-        result = rag_model.analyze_paragraph(item['data'])
+        # strにしろというエラーがあるので、明示的にstrに変換
+        result = rag_model.analyze_paragraph(str(item['data']))
         print(f"{result},")
         result_dict = json.loads(result)
         predictions.append(result_dict)
