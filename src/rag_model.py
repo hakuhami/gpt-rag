@@ -80,10 +80,10 @@ class RAGModel:
                 error_response = {
                     "data": "Error extracting text from PDF: Invalid dictionary construct: [/'FB', /b'tru', /b'e', /'SW', /'N']",
                     "promise_status": "No",
-                    "promise_string": "",
+                    "promise_string": "N/A",
                     "verification_timeline": "N/A",
-                    "evidence_status": "N/A",
-                    "evidence_string": "",
+                    "evidence_status": "No",
+                    "evidence_string": "N/A",
                     "evidence_quality": "N/A"
                 }
                 result = json.dumps(error_response, indent=2, ensure_ascii=False)
@@ -199,10 +199,10 @@ class RAGModel:
                 error_response = {
                     "data": "Error extracting text from PDF: Invalid dictionary construct: [/'FB', /b'tru', /b'e', /'SW', /'N']",
                     "promise_status": "No",
-                    "promise_string": "",
+                    "promise_string": "N/A",
                     "verification_timeline": "N/A",
-                    "evidence_status": "N/A",
-                    "evidence_string": "",
+                    "evidence_status": "No",
+                    "evidence_string": "N/A",
                     "evidence_quality": "N/A"
                 }
                 result = json.dumps(error_response, indent=2, ensure_ascii=False)
@@ -214,10 +214,10 @@ class RAGModel:
             error_response = {
                 "data": "Error extracting text from PDF: Invalid dictionary construct: [/'FB', /b'tru', /b'e', /'SW', /'N']",
                 "promise_status": "No",
-                "promise_string": "",
+                "promise_string": "N/A",
                 "verification_timeline": "N/A",
-                "evidence_status": "N/A",
-                "evidence_string": "",
+                "evidence_status": "No",
+                "evidence_string": "N/A",
                 "evidence_quality": "N/A"
             }
             result = json.dumps(error_response, indent=2, ensure_ascii=False)
