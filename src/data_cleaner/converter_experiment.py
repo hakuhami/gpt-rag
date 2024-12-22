@@ -2,16 +2,16 @@ import json
 from collections import OrderedDict
 
 # Original English JSON file.
-input_file = './data/processed/pdf_Korean_sample_extracted.json'
+input_file = './data/processed/kaggle_1000/pdf_Korean_train_converted_from_baseline.json'
 # New JSON file limited to only the labels needed for the experiment.
-output_file = './data/processed/pdf_Korean_sample_converted.json'
+output_file = './data/processed/kaggle_1000/Experiment_1000_train.json'
 
 with open(input_file, 'r', encoding='utf-8-sig') as file:
     data = json.load(file)
 
 # Remove labels that are not needed for the experiment.
 def remove_labels(record):
-    labels_to_remove = ["pdf", "page_number"]
+    labels_to_remove = ["기업명", "연도"]
     for label in labels_to_remove:
         if label in record:
             del record[label]
