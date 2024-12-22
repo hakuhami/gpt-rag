@@ -40,24 +40,24 @@ def run_analysis(config_path: str) -> None:
     # save_json_data(test_data, config['test_data_path'])
     # print("Search and test data is saved.")
 
-    # # Prepare the RAG model with the search data
-    # rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
-    # rag_model.prepare_documents(search_data)
-    # print("Documents are prepared.")
+    # Prepare the RAG model with the search data
+    rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
+    rag_model.prepare_documents(search_data)
+    print("Documents are prepared.")
 
-    # # Analyze the test data
-    # predictions = []
-    # for item in test_data:
-    #     # strにしろというエラーがあるので、明示的にstrに変換
-    #     result = rag_model.analyze_paragraph(str(item['data']))
-    #     print(f"{result},")
-    #     result_dict = json.loads(result)
-    #     predictions.append(result_dict)
-    # print("Analysis is completed.")
+    # Analyze the test data
+    predictions = []
+    for item in test_data:
+        # strにしろというエラーがあるので、明示的にstrに変換
+        result = rag_model.analyze_paragraph(str(item['data']))
+        print(f"{result},")
+        result_dict = json.loads(result)
+        predictions.append(result_dict)
+    print("Analysis is completed.")
 
-    # # Save the prediction results
-    # save_json_data(predictions, config['generated_data_path'])
-    # print("Predictions are saved.")
+    # Save the prediction results
+    save_json_data(predictions, config['generated_data_path'])
+    print("Predictions are saved.")
 
     # Evaluate the prediction results
     evaluate_scores = evaluate_results(config['test_data_path'], config['generated_data_path'])
