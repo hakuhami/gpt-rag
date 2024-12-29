@@ -249,9 +249,9 @@ class RAGModel:
                 'evidence_quality': doc['evidence_quality']
             } for _, _, doc in category_docs[:count]])
             
-        print("↓がstep3の参考データ")
+        print("↓がstep4の参考データ")
         print(f"{selected_docs}")
-        print("↑がstep3の参考データ")
+        print("↑がstep4の参考データ")
         
         return selected_docs
 
