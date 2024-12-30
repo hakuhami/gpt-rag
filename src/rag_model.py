@@ -199,7 +199,7 @@ class RAGModel:
     
     
     # ラベルの値で分割しない場合（ただ単に上位〇件を取得する）
-    def get_relevant_context(self, query: str, top_k: int = 9) -> List[Dict]:
+    def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
         """
         Retrieve the top documents related to the query
 
