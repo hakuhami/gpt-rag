@@ -1,7 +1,7 @@
 ## rag_model_7を拡張：公約、検証時期、根拠、根拠の性質の4段階の分類を行うモデル（検索方法はrag_modelと同じくE5による密検索）
 
-# "explain"付きのデータを検索対象としていない場合
-# （search_data_path: "data/processed/Japanese_train_experiment.json”とする！）
+# "explain"付きのデータを検索対象としている場合
+# （search_data_path: "data/processed/Japanese_train_experiment_explanained.json”とする！）
 
 import openai
 from openai import OpenAI
