@@ -152,7 +152,6 @@ class RAGModel:
             category_docs = timeline_categories[category]
             category_docs.sort(key=lambda x: x[1], reverse=True)
             selected_docs.extend([{
-                'data': doc['data'],
                 'promise_string': doc['promise_string'],
                 'verification_timeline': doc['verification_timeline'],
                 'verification_timeline_explanation': doc.get('explanation', {}).get('verification_timeline_explanation', '')
@@ -246,7 +245,6 @@ class RAGModel:
             category_docs = quality_categories[category]
             category_docs.sort(key=lambda x: x[1], reverse=True)
             selected_docs.extend([{
-                'data': doc['data'],
                 'promise_string': doc['promise_string'],
                 'evidence_string': doc['evidence_string'],
                 'evidence_quality': doc['evidence_quality'],
@@ -359,7 +357,7 @@ class RAGModel:
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
         return result
 
-    def classify_step2_timeline(self, data: str, promise_string: str) -> Dict[str, str]:
+    def classify_step2_timeline(self, promise_string: str) -> Dict[str, str]:
         """Step 2: Classify verification timeline"""
         similar_docs = self.search_step2_timeline(promise_string)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in similar_docs])
@@ -376,7 +374,6 @@ class RAGModel:
         Output the classification results specified in <the details of the task> to the following corresponding labels.
         
         {{
-            "data": str,
             "promise_string": str,
             "verification_timeline": str,
             "verification_timeline_explanation": str
@@ -417,7 +414,6 @@ class RAGModel:
         <test data>
     
         {{
-            "data": "{data}",
             "promise_string": "{promise_string}"
         }}
         """
@@ -541,7 +537,7 @@ class RAGModel:
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
         return result
                            
-    def classify_step4_quality(self, data: str, promise_string: str, evidence_string: str) -> Dict[str, str]:
+    def classify_step4_quality(self, promise_string: str, evidence_string: str) -> Dict[str, str]:
         """Step 4: Classify evidence quality"""
         similar_docs = self.search_step4_quality(promise_string)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in similar_docs])
@@ -558,7 +554,6 @@ class RAGModel:
         Output the classification results specified in <the details of the task> to the following corresponding labels.
         
         {{
-            "data": str,
             "promise_string": str,
             "evidence_string": str,
             "evidence_quality": str,
@@ -603,7 +598,6 @@ class RAGModel:
         <test data>
         
         {{
-            "data": "{data}",
             "promise_string": "{promise_string}",
             "evidence_string": "{evidence_string}"
         }}
@@ -649,10 +643,7 @@ class RAGModel:
         
         # Step 2: Verification Timeline (if promise exists)
         if result_data['promise_status'] == 'Yes':
-            step2_result = self.classify_step2_timeline(
-                paragraph,
-                result_data['promise_string']
-            )
+            step2_result = self.classify_step2_timeline(result_data['promise_string'])
             result_data['verification_timeline'] = step2_result['verification_timeline']
             
             # Step 3: Evidence Status & String
@@ -666,7 +657,6 @@ class RAGModel:
             # Step 4: Evidence Quality (if evidence exists)
             if result_data['evidence_status'] == 'Yes':
                 step4_result = self.classify_step4_quality(
-                    paragraph,
                     result_data['promise_string'],
                     result_data['evidence_string']
                 )
