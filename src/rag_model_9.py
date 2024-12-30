@@ -105,7 +105,8 @@ class RAGModel:
             filtered_doc = {
                 'data': doc['data'],
                 'promise_status': doc['promise_status'],
-                'promise_string': doc.get('promise_string', '')
+                'promise_string': doc.get('promise_string', ''),
+                'promise_explanation': doc.get('explanation', {}).get('promise_explanation', '')
             }
             result.append(filtered_doc)
             
@@ -153,7 +154,8 @@ class RAGModel:
             selected_docs.extend([{
                 'data': doc['data'],
                 'promise_string': doc['promise_string'],
-                'verification_timeline': doc['verification_timeline']
+                'verification_timeline': doc['verification_timeline'],
+                'verification_timeline_explanation': doc.get('explanation', {}).get('verification_timeline_explanation', '')
             } for _, _, doc in category_docs[:count]])
             
         print("↓がstep2の参考データ")
@@ -199,7 +201,8 @@ class RAGModel:
                 'data': doc['data'],
                 'promise_string': doc['promise_string'],
                 'evidence_status': doc['evidence_status'],
-                'evidence_string': doc.get('evidence_string', '')
+                'evidence_string': doc.get('evidence_string', ''),
+                'evidence_explanation': doc.get('explanation', {}).get('evidence_explanation', '')
             }
             result.append(filtered_doc)
             
@@ -246,7 +249,8 @@ class RAGModel:
                 'data': doc['data'],
                 'promise_string': doc['promise_string'],
                 'evidence_string': doc['evidence_string'],
-                'evidence_quality': doc['evidence_quality']
+                'evidence_quality': doc['evidence_quality'],
+                'evidence_quality_explanation': doc.get('explanation', {}).get('evidence_quality_explanation', '')
             } for _, _, doc in category_docs[:count]])
             
         print("↓がstep4の参考データ")
@@ -282,7 +286,7 @@ class RAGModel:
                 
         <json format>
         Output the results extracted and classified from the test data according to the json format below.
-        The reference examples also follow the json format below.
+        In addition to the labels specified in the json format below, the reference examples have "promise_explanation" that explains the promise extraction and classification features.
         Put the text of the test data in the "data".
         
         {{
@@ -306,6 +310,8 @@ class RAGModel:
            
         Definitions of each label and the thought process behind the task:
         1. Read the <extraction/classification examples> carefully and learn the features of what content is considered to be promise.
+           The "promise_explanation" label contains the explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
+          "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
               Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
@@ -372,7 +378,8 @@ class RAGModel:
         {{
             "data": str,
             "promise_string": str,
-            "verification_timeline": str
+            "verification_timeline": str,
+            "verification_timeline_explanation": str
         }}:
         
         
@@ -386,6 +393,8 @@ class RAGModel:
            
         Definitions of each label and the thought process behind the task:
         1. Read the <classification examples> carefully and learn the classification features of "verification_timeline".
+           The "verification_timeline_explanation" label contains the explanation of the features of classification, so read the explanation carefully and understand them well, following the definitions below.
+          "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3. Based on the features learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
            Make full use of the classification characteristics learned in the first step.
@@ -460,7 +469,8 @@ class RAGModel:
             "data": str,
             "promise_string": str or null,
             "evidence_status": str,
-            "evidence_string": str or null
+            "evidence_string": str or null,
+            "evidence_explanation": str
         }}:
         
         
@@ -478,6 +488,8 @@ class RAGModel:
            
         Definitions of each label and the thought process behind the task:
         1. Read the <extraction/classification examples> carefully and learn the features of what content is considered to be promise or evidence.
+           The "evidence_explanation" label contains the explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
+          "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string".
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
            In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
         3, 4. In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the promise," etc.
@@ -549,7 +561,8 @@ class RAGModel:
             "data": str,
             "promise_string": str,
             "evidence_string": str,
-            "evidence_quality": str
+            "evidence_quality": str,
+            "evidence_quality_explanation": str
         }}:
         
         
@@ -563,6 +576,8 @@ class RAGModel:
            
         Definitions of each label and the thought process behind the task:
         1. Read the <classification examples> carefully and learn the classification features of "evidence_quality".
+           The "evidence_quality_explanation" label contains the explanations of the features of classification, so read the explanations carefully and understand them well, following the definitions below.
+          "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
         2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
            In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
            In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the promise," etc.
