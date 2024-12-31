@@ -136,84 +136,84 @@ class RAGModel:
     ## 以下はリランクをしない場合
     
     # ラベルの値で分割する場合
-    def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
-        """
-        Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
-
-        Args:
-            query (str): Input query
-            yes_with_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "Yes" to retrieve
-            yes_without_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "No" to retrieve
-            no_promise_count (int): Number of documents with promise_status "No" to retrieve
-
-        Returns:
-            List[Dict]: List of relevant documents with specified distribution of status values
-        """
-        query_embedding = self.embedder.encode([query])
-        similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-
-        # Create a list of (index, similarity, status) tuples
-        indexed_similarities = [
-            (i, sim, {
-                'promise_status': self.search_data[i].get('promise_status', 'No'),
-                'evidence_status': self.search_data[i].get('evidence_status', 'N/A')
-            }) 
-            for i, sim in enumerate(similarities)
-        ]
-
-        # Separate documents by status combinations
-        yes_with_evidence = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and status['evidence_status'] == 'Yes'
-        ]
-        yes_without_evidence = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'Yes' and status['evidence_status'] == 'No'
-        ]
-        no_promise = [
-            (i, sim) for i, sim, status in indexed_similarities 
-            if status['promise_status'] == 'No'
-        ]
-
-        # Sort each category by similarity
-        yes_with_evidence.sort(key=lambda x: x[1], reverse=True)
-        yes_without_evidence.sort(key=lambda x: x[1], reverse=True)
-        no_promise.sort(key=lambda x: x[1], reverse=True)
-
-        # Select top documents from each category
-        selected_yes_with_evidence = yes_with_evidence[:yes_with_evidence_count]
-        selected_yes_without_evidence = yes_without_evidence[:yes_without_evidence_count]
-        selected_no_promise = no_promise[:no_promise_count]
-
-        # Combine all selected documents in the specified order
-        all_selected = (
-            selected_yes_with_evidence +
-            selected_yes_without_evidence +
-            selected_no_promise
-        )
-
-        # Get the corresponding documents
-        result = [self.search_data[i] for i, _ in all_selected]
-
-        return result
-    
-    
-    # ラベルの値で分割しない場合（ただ単に上位〇件を取得する）
-    # def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
+    # def get_relevant_context(self, query: str, yes_with_evidence_count: int = 6, yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
     #     """
-    #     Retrieve the top documents related to the query
+    #     Retrieve documents related to the query, maintaining specific ratios of promise_status and evidence_status values.
 
     #     Args:
     #         query (str): Input query
-    #         top_k (int): Number of documents to retrieve
+    #         yes_with_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "Yes" to retrieve
+    #         yes_without_evidence_count (int): Number of documents with promise_status "Yes" and evidence_status "No" to retrieve
+    #         no_promise_count (int): Number of documents with promise_status "No" to retrieve
 
     #     Returns:
-    #         List[Dict]: List of relevant documents
+    #         List[Dict]: List of relevant documents with specified distribution of status values
     #     """
     #     query_embedding = self.embedder.encode([query])
     #     similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
-    #     top_indices = np.argsort(similarities)[-top_k:][::-1]
-    #     return [self.search_data[i] for i in top_indices]
+
+    #     # Create a list of (index, similarity, status) tuples
+    #     indexed_similarities = [
+    #         (i, sim, {
+    #             'promise_status': self.search_data[i].get('promise_status', 'No'),
+    #             'evidence_status': self.search_data[i].get('evidence_status', 'N/A')
+    #         }) 
+    #         for i, sim in enumerate(similarities)
+    #     ]
+
+    #     # Separate documents by status combinations
+    #     yes_with_evidence = [
+    #         (i, sim) for i, sim, status in indexed_similarities 
+    #         if status['promise_status'] == 'Yes' and status['evidence_status'] == 'Yes'
+    #     ]
+    #     yes_without_evidence = [
+    #         (i, sim) for i, sim, status in indexed_similarities 
+    #         if status['promise_status'] == 'Yes' and status['evidence_status'] == 'No'
+    #     ]
+    #     no_promise = [
+    #         (i, sim) for i, sim, status in indexed_similarities 
+    #         if status['promise_status'] == 'No'
+    #     ]
+
+    #     # Sort each category by similarity
+    #     yes_with_evidence.sort(key=lambda x: x[1], reverse=True)
+    #     yes_without_evidence.sort(key=lambda x: x[1], reverse=True)
+    #     no_promise.sort(key=lambda x: x[1], reverse=True)
+
+    #     # Select top documents from each category
+    #     selected_yes_with_evidence = yes_with_evidence[:yes_with_evidence_count]
+    #     selected_yes_without_evidence = yes_without_evidence[:yes_without_evidence_count]
+    #     selected_no_promise = no_promise[:no_promise_count]
+
+    #     # Combine all selected documents in the specified order
+    #     all_selected = (
+    #         selected_yes_with_evidence +
+    #         selected_yes_without_evidence +
+    #         selected_no_promise
+    #     )
+
+    #     # Get the corresponding documents
+    #     result = [self.search_data[i] for i, _ in all_selected]
+
+    #     return result
+    
+    
+    # ラベルの値で分割しない場合（ただ単に上位〇件を取得する）
+    def get_relevant_context(self, query: str, top_k: int = 10) -> List[Dict]:
+        """
+        Retrieve the top documents related to the query
+
+        Args:
+            query (str): Input query
+            top_k (int): Number of documents to retrieve
+
+        Returns:
+            List[Dict]: List of relevant documents
+        """
+        query_embedding = self.embedder.encode([query])
+        similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
+        top_indices = np.argsort(similarities)[-top_k:][::-1]
+        return [self.search_data[i] for i in top_indices]
 
     def extract_json_text(self, text: str) -> Optional[str]:
         # Extract only the JSON data (the part enclosed in "{}").
