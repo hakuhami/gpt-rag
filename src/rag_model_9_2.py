@@ -303,8 +303,11 @@ class RAGModel:
         <the details of the task>
         
         Task Steps:
-        1. Read the examples in <extraction/classification examples> carefully and learn the features of extraction and classification.
-        2. Put the text of the test data verbatim in the "data" label, and read it carefully.
+        1. Read the examples in <extraction/classification examples> carefully and learn the features of what content is considered to be promise or evidence.
+           The "explanation" label contains the step-by-step explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
+          "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
+          "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string".
+        2. Put the text of the test data verbatim in the "data" label, and based on the features learned from the examples in step 1, read the text carefully.
         3. Classification task (About "promise_status"):
            If the test data contains the contents that are considered to be promise, it is classified as "Yes".
            If the test data does not contain the contents that are considered to be promise, it is classified as "No".
@@ -318,17 +321,6 @@ class RAGModel:
         6. Extraction task (About "evidence_string"):
            If "evidence_status" is "Yes", extract the evidence from the test data. (extract verbatim from the text without changing a single word)
            If "evidence_status" is "No", output a blank.
-           
-        Definitions of each label and the thought process behind the task:
-        1. Read the <extraction/classification examples> carefully and learn the features of what content is considered to be promise or evidence.
-           The "promise_explanation" label and "evidence_explanation" label contain the explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
-          "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
-          "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string". (If "evidence_status" is "N/A", this label does not exist.)
-        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
-        3, 4. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
-              Based on the features of the promise learned in the first step, and taking these concepts into account, determine whether the test data contains the promise and which parts are the contents of the promise.
-        5, 6. In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the promise," etc.
-              Based on the features of the evidence learned in the first step, and taking these concepts into account, determine whether the test data contains the evidence supporting the promise and which parts are the contents of the evidnece.
                 
         Important notes:
         You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
@@ -402,22 +394,12 @@ class RAGModel:
         <the details of the task>
         
         Task Steps:
-        1. Read the examples in <classification examples> carefully and learn the features of classification.
-        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
+        1. Read the examples in <classification examples> carefully and learn the classification features of "verification_timeline".
+           The "verification_timeline_explanation" label contains the step-by-step explanations of the features of classification, so read the explanation carefully and understand them well, following the definitions below.
+          "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
+        2. Put the text of the test data verbatim in the "data" label, and based on the features learned from the examples in step 1, read the text carefully.
         3. Classification task (About "verification_timeline"):
            After carefully reading the test data, classify the time when the promise can be verified into one of the four options: "already", "within_2_years", "between_2_and_5_years", or "more_than_5_years".
-           
-        Definitions of each label and the thought process behind the task:
-        1. Read the <classification examples> carefully and learn the classification features of "verification_timeline".
-           The "verification_timeline_explanation" label contains the explanation of the features of classification, so read the explanation carefully and understand them well, following the definitions below.
-          "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
-        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
-        3. Based on the features learned in the first step, think carefully about when the contents of "promise_string" can be verified, following the definition below.
-           Make full use of the classification characteristics learned in the first step.
-           "already": When the promise have already been applied, or whether or not it is applied, can already be verified.
-           "within_2_years": When the promise can be verified within 2 years. (When the promise can be verified in the near future.)
-           "between_2_and_5_years": When the promise can be verified in 2 to 5 years. (When the promise can be verified in the not too distant future, though not in the near future.)
-           "more_than_5_years: When the promise can be verified in more than 5 years. (When the promsie can be verified in the distant future.)
                 
         Important notes:
         You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
@@ -583,24 +565,12 @@ class RAGModel:
         <the details of the task>
         
         Task Steps:
-        1. Read the examples in <classification examples> carefully and learn the features of classification.
-        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
+        1. Read the examples in <classification examples> carefully and learn the classification features of "evidence_quality".
+           The "evidence_quality_explanation" label contains the step-by-step explanations of the features of classification, so read the explanation carefully and understand them well, following the definitions below.
+          "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
+        2. Put the text of the test data verbatim in the "data" label, and based on the features learned from the examples in step 1, read the text carefully.
         3. Classification task (About "evidence_quality"):
            After carefully reading the test data, consider how well the contents of "evidence_string" support the contents of "promise_string" and classify the relationship between the promise and the evidence as "Clear", "Not Clear", or "Misleading".
-           
-        Definitions of each label and the thought process behind the task:
-        1. Read the <classification examples> carefully and learn the classification features of "evidence_quality".
-           The "evidence_quality_explanation" label contains the explanations of the features of classification, so read the explanations carefully and understand them well, following the definitions below.
-          "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
-        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
-           In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
-           In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the promise," etc.
-        3. Based on the features learned in the first step, think carefully about how well the contents of "evidence_string" support the contents of "promise_string".
-           Then, think carefully about which label the quality of the relationship between the promise and the evidence falls into, following the definitions below.
-           Make full use of the classification characteristics learned in the first step.
-           "Clear": In the content of "evidence_string", there is no lack of information and what is said is intelligible and logical.
-           "Not Clear": In the content of "evidence_string", some information is missing or not well described so that what is said may range from intelligible and logical to superficial and/or superfluous.           
-           "Misleading": In the content of "evidence_string", it is not suitable to support the promise, or is not relevant to the contents of the promise, or may distract readers, or is untrue.
                 
         Important notes:
         You must output the results in the format specified by <json format>, but the thought process described above is carried out step by step using natural language, and then the reasoning results in natural language are output in <json format>.
