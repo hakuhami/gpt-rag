@@ -44,7 +44,7 @@ def run_analysis(config_path: str) -> None:
 
     # Prepare the RAG model with the search data
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
-    rag_model.prepare_documents(search_data)
+    #rag_model.prepare_documents(search_data)
     print("Documents are prepared.")
 
     # Analyze the test data
