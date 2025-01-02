@@ -303,7 +303,7 @@ class RAGModel:
         <the details of the task>
         
         Task Steps:
-        1. Read the examples in <extraction/classification examples> carefully and learn the features of what content is considered to be promise or evidence.
+        1. Read the examples in <extraction/classification examples> carefully and learn the features of extraction and classification.
            The "explanation" label contains the step-by-step explanations of the features of extraction and classification, so read the explanations carefully and understand them well, following the definitions below.
           "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
           "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string".
@@ -397,7 +397,7 @@ class RAGModel:
         1. Read the examples in <classification examples> carefully and learn the classification features of "verification_timeline".
            The "verification_timeline_explanation" label contains the step-by-step explanations of the features of classification, so read the explanation carefully and understand them well, following the definitions below.
           "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
-        2. Put the text of the test data verbatim in the "data" label, and based on the features learned from the examples in step 1, read the text carefully.
+        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3. Classification task (About "verification_timeline"):
            After carefully reading the test data, classify the time when the promise can be verified into one of the four options: "already", "within_2_years", "between_2_and_5_years", or "more_than_5_years".
                 
@@ -568,7 +568,7 @@ class RAGModel:
         1. Read the examples in <classification examples> carefully and learn the classification features of "evidence_quality".
            The "evidence_quality_explanation" label contains the step-by-step explanations of the features of classification, so read the explanation carefully and understand them well, following the definitions below.
           "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
-        2. Put the text of the test data verbatim in the "data" label, and based on the features learned from the examples in step 1, read the text carefully.
+        2. Based on the features learned from the examples in step 1, carefully read the contents of the test data.
         3. Classification task (About "evidence_quality"):
            After carefully reading the test data, consider how well the contents of "evidence_string" support the contents of "promise_string" and classify the relationship between the promise and the evidence as "Clear", "Not Clear", or "Misleading".
                 
