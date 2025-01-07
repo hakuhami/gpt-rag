@@ -1,47 +1,64 @@
 import numpy as np
 from scipy import stats
 
-# 各手法のF値を設定
+## 1段階手法について
 baseline = np.array([0.825, 0.428, 0.649, 0.411, 0.719, 0.394])  # ベースライン手法のF値
-teian = np.array([0.825, 0.558, 0.876, 0.455, 0.747, 0.469])    # 提案手法のF値
+# 1段階手法のRAG有り
+teian = np.array([0.825, 0.558, 0.876, 0.455, 0.747, 0.469])
+# # 1段階手法のRAGと解説文有り
+# teian = np.array([0.862, 0.507, 0.852, 0.427, 0.769, 0.482])
 
-# 基本統計量の計算と表示
-print("基本統計量:")
-print(f"ベースライン手法 - 平均: {np.mean(baseline):.4f}, 標準偏差: {np.std(baseline, ddof=1):.4f}")
-print(f"提案手法 - 平均: {np.mean(teian):.4f}, 標準偏差: {np.std(teian, ddof=1):.4f}")
+# ## 3段階手法について
+# baseline = np.array([0.825, 0.456, 0.715, 0.409, 0.709, 0.496])  # ベースライン手法のF値
+# # 3段階手法のRAG有り
+# teian = np.array([0.844, 0.561, 0.860, 0.509, 0.735, 0.567])
+# # 3段階手法のRAGと解説文有り
+# teian = np.array([0.878, 0.561, 0.914, 0.465, 0.726, 0.599])
 
-# 両側t検定の実行（有意水準5%）
-# alternative='two-sided'で両側検定を明示的に指定
-t_stat, p_value = stats.ttest_ind(baseline, teian, alternative='two-sided')
+# ## 4段階手法について
+# baseline = np.array([0.830, 0.225, 0.628, 0.370, 0.702, 0.483])  # ベースライン手法のF値
+# # 4段階手法のRAG有り
+# teian = np.array([0.853, 0.466, 0.815, 0.411, 0.738, 0.613])
+# # 4段階手法のRAGと解説文有り
+# teian = np.array([0.869, 0.442, 0.843, 0.324, 0.749, 0.618])
 
-# 効果量（Cohen's d）の計算
-n1, n2 = len(baseline), len(teian)
-pooled_std = np.sqrt(((n1 - 1) * np.std(baseline, ddof=1)**2 + 
-                     (n2 - 1) * np.std(teian, ddof=1)**2) / (n1 + n2 - 2))
-cohens_d = (np.mean(teian) - np.mean(baseline)) / pooled_std
 
-# 結果の表示
-print("\n両側t検定の結果（有意水準5%）:")
-print(f"t値: {t_stat:.4f}")
+# 1対の対応のある両側t検定の実行
+t_stat, p_value = stats.ttest_rel(baseline, teian)
+
+# 効果量（Pearson's r）の計算
+df = len(baseline) - 1
+r = np.abs(t_stat) / np.sqrt(t_stat**2 + df)
+
+# 記述統計量の計算
+baseline_mean = np.mean(baseline)
+teian_mean = np.mean(teian)
+baseline_std = np.std(baseline, ddof=1)
+teian_std = np.std(teian, ddof=1)
+
+# 効果量の解釈
+def interpret_effect_size(r):
+    r = abs(r)
+    if r < 0.1:
+        return "無視できる効果量"
+    elif r < 0.3:
+        return "小さい効果量"
+    elif r < 0.5:
+        return "中程度の効果量"
+    else:
+        return "大きい効果量"
+
+# 結果の出力
+print("==== 統計分析結果 ====")
+print(f"t統計量: {t_stat:.4f}")
 print(f"p値: {p_value:.4f}")
-print(f"Cohen's d: {cohens_d:.4f}")
+print(f"効果量 (Pearson's r): {r:.4f}")
+print(f"有意差: {'あり' if p_value < 0.05 else 'なし'}")
 
-# 有意差の判定（有意水準5%）
-alpha = 0.05  # 有意水準を明示的に設定
-if p_value < alpha:
-    print(f"\n※ 有意水準{alpha*100}%で統計的有意差が認められました")
-    print(f"   (p値 = {p_value:.4f} < {alpha})")
-else:
-    print(f"\n※ 有意水準{alpha*100}%で統計的有意差は認められませんでした")
-    print(f"   (p値 = {p_value:.4f} ≧ {alpha})")
+print("\n==== 記述統計量 ====")
+print(f"ベースライン手法の平均F値: {baseline_mean:.4f}")
+print(f"提案手法の平均F値: {teian_mean:.4f}")
+print(f"ベースライン手法の標準偏差: {baseline_std:.4f}")
+print(f"提案手法の標準偏差: {teian_std:.4f}")
 
-# 自由度の表示を追加
-df = n1 + n2 - 2
-print(f"\n自由度: {df}")
-
-# 検定の詳細情報
-print("\n検定の詳細:")
-print("- 検定の種類: 対応のない両側t検定")
-print(f"- 有意水準: {alpha}")
-print("- 帰無仮説: 2つの手法の母平均に差がない")
-print("- 対立仮説: 2つの手法の母平均に差がある")
+print(f"\n効果量の解釈: {interpret_effect_size(r)}")
