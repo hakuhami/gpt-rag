@@ -88,20 +88,20 @@ class AllRabelExplainer:
         Explanation of each label:
         "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
          - If "promise_status" is "Yes", follow the template below.
-           <"promise_string" states (a summary of the "promise_string"). So this can be judged to be a promise because (the reason it can be judged to be a promise).>
+           <Extracted promise states (a summary of the "promise_string"). So this can be judged to be a promise because (the reason it can be judged to be a promise).>
          - If "promise_status" is "No", follow the template below.
            <(the reason it can not be judged to be a promise), so this text can not be judged to contain a promise.>
         "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
          - Follow the template below.
-           <"promise_string" states (a summary of the "promise_string"). So this promise's "verification_timeline" can be judged (the value of "verification_timeline") because (the reason).>
+           <Extracted promise states (a summary of the "promise_string"). So this promise's "verification_timeline" can be judged (the value of "verification_timeline") because (the reason).>
         "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string".
          - If "evidence_status" is "Yes", follow the template below.
-           <"evidence_string" states (a summary of the "evidence_string"). So this can be judged to be a evidence because (the reason it can be judged to be a evidence).>
+           <Extrcted evidence states (a summary of the "evidence_string"). So this can be judged to be a evidence because (the reason it can be judged to be a evidence).>
          - If "evidence_status" is "No", follow the template below.
            <(the reason it can not be judged to be a evidence), so this text can not be judged to contain a evidence supporting "promise_string".>
         "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
          - If "evidence_status" is "Yes", follow the template below.
-           <(explain a summary of the "evidence_string" and "promise_string, and then explain the reason why this evidence's "evidence_quality" can be judged (the value of "evidence_quality"). So this evidence's "evidence_quality" can be judged (the value of "evidence_quality").> 
+           <(explain a summary of the extracted promise and evidence, and then explain the relationship between them and the reason why this evidence's "evidence_quality" can be judged (the value of "evidence_quality"). So this evidence's "evidence_quality" can be judged (the value of "evidence_quality").> 
         
         
         <the details of the task>
