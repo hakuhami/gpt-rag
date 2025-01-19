@@ -74,7 +74,9 @@ class AllRabelExplainer:
         
         <output json format>
         Output explanations of the features of extraction and classification according to the json format below.
-        Be sure to explain step by step in logical Japanese sentences.
+        Be sure to explain step by step in logical and concise English sentences, and don't include Japanese except for necessary proper noun explanations.
+        And explain according to the template below indicated by "<>". The contents in "()" are up to you to think according to the contents of <the details of the task>, and for (the value of "verification_timeline") and (the value of "evidence_quality"), enter the corresponding values from <test data>.
+        Don't include unnecessary characters or symbols that are not necessary for the explanation.
         
         {{
             "promise_explanation": str,
@@ -85,9 +87,21 @@ class AllRabelExplainer:
         
         Explanation of each label:
         "promise_explanation": Explanation of the features of the classification result of "promise_status" and the extraction result of "promise_string".
+         - If "promise_status" is "Yes", follow the template below.
+           <"promise_string" states (a summary of the "promise_string"). So this can be judged to be a promise because (the reason it can be judged to be a promise).>
+         - If "promise_status" is "No", follow the template below.
+           <(the reason it can not be judged to be a promise), so this text can not be judged to contain a promise.>
         "verification_timeline_explanation": Explanation of the features of the classification result of "verification_timeline".
+         - Follow the template below.
+           <"promise_string" states (a summary of the "promise_string"). So this promise's "verification_timeline" can be judged (the value of "verification_timeline") because (the reason).>
         "evidence_explanation": Explanation of the features of the classification result of "evidence_status" and the extraction result of "evidence_string".
+         - If "evidence_status" is "Yes", follow the template below.
+           <"evidence_string" states (a summary of the "evidence_string"). So this can be judged to be a evidence because (the reason it can be judged to be a evidence).>
+         - If "evidence_status" is "No", follow the template below.
+           <(the reason it can not be judged to be a evidence), so this text can not be judged to contain a evidence supporting "promise_string".>
         "evidence_quality_explanation": Explanation of the features of the classification result of "evidence_quality".
+         - If "evidence_status" is "Yes", follow the template below.
+           <(explain a summary of the "evidence_string" and "promise_string, and then explain the reason why this evidence's "evidence_quality" can be judged (the value of "evidence_quality"). So this evidence's "evidence_quality" can be judged (the value of "evidence_quality").> 
         
         
         <the details of the task>
@@ -111,10 +125,10 @@ class AllRabelExplainer:
         1. After carefully considering whether a promise exists and, if so, whether there is evidence, carefully read and understand the text in the "data".
         2. In this task, "promise" is expressed as expressions such as a company's ESG-related "corporate philosophy," "commitments being implemented or planned," "strategies for the future," and "statements for the future."
            Based on what you learned in step 1, and taking these concepts into account, think carefully about the reasons for the classification results of "promise_status" and the extraction results of "promise_string".
-           Then explain those reasons step by step in logical Japanese sentences.
+           Then explain those reasons step by step in logical and concise English sentences.
         3. In this task, the value of "verification_timeline" follows the definitions below.
            Based on what you learned in step 1 and the definitions below, think carefully about the reasons for the classification results of "verification_timeline".
-           Then explain those reasons step by step in logical Japanese sentences.
+           Then explain those reasons step by step in logical and concise English sentences.
            <the definitions>
            "already": When the promise have already been applied, or whether or not it is applied, can already be verified.
            "within_2_years": When the promise can be verified within 2 years. (When the promise can be verified in the near future.)
@@ -122,10 +136,10 @@ class AllRabelExplainer:
            "more_than_5_years: When the promise can be verified in more than 5 years. (When the promsie can be verified in the distant future.)
         4. In this task, "evidence" is expressed as "specific examples of the contents of the promise," "detailed explanation of the contents of the promise," "current status of the contents of the promise," etc.
            Based on what you learned in step 1, and taking these concepts into account, think carefully about the reasons for the classification results of "evidence_status" and the extraction results of "evidence_string".
-           Then explain those reasons step by step in logical Japanese sentences.
+           Then explain those reasons step by step in logical and concise English sentences.
         5. In this task, the value of "evidence_quality" follows the definitions below.
            Based on what you learned in step 1 and the definitions below, think carefully about the reasons for the classification results of "evidence_quality".
-           Then explain those reasons step by step in logical Japanese sentences.
+           Then explain those reasons step by step in logical and concise English sentences.
            <the definitions>
            "Clear": In the content of "evidence_string", there is no lack of information and what is said is intelligible and logical.
            "Not Clear": In the content of "evidence_string", some information is missing or not well described so that what is said may range from intelligible and logical to superficial and/or superfluous.           
