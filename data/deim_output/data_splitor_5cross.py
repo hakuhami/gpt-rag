@@ -69,33 +69,6 @@ def create_cross_validation_sets():
     except Exception as e:
         print(f"Error occurred: {str(e)}")
 
-# # 検証用の関数
-# def verify_data_split():
-#     """データ分割の検証を行う関数"""
-#     for i, output_dir in enumerate(output_dirs):
-#         test_path = os.path.join(output_dir, test_file)
-#         train_path = os.path.join(output_dir, train_file)
-        
-#         with open(test_path, 'r', encoding='utf-8') as f:
-#             test_data = json.load(f)
-#         with open(train_path, 'r', encoding='utf-8') as f:
-#             train_data = json.load(f)
-        
-#         print(f"\nVerifying Set {i+1}:")
-#         print(f"- Test data size: {len(test_data)}")
-#         print(f"- Train data size: {len(train_data)}")
-        
-#         # データの重複チェック
-#         test_ids = set(item['id'] for item in test_data)
-#         train_ids = set(item['id'] for item in train_data)
-#         intersection = test_ids.intersection(train_ids)
-        
-#         if intersection:
-#             print(f"Warning: Found {len(intersection)} overlapping items in set {i+1}")
-#         else:
-#             print("- No overlapping items found")
-
 # メイン処理の実行
 if __name__ == "__main__":
     create_cross_validation_sets()
-    # verify_data_split()
