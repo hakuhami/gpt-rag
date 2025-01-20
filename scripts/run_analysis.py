@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.data_loader import save_json_data, load_json_data
 # from src.data_preprocessor import split_data
-from src.rag_model_5 import RAGModel
+from src.rag_model_8_2_without_rag import RAGModel
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
 import json
@@ -22,8 +22,8 @@ def run_analysis(config_path: str) -> None:
         config = yaml.safe_load(f)
     
     # Load the search data from the file
-    with open(config['search_data_path'], 'r', encoding='utf-8-sig') as f:
-        search_data = json.load(f)
+    # with open(config['search_data_path'], 'r', encoding='utf-8-sig') as f:
+        # search_data = json.load(f)
 
     # Load the test data from the file
     with open(config['test_data_path'], 'r', encoding='utf-8-sig') as f:
@@ -45,8 +45,8 @@ def run_analysis(config_path: str) -> None:
     # Prepare the RAG model with the search data
     rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
     print("RAGModel is loaded.")
-    rag_model.prepare_documents(search_data)
-    print("Documents are prepared.")
+    # rag_model.prepare_documents(search_data)
+    # print("Documents are prepared.")
 
     # Analyze the test data
     predictions = []
