@@ -76,6 +76,7 @@ class AllRabelExplainer:
         Output explanations of the features of extraction and classification according to the json format below.
         Be sure to explain step by step in logical and concise Japanese sentences, and don't include English except for necessary proper noun explanations.
         And explain according to the template below indicated by "<>". The contents in "()" are up to you to think according to the contents of <the details of the task>, and for (the value of "verification_timeline") and (the value of "evidence_quality"), enter the corresponding values from <test data>.
+        Never copy and paste the contents of "promise_string" and "evidence_string", summarize the contents concisely and logically.
         Don't include unnecessary characters or symbols that are not necessary for the explanation.
         
         {{
