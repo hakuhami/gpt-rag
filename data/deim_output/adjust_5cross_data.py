@@ -1,12 +1,13 @@
 # (01/26)解説文を新たに作り直したので、以前の5分割した内容に合わせる
+# (01/27)卒研の解説文と似たような内容で作り直したので、再度分割する
 
 import json
 
 # グローバル変数の定義
-original_file = 'data/deim_output/Japanese_5cross_500_explanained_JaAgain.json'
+original_file = 'data/deim_output/Japanese_5cross_500_explanained_JaAgain_again.json'
 split_file = 'data/deim_output/5_set/test_100.json'
-matched_output = 'data/deim_output/5_set/test_100_explanained_JaAgain.json'
-unmatched_output = 'data/deim_output/5_set/train_400_explanained_JaAgain.json'
+matched_output = 'data/deim_output/5_set/test_100_explanained_JaAgain_again.json'
+unmatched_output = 'data/deim_output/5_set/train_400_explanained_JaAgain_again.json'
 
 def split_data_by_match():
    with open(original_file, 'r', encoding='utf-8-sig') as f:
