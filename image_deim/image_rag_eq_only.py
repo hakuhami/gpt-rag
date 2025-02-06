@@ -295,7 +295,7 @@ class RAGModel:
         #     result_data['evidence_quality'] = 'N/A'
         
         else:
-            quality_dict['evidence_quality'] = 'N/A'
+            quality_dict = {'evidence_quality': 'N/A'}
         
         # 指定された順序でデータを再構成
         ordered_data = {
