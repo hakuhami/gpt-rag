@@ -4,8 +4,13 @@ import numpy as np
 from scipy import stats
 
 # グローバル変数の定義(これらを変化して検定対象データを変える)
-baseline_dir = "data/deim_output/result/3_chikuji/1_baseline"
-rag_dir = "data/deim_output/result/3_chikuji/miss_explanained_en"
+# baseline_dir = "data/deim_output/result/3_chikuji/1_baseline"
+# rag_dir = "data/deim_output/result/3_chikuji/miss_explanained_en"
+# file_names = [f"{i}_set_evaluation_results.json" for i in range(1, 6)]
+
+### イメージベース評価用
+baseline_dir = "image_deim/result/change0_114/1_baseline"
+rag_dir = "image_deim/result/change0_114/3_rag"
 file_names = [f"{i}_set_evaluation_results.json" for i in range(1, 6)]
 
 def read_f_scores(directory):
