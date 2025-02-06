@@ -4,7 +4,7 @@ import json
 
 # グローバル変数として入力・出力ファイルのパスを指定
 input_json_path = "image_deim/Japanese_merged600_experiment.json"
-output_json_path = "image_deim/Japanese_merged159_image.json"
+output_json_path = "image_deim/Japanese_merged441_NOimage.json"
 
 def filter_image_yes():
     """
@@ -15,8 +15,11 @@ def filter_image_yes():
         with open(input_json_path, 'r', encoding='utf-8-sig') as f:
             input_data = json.load(f)
         
-        # imageが"Yes"のデータのみを抽出
-        filtered_data = [item for item in input_data if item.get("image") == "Yes"]
+        # # imageが"Yes"のデータのみを抽出
+        # filtered_data = [item for item in input_data if item.get("image") == "Yes"]
+        
+        # imageが"No"のデータのみを抽出
+        filtered_data = [item for item in input_data if item.get("image") == "No"]
         
         # フィルタリングされたデータを新しいファイルに書き出す
         with open(output_json_path, 'w', encoding='utf-8-sig') as f:
