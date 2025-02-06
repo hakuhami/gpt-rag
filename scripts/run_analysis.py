@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data_loader import save_json_data, load_json_data
 # from src.data_preprocessor import split_data
 # from src.rag_model import RAGModel
-from image_deim.image600_rag_model import RAGModel
+from image_deim.image_rag import RAGModel
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
 import json
@@ -53,7 +53,7 @@ def run_analysis(config_path: str) -> None:
     predictions = []
     for item in test_data:
         # result = rag_model.analyze_paragraph(item['data'])
-        result = rag_model.analyze_item(item)
+        result = rag_model.analyze_paragraph(item)
         print(f"{result},")
         result_dict = json.loads(result)
         predictions.append(result_dict)

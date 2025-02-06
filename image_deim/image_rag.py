@@ -13,7 +13,7 @@ class RAGModel:
     def __init__(self, api_key: str, model_name: str) -> None:
         """
         Initialize the RAG model with API credentials and model configurations.
-        テキスト分析は従来の関数呼び出し方式、画像分析はrequests経由でGPT-4o-miniを利用する。
+        テキスト分析は従来の関数呼び出し方式、画像分析は requests 経由で GPT-4o-mini を利用する。
         """
         openai.api_key = api_key
         self.model_name = model_name
@@ -26,11 +26,11 @@ class RAGModel:
         """
         self.search_data = search_data
         
-        # Step 1: 全データ（"data"フィールド）で検索
+        # Step 1の検索用データ
         self.documents = [item['data'] for item in search_data]
         self.doc_embeddings = self.embedder.encode(self.documents)
         
-        # Step 2: promise_statusがYesのもの（promise_string）
+        # Step 2の検索用データ
         self.promise_only_data = [
             item for item in search_data 
             if item.get('promise_status') == 'Yes'
@@ -38,7 +38,7 @@ class RAGModel:
         self.promise_only_texts = [item['promise_string'] for item in self.promise_only_data]
         self.promise_only_embeddings = self.embedder.encode(self.promise_only_texts)
         
-        # Step 3: evidenceがあるもの
+        # Step 3の検索用データ
         self.quality_data = [
             item for item in search_data 
             if item.get('promise_status') == 'Yes' and 
@@ -51,10 +51,11 @@ class RAGModel:
     def search_step1_promise(self, query: str, yes_with_evidence_count: int = 6, 
                            yes_without_evidence_count: int = 2, no_promise_count: int = 2) -> List[Dict]:
         """
-        Step1: 類似度計算により、promise抽出用の参考例を取得する
+        Step 1: Retrieve documents for promise classification
         """
         query_embedding = self.embedder.encode([query])
-        similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]        
+        similarities = cosine_similarity(query_embedding, self.doc_embeddings)[0]
+
         # Create indexed similarities with status
         indexed_similarities = [
             (i, sim, {
@@ -63,6 +64,7 @@ class RAGModel:
             }) 
             for i, sim in enumerate(similarities)
         ]
+
         # Separate by status combinations
         yes_with_evidence = [
             (i, sim) for i, sim, status in indexed_similarities 
@@ -76,14 +78,17 @@ class RAGModel:
             (i, sim) for i, sim, status in indexed_similarities 
             if status['promise_status'] == 'No'
         ]
+
         # Sort and select
         for category in [yes_with_evidence, yes_without_evidence, no_promise]:
             category.sort(key=lambda x: x[1], reverse=True)
+
         selected = (
             yes_with_evidence[:yes_with_evidence_count] +
             yes_without_evidence[:yes_without_evidence_count] +
             no_promise[:no_promise_count]
         )
+
         # Get filtered documents
         result = []
         for i, _ in selected:
@@ -96,31 +101,37 @@ class RAGModel:
                 'evidence_string': doc.get('evidence_string', '')
             }
             result.append(filtered_doc)
+            
         print("↓がstep1の参考データ")
         print(f"{result}")
         print("↑がstep1の参考データ")
+
         return result
 
     def search_step2_timeline(self, promise_text: str) -> List[Dict]:
         """
-        Step2: 検証時期の分類用の参考例を取得する
+        Step 2: Retrieve documents for verification timeline classification
         """
         query_embedding = self.embedder.encode([promise_text])
         similarities = cosine_similarity(query_embedding, self.promise_only_embeddings)[0]
+        
         indexed_data = [
             (idx, sim, doc) 
             for idx, (sim, doc) in enumerate(zip(similarities, self.promise_only_data))
         ]
+        
         timeline_categories = {
             'already': [],
             'within_2_years': [],
             'between_2_and_5_years': [],
             'more_than_5_years': []
         }
+        
         for idx, sim, doc in indexed_data:
             timeline = doc.get('verification_timeline')
             if timeline in timeline_categories:
                 timeline_categories[timeline].append((idx, sim, doc))
+        
         selected_docs = []
         category_counts = {
             'already': 4,
@@ -128,6 +139,7 @@ class RAGModel:
             'between_2_and_5_years': 2,
             'more_than_5_years': 2
         }
+        
         for category, count in category_counts.items():
             category_docs = timeline_categories[category]
             category_docs.sort(key=lambda x: x[1], reverse=True)
@@ -135,36 +147,43 @@ class RAGModel:
                 'promise_string': doc['promise_string'],
                 'verification_timeline': doc['verification_timeline']
             } for _, _, doc in category_docs[:count]])
+            
         print("↓がstep2の参考データ")
         print(f"{selected_docs}")
         print("↑がstep2の参考データ")
+        
         return selected_docs
 
     def search_step3_quality(self, promise_text: str) -> List[Dict]:
         """
-        Step3: evidenceのクオリティ分類用の参考例を取得する
+        Step 3: Retrieve documents for evidence quality classification
         """
         query_embedding = self.embedder.encode([promise_text])
         similarities = cosine_similarity(query_embedding, self.quality_embeddings)[0]
+        
         indexed_data = [
             (idx, sim, doc) 
             for idx, (sim, doc) in enumerate(zip(similarities, self.quality_data))
         ]
+        
         quality_categories = {
             'Clear': [],
             'Not Clear': [],
             'Misleading': []
         }
+        
         for idx, sim, doc in indexed_data:
             quality = doc.get('evidence_quality')
             if quality in quality_categories:
                 quality_categories[quality].append((idx, sim, doc))
+        
         selected_docs = []
         category_counts = {
             'Clear': 4,
             'Not Clear': 3,
             'Misleading': 3
         }
+        
         for category, count in category_counts.items():
             category_docs = quality_categories[category]
             category_docs.sort(key=lambda x: x[1], reverse=True)
@@ -173,17 +192,18 @@ class RAGModel:
                 'evidence_string': doc['evidence_string'],
                 'evidence_quality': doc['evidence_quality']
             } for _, _, doc in category_docs[:count]])
+            
         print("↓がstep3の参考データ")
         print(f"{selected_docs}")
         print("↑がstep3の参考データ")
+        
         return selected_docs
 
     def extract_json_text(self, text: str) -> Optional[str]:
-        """
-        レスポンス文字列中からJSON部を抽出する
-        """
+        """Extract JSON text from string"""
         json_pattern = re.compile(r'\{[^{}]*\}')
         matches = json_pattern.findall(text)
+        
         if matches:
             try:
                 json_obj = json.loads(matches[0])
@@ -193,9 +213,7 @@ class RAGModel:
         return None
 
     def classify_step1_promise(self, data: str) -> Dict[str, str]:
-        """
-        Step1: ESGに関する公約の有無と公約テキストの抽出・分類
-        """
+        """Step 1: Classify promise status and extract promise string"""
         similar_docs = self.search_step1_promise(data)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in similar_docs])
         
@@ -294,11 +312,10 @@ class RAGModel:
         return result
 
     def classify_step2_timeline(self, promise_string: str) -> Dict[str, str]:
-        """
-        Step2: ESGに関する公約の検証時期の分類
-        """
+        """Step 2: Classify verification timeline"""
         similar_docs = self.search_step2_timeline(promise_string)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in similar_docs])
+        
         prompt = f"""
         You are an expert in classifying promise from corporate texts related to ESG.
         Classify the verification timing of the promise from the provided test data, and output content to the corresponding label in the json format.
@@ -351,6 +368,7 @@ class RAGModel:
             "promise_string": "{promise_string}"
         }}
         """
+
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
@@ -377,18 +395,29 @@ class RAGModel:
         
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
         return result
-                           
-    def classify_step3_quality(self, promise_string: str, evidence_string: str) -> Dict[str, str]:
+
+    def encode_image(self, image_path: str) -> str:
         """
-        Step3: 公約と根拠の関係性（根拠のクオリティ）の分類
+        画像ファイル (PNG) を読み込み、base64 エンコードした文字列を返す。
+        """
+        with open(image_path, "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode('utf-8-sig')
+
+    def classify_step3_quality_image(self, promise_string: str, evidence_string: str, image_path: str) -> Dict[str, str]:
+        """
+        Step3: 根拠のクオリティの分類を、画像情報を付加して実施する。
+        従来のテキストのみのプロンプトに、画像 (PNG) を base64 化したものを追加して送信する。
+        出力は JSON 形式の辞書として返す。
         """
         similar_docs = self.search_step3_quality(promise_string)
         context = "\n".join([json.dumps(doc, ensure_ascii=False, indent=2) for doc in similar_docs])
+        
         prompt = f"""
         You are an expert in analyzing promise and supporting evidence from corporate texts related to ESG.
         Classify the quality of the evidence supporting the promise from the provided test data, and output content to the corresponding label in the json format.
         Carefully consider the detailed task explanation and reference examples step-by-step before proceeding with the task.
         The content is provided under four tags: <json format>, <the details of the task>, <classification examples>, and <test data>.
+        And, the attached image contains supplementary information on the promise and evidence to be analyzed, so make sure to understand the content of the image before using it as a reference for analyzing.
         
                 
         <json format>
@@ -441,12 +470,63 @@ class RAGModel:
             "evidence_string": "{evidence_string}"
         }}
         """
+        base64_image = self.encode_image(image_path)
+        
+        # headers = {
+        #     "Content-Type": "application/json",
+        #     "Authorization": f"Bearer {openai.api_key}"
+        # }
+        # payload = {
+        #     "model": "gpt-4o-mini",
+        #     "messages": [
+        #         {
+        #             "role": "user",
+        #             "content": [
+        #                 {
+        #                     "type": "text",
+        #                     "text": prompt,
+        #                 },
+        #                 {
+        #                     "type": "image_url",
+        #                     "image_url": {
+        #                         "url": f"data:image/png;base64,{base64_image}"
+        #                     }
+        #                 }
+        #             ]
+        #         }
+        #     ],
+        #     "max_tokens": 300
+        # }
+        # response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+        # response_json = response.json()
+        # result_text = response_json["choices"][0]["message"]["content"]
+        # extracted_json = self.extract_json_text(result_text)
+        # if extracted_json is None:
+        #     extracted_json = json.dumps(json.loads(result_text), ensure_ascii=False, indent=2)
+        # return json.loads(extracted_json)
 
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
                 {"role": "system", "content": "You are an expert in analyzing ESG-related promise and evidence."},
-                {"role": "user", "content": prompt}
+                {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": prompt
+                    },
+                    {
+                        "type": "image_url",
+                        # "image_url": {
+                        #     "url": f"data:image/png;base64,{self.image_to_base64(image, scale_factor=0.2, quality=95)}"
+                        # }
+                        "image_url": {
+                            "url": f"data:image/png;base64,{base64_image}"
+                        }
+                    },
+                ]
+                }
             ],
             functions=[{
                 "name": "classify_evidence_quality",
@@ -469,30 +549,30 @@ class RAGModel:
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
         return result
 
-    def analyze_paragraph(self, paragraph: str) -> str:
+    def analyze_paragraph(self, item: Dict) -> str:
         """
-        テキストデータの場合の4段階の分析を実行する。
+        4段階の分析を実行
         """
+        paragraph = item['data']
         result_data = {'data': paragraph}
         
-        # Step1: 公約および根拠の抽出・分類
+        # Step 1: Promise Status & String
         step1_result = self.classify_step1_promise(paragraph)
         result_data['promise_status'] = step1_result['promise_status']
         result_data['promise_string'] = step1_result['promise_string']
         result_data['evidence_status'] = step1_result['evidence_status']
         result_data['evidence_string'] = step1_result['evidence_string']
         
-        # Step2, Step3: promiseが存在する場合のみ実施
+        # Step 2: Verification Timeline (if promise exists)
         if result_data['promise_status'] == 'Yes':
             step2_result = self.classify_step2_timeline(result_data['promise_string'])
             result_data['verification_timeline'] = step2_result['verification_timeline']
             
+            # Step3: 根拠のクオリティの分類（画像入力を用いる；promise かつ evidence が存在する場合）
             if result_data['evidence_status'] == 'Yes':
-                step3_result = self.classify_step3_quality(
-                    result_data['promise_string'],
-                    result_data['evidence_string']
-                )
-                result_data['evidence_quality'] = step3_result['evidence_quality']
+                image_path = os.path.join("image_deim", "images_experiment", f"{item['id']}.png")
+                quality_dict = self.classify_step3_quality_image(result_data['promise_string'], result_data['evidence_string'], image_path)
+                result_data['evidence_quality'] = quality_dict['evidence_quality']
             else:
                 result_data['evidence_quality'] = 'N/A'
         else:
@@ -502,7 +582,7 @@ class RAGModel:
             result_data['evidence_string'] = ''
             result_data['evidence_quality'] = 'N/A'
         
-        # 順序通りに再構成
+        # 指定された順序でデータを再構成
         ordered_data = {
             'data': result_data['data'],
             'promise_status': result_data['promise_status'],
@@ -514,78 +594,3 @@ class RAGModel:
         }
         
         return json.dumps(ordered_data, ensure_ascii=False, indent=2)
-
-    def encode_image(self, image_path: str) -> str:
-        """
-        画像ファイル(PNG)を読み込み、base64エンコードした文字列を返す。
-        """
-        with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode('utf-8')
-
-    def analyze_paragraph_image(self, paragraph: str, image_path: str) -> str:
-        """
-        画像データを含むESGレポートの分析を実施する。
-        
-        ・テキスト部分（paragraph）については、類似例検索を行い、そのコンテキストをプロンプトに含める。
-        ・画像は encode_image() でbase64形式に変換し、"data:image/png;base64,..." の形式でプロンプトに添付する。
-        ・GPT-4o-mini へは、テキストと画像の両方を含む payload を送信し、返却された結果からJSON部を抽出して返す。
-        
-        出力は analyze_paragraph() と同様のJSON形式の文字列となる。
-        """
-        similar_docs = self.search_step1_promise(paragraph)
-        similar_context = "\n".join(
-            [json.dumps(doc, ensure_ascii=False, indent=2) for doc in similar_docs]
-        )
-        prompt = f"""
-        You are an expert in extracting and classifying promise and supporting evidence from corporate reports related to ESG.
-        """
-        base64_image = self.encode_image(image_path)
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.api_key}"
-        }
-        payload = {
-            "model": "gpt-4o-mini",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt,
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/png;base64,{base64_image}"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "max_tokens": 300
-        }
-        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-        response_json = response.json()
-        result_text = response_json["choices"][0]["message"]["content"]
-        extracted_json = self.extract_json_text(result_text)
-        if extracted_json is None:
-            extracted_json = json.dumps(json.loads(result_text), ensure_ascii=False, indent=2)
-        return extracted_json
-
-    def analyze_item(self, item: dict) -> str:
-        """
-        渡された入力データ（辞書型）に基づき、画像用かテキスト用かの分析を自動判定する。
-        
-        - 入力データは、既存のjson形式のテストデータと同様に、
-          "data"（テキスト）、"id"（整数）、"image"（"Yes"または"No"）などのキーを持つ前提とする。
-        - "image"が "Yes" なら、画像分析を実施する。画像ファイルは "image_deim/images/{id}.png" から取得する。
-        - それ以外の場合は、従来のテキスト分析を実施する。
-        
-        出力はいずれの場合も JSON 形式の文字列となる。
-        """
-        if item.get("image", "No") == "Yes":
-            image_path = os.path.join("image_deim", "images", f"{item['id']}.png")
-            return self.analyze_paragraph_image(item["data"], image_path)
-        else:
-            return self.analyze_paragraph(item["data"])
