@@ -37,6 +37,25 @@ train_file = "train_400.json"
 # train_file = "train_72.json"
 
 
+
+### DEIM用の画像データを5分割するスクリプト
+
+# # 入力ファイルパス
+# input_file = "image_deim/Japanese_merged130_image_noChange_test.json"
+
+# # 出力ディレクトリとファイル名の設定
+# output_dirs = [
+#     "image_deim/1_set",
+#     "image_deim/2_set",
+#     "image_deim/3_set",
+#     "image_deim/4_set",
+#     "image_deim/5_set"
+# ]
+
+# test_file = "test_26_noChange.json"
+# train_file = "train_104_noChange.json"
+
+
 def create_cross_validation_sets():
     try:
         # JSONファイルの読み込み
@@ -51,6 +70,10 @@ def create_cross_validation_sets():
         # if len(data) != 90:
         #     raise ValueError(f"Expected 500 items, but got {len(data)} items")
         
+        ### DEIM用のデータ数の検証
+        # if len(data) != 130:
+        #     raise ValueError(f"Expected 500 items, but got {len(data)} items")
+                
         # データをランダムにシャッフル
         random.shuffle(data)
         
@@ -59,6 +82,9 @@ def create_cross_validation_sets():
         
         ### DEIM用の分割（18件ずつの5グループに分割）
         # chunks = [data[i:i+18] for i in range(0, 90, 18)]
+        
+        ### DEIM用の分割（26件ずつの5グループに分割）
+        # chunks = [data[i:i+26] for i in range(0, 130, 26)]
         
         # 各セットのディレクトリとファイルを作成
         for i, output_dir in enumerate(output_dirs):

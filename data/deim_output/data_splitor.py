@@ -11,6 +11,11 @@ output_100 = "data/deim_output/Japanese_validation_100.json"
 # output_500 = "image_deim/Japanese_merged90_image_change0_test.json"
 # output_100 = "image_deim/Japanese_merged24_image_change0_validation.json"
 
+# DEIM用の画像データをテスト・検証用に分割する（根拠変更データ含む）
+# input_file = "image_deim/Japanese_merged159_image_noChange.json"
+# output_500 = "image_deim/Japanese_merged130_image_noChange_test.json"
+# output_100 = "image_deim/Japanese_merged29_image_noChange_validation.json"
+
 def split_json_data():
     # JSONファイルの読み込み
     try:
@@ -31,6 +36,10 @@ def split_json_data():
         # DEIM用のデータを分割
         # data_500 = data[:90]
         # data_100 = data[90:114]
+        
+        # DEIM用のデータを分割（根拠変更データ含む）
+        # data_500 = data[:130]
+        # data_100 = data[130:159]
         
         # 500件のデータを保存
         with open(output_500, 'w', encoding='utf-8-sig') as f:

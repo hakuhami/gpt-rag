@@ -1,12 +1,15 @@
 ### 5分割したそれぞれのテストデータ18件に対し、検証用24を差し引いた、合計558件の訓練データ（検索対象データ）を作成する
 
+### （根拠変更データも含めて、更新）5分割したそれぞれのテストデータ26件に対し、検証用29を差し引いた、合計545件の訓練データ（検索対象データ）を作成する
+
 import json
 import os
 
 # グローバル変数としてファイルパスを指定
 base_dir = "image_deim"
 main_data_path = os.path.join(base_dir, "Japanese_merged600_experiment_added_index copy.json")
-validation_data_path = os.path.join(base_dir, "Japanese_merged24_image_change0_validation.json")
+# validation_data_path = os.path.join(base_dir, "Japanese_merged24_image_change0_validation.json")
+validation_data_path = os.path.join(base_dir, "Japanese_merged29_image_noChange_validation.json")
 
 def load_json_file(file_path):
     """JSONファイルを読み込む関数"""
@@ -34,7 +37,8 @@ def create_training_data(set_number):
     """各セット用の訓練データを作成する関数"""
     # テストデータのパスを構築
     set_dir = f"{set_number}_set"
-    test_path = os.path.join(base_dir, set_dir, "test_18.json")
+    # test_path = os.path.join(base_dir, set_dir, "test_18.json")
+    test_path = os.path.join(base_dir, set_dir, "test_26_noChange.json")
     
     # 除外すべきIDを取得
     exclude_ids = get_ids_to_exclude(validation_data_path, test_path)
@@ -60,7 +64,8 @@ def create_training_data(set_number):
         os.makedirs(output_dir)
     
     # 訓練データを保存
-    output_path = os.path.join(output_dir, "train_rag_558.json")
+    # output_path = os.path.join(output_dir, "train_rag_558.json")
+    output_path = os.path.join(output_dir, "train_rag_545_noChange.json")
     try:
         with open(output_path, 'w', encoding='utf-8-sig') as f:
             json.dump(train_data, f, indent=2, ensure_ascii=False)
