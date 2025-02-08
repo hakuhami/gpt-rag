@@ -482,10 +482,11 @@ class RAGModel:
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
         return result
 
-    def analyze_paragraph(self, paragraph: str) -> str:
+    def analyze_paragraph(self, item: Dict) -> str:
         """
         4段階の分析を実行
         """
+        paragraph = item['data']
         result_data = {'data': paragraph}
         
         # Step 1: Promise Status & String
@@ -518,6 +519,7 @@ class RAGModel:
         
         # 指定された順序でデータを再構成
         ordered_data = {
+            'id': item['id'],
             'data': result_data['data'],
             'promise_status': result_data['promise_status'],
             'promise_string': result_data['promise_string'],

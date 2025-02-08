@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.data_loader import save_json_data, load_json_data
 # from src.data_preprocessor import split_data
 # from src.rag_model_8_2 import RAGModel
-from image_deim.image_rag_eq_only import RAGModel
+from image_deim.rag_model_8_2_re import RAGModel
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
 import json
@@ -53,6 +53,7 @@ def run_analysis(config_path: str) -> None:
     predictions = []
     for item in test_data:
         # result = rag_model.analyze_paragraph(item['data'])
+        ### ↓イメージベースでは、"id"を引き継ぐ（または、根拠の性質以外はベースラインの結果を引き継ぐ）ため、辞書でデータを渡す
         result = rag_model.analyze_paragraph(item)
         print(f"{result},")
         result_dict = json.loads(result)
