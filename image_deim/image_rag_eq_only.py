@@ -286,7 +286,7 @@ class RAGModel:
                 quality_dict = self.classify_step3_quality_image(item['promise_string'], item['evidence_string'], image_path)
                 # result_data['evidence_quality'] = quality_dict['evidence_quality']
             else:
-                item['evidence_quality'] = 'N/A'
+                quality_dict = {'evidence_quality': 'N/A'}
         # else:
         #     result_data['promise_string'] = ''
         #     result_data['verification_timeline'] = 'N/A'
