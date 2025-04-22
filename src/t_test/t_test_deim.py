@@ -1,5 +1,6 @@
+### 5分割交差検証したデータのそれぞれの属性について、ベースラインと提案手法を比較してt検定を行う(DEIM→HICSS)
+
 import json
-import os
 import numpy as np
 from scipy import stats
 
@@ -9,8 +10,14 @@ from scipy import stats
 # file_names = [f"{i}_set_evaluation_results.json" for i in range(1, 6)]
 
 ### イメージベース評価用
-baseline_dir = "image_deim/result/change0_114/1_baseline"
-rag_dir = "image_deim/result/change0_114/3_rag"
+# baseline_dir = "image_deim/result/change0_114/1_baseline"
+# rag_dir = "image_deim/result/change0_114/3_rag"
+# file_names = [f"{i}_set_evaluation_results.json" for i in range(1, 6)]
+
+
+##### （修士）HICSS向け評価用
+baseline_dir = "master/experiment/result/gpt/1_baseline"
+rag_dir = "master/experiment/result/gpt/2_rag"
 file_names = [f"{i}_set_evaluation_results.json" for i in range(1, 6)]
 
 def read_f_scores(directory):
