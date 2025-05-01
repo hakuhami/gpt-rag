@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import json
 import re
+import time
 
 class RAGModel:
     def __init__(self, api_key: str, model_name: str) -> None:
@@ -307,6 +308,9 @@ class RAGModel:
             config=config,
         )
         
+        # 無料枠（1分あたり15リクエストまで）を超えないように、5秒待機
+        time.sleep(5)
+        
         result = json.loads(self.extract_json_text(response.text))
         return result
 
@@ -395,6 +399,9 @@ class RAGModel:
             contents=prompt,
             config=config,
         )
+        
+        # 無料枠（1分あたり15リクエストまで）を超えないように、5秒待機
+        time.sleep(5)
         
         result = json.loads(self.extract_json_text(response.text))
         return result
@@ -489,6 +496,9 @@ class RAGModel:
             contents=prompt,
             config=config,
         )
+        
+        # 無料枠（1分あたり15リクエストまで）を超えないように、5秒待機
+        time.sleep(5)
         
         result = json.loads(self.extract_json_text(response.text))
         return result
