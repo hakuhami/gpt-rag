@@ -117,7 +117,7 @@ class RAGModel:
         )
         
         # 無料枠（1分あたり15リクエストまで）を超えないように、4秒待機
-        time.sleep(4)
+        time.sleep(2)
         
         result = json.loads(self.extract_json_text(response.text))
         return result
@@ -199,7 +199,7 @@ class RAGModel:
         )
         
         # 無料枠（1分あたり15リクエストまで）を超えないように、4秒待機
-        time.sleep(4)
+        time.sleep(2)
         
         result = json.loads(self.extract_json_text(response.text))
         return result
@@ -286,7 +286,7 @@ class RAGModel:
         )
         
         # 無料枠（1分あたり15リクエストまで）を超えないように、4秒待機
-        time.sleep(4)
+        time.sleep(2)
         
         result = json.loads(self.extract_json_text(response.text))
         return result
