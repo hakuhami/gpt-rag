@@ -7,7 +7,7 @@ from src.data_loader import save_json_data
 
 # from src.rag_model_8_2 import RAGModel
 # from image_deim.image_rag_eq_only import RAGModel
-from master.experiment.rag_model_8_2_without_rag_gemini import RAGModel
+from master.experiment.rag_model_8_2_gemini import RAGModel
 
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
@@ -24,9 +24,9 @@ def run_analysis(config_path: str) -> None:
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     
-    # # Load the search data from the file（ベースラインの実験では使用しない）
-    # with open(config['search_data_path'], 'r', encoding='utf-8-sig') as f:
-    #     search_data = json.load(f)
+    # Load the search data from the file（ベースラインの実験では使用しない）
+    with open(config['search_data_path'], 'r', encoding='utf-8-sig') as f:
+        search_data = json.load(f)
 
     # Load the test data from the file
     with open(config['test_data_path'], 'r', encoding='utf-8-sig') as f:
@@ -50,8 +50,8 @@ def run_analysis(config_path: str) -> None:
     # Prepare the RAG model with the search data
     rag_model = RAGModel(api_key=config['gemini_api_key'], model_name=config['model_name'])
     print("RAGModel is loaded.")
-    # rag_model.prepare_documents(search_data) #（ベースラインの実験では使用しない）
-    # print("Documents are prepared.")
+    rag_model.prepare_documents(search_data) #（ベースラインの実験では使用しない）
+    print("Documents are prepared.")
     
     # 未処理のデータ数を計算
     remaining_items = [item for item in test_data if item.get('id', '') not in processed_ids]
