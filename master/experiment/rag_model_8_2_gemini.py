@@ -391,7 +391,7 @@ class RAGModel:
         config=types.GenerateContentConfig(
             tools=tool,
             temperature=0,
-            system_instruction="You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."
+            system_instruction="You are an expert in classifying ESG-related promises."
         )
         
         response = self.client.models.generate_content(
@@ -488,7 +488,7 @@ class RAGModel:
         config=types.GenerateContentConfig(
             tools=tool,
             temperature=0,
-            system_instruction="You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."
+            system_instruction="You are an expert in analyzing ESG-related promise and evidence."
         )
         
         response = self.client.models.generate_content(
