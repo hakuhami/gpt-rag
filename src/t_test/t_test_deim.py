@@ -16,8 +16,8 @@ from scipy import stats
 
 
 ##### （修士）HICSS向け評価用
-baseline_dir = "master/experiment/result/gpt/1_baseline"
-rag_dir = "master/experiment/result/gpt/2_rag"
+baseline_dir = "master/experiment/result/gemini/1_baseline"
+rag_dir = "master/experiment/result/gemini/2_rag"
 file_names = [f"{i}_set_evaluation_results.json" for i in range(1, 6)]
 
 def read_f_scores(directory):
