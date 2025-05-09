@@ -295,9 +295,15 @@ class RAGModel:
             }
         }]
         
-        tool = types.Tool(function_declarations=functions),
+        tool = types.Tool(function_declarations=functions)
+        
+        tool_config = types.ToolConfig(
+            function_calling_config=types.FunctionCallingConfig(mode="ANY")
+        )
+        
         config=types.GenerateContentConfig(
             tools=tool,
+            tool_config=tool_config,
             temperature=0,
             system_instruction="You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."
         )
@@ -387,11 +393,17 @@ class RAGModel:
             }
         }]
         
-        tool = types.Tool(function_declarations=functions),
+        tool = types.Tool(function_declarations=functions)
+        
+        tool_config = types.ToolConfig(
+            function_calling_config=types.FunctionCallingConfig(mode="ANY")
+        )
+        
         config=types.GenerateContentConfig(
             tools=tool,
+            tool_config=tool_config,
             temperature=0,
-            system_instruction="You are an expert in classifying ESG-related promises. Be sure to ou"
+            system_instruction="You are an expert in classifying ESG-related promises."
         )
         
         response = self.client.models.generate_content(
@@ -484,11 +496,17 @@ class RAGModel:
             }
         }]
         
-        tool = types.Tool(function_declarations=functions),
+        tool = types.Tool(function_declarations=functions)
+        
+        tool_config = types.ToolConfig(
+            function_calling_config=types.FunctionCallingConfig(mode="ANY")
+        )
+        
         config=types.GenerateContentConfig(
             tools=tool,
+            tool_config=tool_config,
             temperature=0,
-            system_instruction="You are an expert in analyzing ESG-related promise and evidence .Be sure to output the evidence_quality value exactly as specified."
+            system_instruction="You are an expert in analyzing ESG-related promise and evidence."
         )
         
         response = self.client.models.generate_content(

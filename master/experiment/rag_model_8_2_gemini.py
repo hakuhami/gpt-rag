@@ -391,7 +391,7 @@ class RAGModel:
         config=types.GenerateContentConfig(
             tools=tool,
             temperature=0,
-            system_instruction="You are an expert in classifying ESG-related promises. Be sure to output the verification_timeline value exactly as specified."
+            system_instruction="You are an expert in classifying ESG-related promises."
         )
         
         response = self.client.models.generate_content(
@@ -488,7 +488,7 @@ class RAGModel:
         config=types.GenerateContentConfig(
             tools=tool,
             temperature=0,
-            system_instruction="You are an expert in analyzing ESG-related promise and evidence .Be sure to output the evidence_quality value exactly as specified."
+            system_instruction="You are an expert in analyzing ESG-related promise and evidence."
         )
         
         response = self.client.models.generate_content(
