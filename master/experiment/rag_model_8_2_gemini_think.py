@@ -302,7 +302,7 @@ class RAGModel:
         )
         
         config=types.GenerateContentConfig(
-            tools=tool,
+            tools=[tool],
             tool_config=tool_config,
             temperature=0,
             system_instruction="You are an expert in extracting ESG-related promise and their corresponding evidence from corporate reports that describe ESG matters."
@@ -400,7 +400,7 @@ class RAGModel:
         )
         
         config=types.GenerateContentConfig(
-            tools=tool,
+            tools=[tool],
             tool_config=tool_config,
             temperature=0,
             system_instruction="You are an expert in classifying ESG-related promises."
@@ -503,7 +503,7 @@ class RAGModel:
         )
         
         config=types.GenerateContentConfig(
-            tools=tool,
+            tools=[tool],
             tool_config=tool_config,
             temperature=0,
             system_instruction="You are an expert in analyzing ESG-related promise and evidence."
