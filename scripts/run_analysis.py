@@ -7,7 +7,7 @@ from src.data_loader import save_json_data
 
 # from src.rag_model_8_2 import RAGModel
 # from image_deim.image_rag_eq_only import RAGModel
-from master.experiment.rag_model_8_2_gemini import RAGModel
+from master.experiment.rag_model_8_2_gemini_think import RAGModel
 
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
