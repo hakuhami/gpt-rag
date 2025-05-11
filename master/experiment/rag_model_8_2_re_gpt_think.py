@@ -302,7 +302,7 @@ class RAGModel:
             }],
             function_call={"name": "analyze_esg_paragraph"},
             reasoning_effort="medium",
-            max_completion_tokens=5000 # 段階によりパラメータ変更
+            max_completion_tokens=4000 # 段階によりパラメータ変更
         )
         
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
@@ -388,7 +388,7 @@ class RAGModel:
             }],
             function_call={"name": "classify_verification_timeline"},
             reasoning_effort="medium",
-            max_completion_tokens=1000 # 段階によりパラメータ変更
+            max_completion_tokens=2000 # 段階によりパラメータ変更
         )
         
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
