@@ -7,7 +7,7 @@ from src.data_loader import save_json_data
 
 # from src.rag_model_8_2 import RAGModel
 # from image_deim.image_rag_eq_only import RAGModel
-from master.experiment.rag_model_8_2_gemini_think import RAGModel
+from master.experiment.rag_model_8_2_re_gpt import RAGModel
 
 from src.evaluator import evaluate_results, save_average_results_to_file
 import yaml
@@ -48,7 +48,7 @@ def run_analysis(config_path: str) -> None:
     processed_ids = {item.get('id', '') for item in predictions}
 
     # Prepare the RAG model with the search data
-    rag_model = RAGModel(api_key=config['gemini_api_key'], model_name=config['model_name'])
+    rag_model = RAGModel(api_key=config['openai_api_key'], model_name=config['model_name'])
     print("RAGModel is loaded.")
     rag_model.prepare_documents(search_data) #（ベースラインの実験では使用しない）
     print("Documents are prepared.")
