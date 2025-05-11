@@ -301,8 +301,8 @@ class RAGModel:
                 }
             }],
             function_call={"name": "analyze_esg_paragraph"},
-            reasoning_effort="high",
-            max_completion_tokens=5000
+            reasoning_effort="medium",
+            max_completion_tokens=5000 # 段階によりパラメータ変更
         )
         
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
@@ -387,8 +387,8 @@ class RAGModel:
                 }
             }],
             function_call={"name": "classify_verification_timeline"},
-            reasoning_effort="high",
-            max_completion_tokens=5000
+            reasoning_effort="medium",
+            max_completion_tokens=1000 # 段階によりパラメータ変更
         )
         
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
@@ -478,8 +478,8 @@ class RAGModel:
                 }
             }],
             function_call={"name": "classify_evidence_quality"},
-            reasoning_effort="high",
-            max_completion_tokens=5000
+            reasoning_effort="medium",
+            max_completion_tokens=3000 # 段階によりパラメータ変更
         )
         
         result = json.loads(self.extract_json_text(response.choices[0].message.function_call.arguments))
