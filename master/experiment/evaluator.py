@@ -174,17 +174,17 @@ def main():
     industry = "trade"  # "automobile", "energy", "trade" のいずれかを指定
     # esg_type = "E"  # "E", "S", "G" のいずれかを指定
     
-    # evidence_qualityの条件
+    # evidence_qualityの条件（こいつの値を都度変更する）
     true_value = "N/A"  # 正解データの条件: "Clear", "Not Clear", "Misleading", "N/A"
     pred_value = "N/A"  # 予測データの条件: "Clear", "Not Clear", "Misleading", "N/A"
     # =====================================================
     
     # データの読み込み
     print("Loading ground truth data...")
-    ground_truth = load_all_data("master/data/Japanese_merged1000_added_index.json")
+    ground_truth = load_all_data("master/data/Japanese_merged1000_added_index.json") # 大元の全データセットのため、変更しない
     
     print("Loading prediction data...")
-    predictions = load_all_predictions("master/experiment/result/gpt/2_rag")
+    predictions = load_all_predictions("master/experiment/result/gpt-think/2_rag") # 調べたい、実験結果のデータのディレクトリを指定
     
     print(f"Loaded {len(ground_truth)} ground truth items and {len(predictions)} prediction items")
     

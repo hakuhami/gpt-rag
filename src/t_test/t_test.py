@@ -126,10 +126,20 @@ print("t検定を行う。")
 # # GPTのRAG有り
 # teian = np.array([0.919, 0.510, 0.794, 0.795, 0.619, 0.630])
 
+# # GeminiのRAG無し
+# baseline = np.array([0.870, 0.262, 0.604, 0.586, 0.444, 0.536])
+# # GeminiのRAG有り
+# teian = np.array([0.925, 0.560, 0.764, 0.793, 0.654, 0.597])
+
+# # GPTのRAG無し
+# baseline = np.array([0.902, 0.332, 0.764, 0.660, 0.495, 0.542])
+# # GPT-thinkのRAG有り
+# teian = np.array([0.912, 0.558, 0.791, 0.827, 0.661, 0.596])
+
 # GeminiのRAG無し
 baseline = np.array([0.870, 0.262, 0.604, 0.586, 0.444, 0.536])
-# GeminiのRAG有り
-teian = np.array([0.925, 0.560, 0.764, 0.793, 0.654, 0.597])
+# Gemini-thinkのRAG有り
+teian = np.array([0.918, 0.525, 0.786, 0.794, 0.653, 0.606])
 
 
 
